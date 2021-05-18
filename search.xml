@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>各种解决方案</title>
+      <link href="2021/05/18/bug_solve/"/>
+      <url>2021/05/18/bug_solve/</url>
+      
+        <content type="html"><![CDATA[<h2 id="1-HEXO-博客部署失败"><a href="#1-HEXO-博客部署失败" class="headerlink" title="1. HEXO 博客部署失败"></a>1. HEXO 博客部署失败</h2><p>github提示<strong>Unable to build page. Please try again later</strong></p><p>前几天执行hexo d部署博客后，github发邮件提醒，试了很多办法，就差重新搭建了，都没有解决问题。</p><p>今天简单操作了一下，方法就是在github目录下加一个空文件 .nojekyll ，注意是在github目录下直接加，之前在本地Blog目录加并不起作用</p><p>添加后查看github setting-pages</p><p><img src="https://z3.ax1x.com/2021/05/18/gfjrFS.png" alt="2021 05 18 16 52 01屏幕截图"></p><p>这样就成功部署了</p><h2 id="2-图床"><a href="#2-图床" class="headerlink" title="2. 图床"></a>2. 图床</h2><p>一个图片服务器，可以上传本地图片，通过链接可以查看图片，对于写博客很有帮助</p><p><a href="https://imgtu.com/">https://imgtu.com/</a></p><p><img src="https://z3.ax1x.com/2021/05/18/gfvDn1.png" alt="2021 05 18 16 56 23屏幕截图"></p><h2 id="3-Linux系统的翻墙方案"><a href="#3-Linux系统的翻墙方案" class="headerlink" title="3. Linux系统的翻墙方案"></a>3. Linux系统的翻墙方案</h2><p>之前在windows和iphone上翻墙用的shadowsocket，一个月七八块钱，网址是 vdoos.com。在linux上用它的客户端不给力</p><p>进行一番摸索后，用v2ray实现翻墙，并且免费</p><p>教程链接：<a href="https://www.youtube.com/watch?v=JGW76bYFbGU">https://www.youtube.com/watch?v=JGW76bYFbGU</a></p><p>youtube上搜索linux翻墙，v2ray等关键字也可以搜到很多教程！</p><h2 id="4-文字转声音"><a href="#4-文字转声音" class="headerlink" title="4. 文字转声音"></a>4. 文字转声音</h2><p>之前写人机交互实验 做 倒计时网页用到的一个网站，<a href="https://peiyin.wozhiyi.com/">https://peiyin.wozhiyi.com/</a> ，可以通过输入文字生成音频</p><h2 id="5-Redis-bug"><a href="#5-Redis-bug" class="headerlink" title="5. Redis bug"></a>5. Redis bug</h2><ol><li><strong>Redis is configured to save RDB snapshots, but is currently not able to persist on disk. Commands that may modify the data set are disabled. Please check Redis logs for details about the error.</strong></li></ol><p>之前项目中碰到的一个问题，Redis被配置为保存数据库快照，但它目前不能持久化到硬盘。用来修改集合数据的命令不能用。请查看Redis日志的详细错误信息。</p><p>解决办法： 执行 config set stop-writes-on-bgsave-error no</p><h2 id="6-nacos-bug"><a href="#6-nacos-bug" class="headerlink" title="6. nacos bug"></a>6. nacos bug</h2><p>linux nacos启动：</p><p>bash -f ./startup.sh -m standalone</p><p>之前用sh startup.sh -m standalone一直启动失败，直到换成这个命令….</p><h2 id="7-nginx-bug"><a href="#7-nginx-bug" class="headerlink" title="7. nginx bug"></a>7. nginx bug</h2><h2 id="8-Java-bug"><a href="#8-Java-bug" class="headerlink" title="8. Java bug"></a>8. Java bug</h2><ol><li><strong>io.jsonwebtoken.ExpiredJwtException</strong></li></ol><p>之前使用jwt碰到的一个bug，跟jwt过期时间相关</p><p>在解析token并发现这个token已经过期了，它作出的反应是<strong>直接抛异常</strong>，除了msg信息，还有claims和header信息；</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> Claims <span class="title">parseJwt</span><span class="params">(String token)</span></span>&#123;</span><br><span class="line">        Claims claims = Jwts.parser()</span><br><span class="line">                    .setSigningKey(signKey) <span class="comment">// 设置标识名</span></span><br><span class="line">                    .parseClaimsJws(token)  <span class="comment">//解析token</span></span><br><span class="line">                    .getBody();</span><br><span class="line">        <span class="keyword">return</span> claims;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure><p>改为</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> Boolean <span class="title">isTokenExpired</span><span class="params">(String token)</span> </span>&#123;</span><br><span class="line">  <span class="comment">//不管是否过期，都返回claims对象</span></span><br><span class="line">      Claims claims = <span class="keyword">this</span>.parseJwt(token);</span><br><span class="line">      Date expiration = claims.getExpiration();</span><br><span class="line">      <span class="comment">//和当前时间进行对比来判断是否过期</span></span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">new</span> Date(System.currentTimeMillis()).after(expiration);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure><h2 id="9-查找文档"><a href="#9-查找文档" class="headerlink" title="9. 查找文档"></a>9. 查找文档</h2><p>很方便的一个文档，教程查找网站  <a href="https://www.jiumodiary.com/">https://www.jiumodiary.com/</a></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> solution </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> solution </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Redis 3</title>
       <link href="2021/05/17/Redis_3/"/>
       <url>2021/05/17/Redis_3/</url>
@@ -398,11 +423,11 @@
     
     
     <entry>
-      <title>Redis 2</title>
-      <link href="2021/04/25/Redis_2/"/>
-      <url>2021/04/25/Redis_2/</url>
+      <title>Redis 1</title>
+      <link href="2021/04/25/Redis_1/"/>
+      <url>2021/04/25/Redis_1/</url>
       
-        <content type="html"><![CDATA[<p>Redis缓存相关问题</p><h2 id="1-Redis做缓存场景"><a href="#1-Redis做缓存场景" class="headerlink" title="1. Redis做缓存场景"></a>1. Redis做缓存场景</h2><h2 id="2-缓存穿透"><a href="#2-缓存穿透" class="headerlink" title="2. 缓存穿透"></a>2. 缓存穿透</h2><h2 id="3-缓存击穿"><a href="#3-缓存击穿" class="headerlink" title="3. 缓存击穿"></a>3. 缓存击穿</h2><h2 id="4-缓存雪崩"><a href="#4-缓存雪崩" class="headerlink" title="4. 缓存雪崩"></a>4. 缓存雪崩</h2><h2 id="5-缓存淘汰策略"><a href="#5-缓存淘汰策略" class="headerlink" title="5. 缓存淘汰策略"></a>5. 缓存淘汰策略</h2><h2 id="6-与数据库保持一致性"><a href="#6-与数据库保持一致性" class="headerlink" title="6. 与数据库保持一致性"></a>6. 与数据库保持一致性</h2><h2 id="7-布隆过滤器原理"><a href="#7-布隆过滤器原理" class="headerlink" title="7. 布隆过滤器原理"></a>7. 布隆过滤器原理</h2>]]></content>
+        <content type="html"><![CDATA[<p>Redis 介绍及常用数据结构</p><h2 id="1-Redis简介"><a href="#1-Redis简介" class="headerlink" title="1. Redis简介"></a>1. Redis简介</h2><h2 id="2-String"><a href="#2-String" class="headerlink" title="2. String"></a>2. String</h2><h2 id="3-List"><a href="#3-List" class="headerlink" title="3. List"></a>3. List</h2><h2 id="4-Hash"><a href="#4-Hash" class="headerlink" title="4. Hash"></a>4. Hash</h2><h2 id="5-Set"><a href="#5-Set" class="headerlink" title="5. Set"></a>5. Set</h2><h2 id="6-Zset"><a href="#6-Zset" class="headerlink" title="6. Zset"></a>6. Zset</h2><h2 id="7-RDB和AOF"><a href="#7-RDB和AOF" class="headerlink" title="7. RDB和AOF"></a>7. RDB和AOF</h2>]]></content>
       
       
       <categories>
@@ -423,11 +448,11 @@
     
     
     <entry>
-      <title>Redis 1</title>
-      <link href="2021/04/25/Redis_1/"/>
-      <url>2021/04/25/Redis_1/</url>
+      <title>Redis 2</title>
+      <link href="2021/04/25/Redis_2/"/>
+      <url>2021/04/25/Redis_2/</url>
       
-        <content type="html"><![CDATA[<p>Redis 介绍及常用数据结构</p><h2 id="1-Redis简介"><a href="#1-Redis简介" class="headerlink" title="1. Redis简介"></a>1. Redis简介</h2><h2 id="2-String"><a href="#2-String" class="headerlink" title="2. String"></a>2. String</h2><h2 id="3-List"><a href="#3-List" class="headerlink" title="3. List"></a>3. List</h2><h2 id="4-Hash"><a href="#4-Hash" class="headerlink" title="4. Hash"></a>4. Hash</h2><h2 id="5-Set"><a href="#5-Set" class="headerlink" title="5. Set"></a>5. Set</h2><h2 id="6-Zset"><a href="#6-Zset" class="headerlink" title="6. Zset"></a>6. Zset</h2><h2 id="7-RDB和AOF"><a href="#7-RDB和AOF" class="headerlink" title="7. RDB和AOF"></a>7. RDB和AOF</h2>]]></content>
+        <content type="html"><![CDATA[<p>Redis缓存相关问题</p><h2 id="1-Redis做缓存场景"><a href="#1-Redis做缓存场景" class="headerlink" title="1. Redis做缓存场景"></a>1. Redis做缓存场景</h2><h2 id="2-缓存穿透"><a href="#2-缓存穿透" class="headerlink" title="2. 缓存穿透"></a>2. 缓存穿透</h2><h2 id="3-缓存击穿"><a href="#3-缓存击穿" class="headerlink" title="3. 缓存击穿"></a>3. 缓存击穿</h2><h2 id="4-缓存雪崩"><a href="#4-缓存雪崩" class="headerlink" title="4. 缓存雪崩"></a>4. 缓存雪崩</h2><h2 id="5-缓存淘汰策略"><a href="#5-缓存淘汰策略" class="headerlink" title="5. 缓存淘汰策略"></a>5. 缓存淘汰策略</h2><h2 id="6-与数据库保持一致性"><a href="#6-与数据库保持一致性" class="headerlink" title="6. 与数据库保持一致性"></a>6. 与数据库保持一致性</h2><h2 id="7-布隆过滤器原理"><a href="#7-布隆过滤器原理" class="headerlink" title="7. 布隆过滤器原理"></a>7. 布隆过滤器原理</h2>]]></content>
       
       
       <categories>
