@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/fru-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/fru-16x16.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"bibofu24.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"manual","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="总结项目的后台开发部分 后台管理模块在后台中，大概有讲师管理，课程分类管理，课程管理等模块 一个课程包含，课程老师，课程所属分类，课程基本信息（课程名，课程价格，课程封面等），课程描述，课程下的章节（可能存在多级目录），章节下的小节（小节中有视频） 在service中新建子模块service_edu  编写配置文件application.properties 1234567891011121314">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在线教育项目 2">
+<meta property="og:url" content="https://bibofu24.com/2021/05/16/onlineEdu_2/index.html">
+<meta property="og:site_name" content="二十六画生">
+<meta property="og:description" content="总结项目的后台开发部分 后台管理模块在后台中，大概有讲师管理，课程分类管理，课程管理等模块 一个课程包含，课程老师，课程所属分类，课程基本信息（课程名，课程价格，课程封面等），课程描述，课程下的章节（可能存在多级目录），章节下的小节（小节中有视频） 在service中新建子模块service_edu  编写配置文件application.properties 1234567891011121314">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://z3.ax1x.com/2021/05/16/gglN11.png">
+<meta property="article:published_time" content="2021-05-16T11:52:00.583Z">
+<meta property="article:modified_time" content="2021-05-16T12:50:35.560Z">
+<meta property="article:author" content="bibofu">
+<meta property="article:tag" content="项目">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://z3.ax1x.com/2021/05/16/gglN11.png">
+
+<link rel="canonical" href="https://bibofu24.com/2021/05/16/onlineEdu_2/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>在线教育项目 2 | 二十六画生</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">二十六画生</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-resources">
+
+    <a href="/resources/" rel="section"><i class="fa fa-download fa-fw"></i>资源</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bibofu24.com/2021/05/16/onlineEdu_2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="bibofu">
+      <meta itemprop="description" content="记录学习，分享生活">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="二十六画生">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          在线教育项目 2
+        </h1>
+
+        <div class="post-meta">
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-05-16 19:52:00 / 修改时间：20:50:35" itemprop="dateCreated datePublished" datetime="2021-05-16T19:52:00+08:00">2021-05-16</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%9C%A8%E7%BA%BF%E6%95%99%E8%82%B2%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">在线教育项目</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>20k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>18 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>总结项目的后台开发部分</p>
+<h2 id="后台管理模块"><a href="#后台管理模块" class="headerlink" title="后台管理模块"></a>后台管理模块</h2><p>在后台中，大概有讲师管理，课程分类管理，课程管理等模块</p>
+<p>一个课程包含，课程老师，课程所属分类，课程基本信息（课程名，课程价格，课程封面等），课程描述，课程下的章节（可能存在多级目录），章节下的小节（小节中有视频）</p>
+<p>在service中新建子模块service_edu</p>
+<p><img src="https://z3.ax1x.com/2021/05/16/gglN11.png" alt="2021 05 16 19 56 27屏幕截图"></p>
+<p>编写配置文件application.properties</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 服务端口</span></span><br><span class="line"><span class="meta">server.port</span>=<span class="string">8001</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 服务名</span></span><br><span class="line"><span class="meta">spring.application.name</span>=<span class="string">service-edu</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 环境设置：dev、test、prod</span></span><br><span class="line"><span class="meta">spring.profiles.active</span>=<span class="string">dev</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># mysql数据库连接</span></span><br><span class="line"><span class="meta">spring.datasource.driver-class-name</span>=<span class="string">com.mysql.cj.jdbc.Driver</span></span><br><span class="line"><span class="meta">spring.datasource.url</span>=<span class="string">jdbc:mysql://localhost:3306/guli?serverTimezone=GMT%2B8&amp;useUnicode=true&amp;characterEncoding=utf8</span></span><br><span class="line"><span class="meta">spring.datasource.username</span>=<span class="string">root</span></span><br><span class="line"><span class="meta">spring.datasource.password</span>=<span class="string">123456</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#返回json的全局时间格式</span></span><br><span class="line"><span class="meta">spring.jackson.date-format</span>=<span class="string">yyyy-MM-dd HH:mm:ss</span></span><br><span class="line"><span class="meta">spring.jackson.time-zone</span>=<span class="string">GMT+8</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#mybatis日志</span></span><br><span class="line"><span class="comment">#mybatis-plus.configuration.log-impl=org.apache.ibatis.logging.stdout.StdOutImpl</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#配置mapper xml文件的路径</span></span><br><span class="line"><span class="meta">mybatis-plus.mapper-locations</span>=<span class="string">classpath:com/bibofu/eduservice/mapper/xml/*.xml</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># nacos服务地址</span></span><br><span class="line"><span class="meta">spring.cloud.nacos.discovery.server-addr</span>=<span class="string">127.0.0.1:8848</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#开启熔断机制</span></span><br><span class="line"><span class="meta">feign.hystrix.enabled</span>=<span class="string">true</span></span><br><span class="line"><span class="comment"># 设置hystrix超时时间，默认1000ms</span></span><br><span class="line"><span class="meta">hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds</span>=<span class="string">6000</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<p>使用代码生成器生成基本代码（service，entity，control，mapper）</p>
+<p>解决跨域（协议，端口号，ip地址），在controller上加上注解@CrossOrigin</p>
+<p>配置swagger</p>
+<p>创建公共模块common</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@EnableSwagger2</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SwaggerConfig</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Docket <span class="title">webApiConfig</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Docket(DocumentationType.SWAGGER_2)</span><br><span class="line">                .groupName(<span class="string">&quot;webApi&quot;</span>)</span><br><span class="line">                .apiInfo(webApiInfo())</span><br><span class="line">                .select()</span><br><span class="line">                <span class="comment">//.paths(Predicates.not(PathSelectors.regex(&quot;/admin/.*&quot;)))</span></span><br><span class="line">                .paths(Predicates.not(PathSelectors.regex(<span class="string">&quot;/error.*&quot;</span>)))</span><br><span class="line">                .build();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> ApiInfo <span class="title">webApiInfo</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ApiInfoBuilder()</span><br><span class="line">                .title(<span class="string">&quot;网站-课程中心API文档&quot;</span>)</span><br><span class="line">                .description(<span class="string">&quot;本文档描述了课程中心微服务接口定义&quot;</span>)</span><br><span class="line">                .version(<span class="string">&quot;1.0&quot;</span>)</span><br><span class="line">                .contact(<span class="keyword">new</span> Contact(<span class="string">&quot;jack&quot;</span>, <span class="string">&quot;https://bibofu24.com&quot;</span>, <span class="string">&quot;bibofu24@gmail.com&quot;</span>))</span><br><span class="line">                .build();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>统一数据返回</p>
+<p>同样写在公共模块部分</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//统一返回结果</span></span><br><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">R</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ApiModelProperty(value = &quot;是否成功&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> Boolean success;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ApiModelProperty(value = &quot;返回码&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> Integer code;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ApiModelProperty(value = &quot;返回消息&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String message;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ApiModelProperty(value = &quot;返回数据&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> Map&lt;String, Object&gt; data = <span class="keyword">new</span> HashMap&lt;String, Object&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">R</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//成功静态方法</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> R <span class="title">ok</span><span class="params">()</span></span>&#123;</span><br><span class="line">        R r=<span class="keyword">new</span> R();</span><br><span class="line">        r.setSuccess(<span class="keyword">true</span>);</span><br><span class="line">        r.setCode(ResultCode.SUCCESS);</span><br><span class="line">        r.setMessage(<span class="string">&quot;成功&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> r;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//失败静态方法</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> R <span class="title">error</span><span class="params">()</span></span>&#123;</span><br><span class="line">        R r=<span class="keyword">new</span> R();</span><br><span class="line">        r.setSuccess(<span class="keyword">false</span>);</span><br><span class="line">        r.setCode(ResultCode.ERROR);</span><br><span class="line">        r.setMessage(<span class="string">&quot;失败&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> r;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> R <span class="title">success</span><span class="params">(Boolean success)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.setSuccess(success);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> R <span class="title">message</span><span class="params">(String message)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.setMessage(message);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> R <span class="title">code</span><span class="params">(Integer code)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.setCode(code);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> R <span class="title">data</span><span class="params">(String key, Object value)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.data.put(key, value);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> R <span class="title">data</span><span class="params">(Map&lt;String, Object&gt; map)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.setData(map);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>类似于：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line"> <span class="attr">&quot;success&quot;</span>: <span class="literal">true</span>,</span><br><span class="line"> <span class="attr">&quot;code&quot;</span>: <span class="number">20000</span>,</span><br><span class="line"> <span class="attr">&quot;message&quot;</span>: <span class="string">&quot;成功&quot;</span>,</span><br><span class="line"> <span class="attr">&quot;data&quot;</span>: &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<p>Nginx的使用</p>
+<p>修改nginx.conf，实现反向代理，请求转发</p>
+<p>在http括号内加上：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">server&#123;</span><br><span class="line">         listen     9001;</span><br><span class="line">         server_name   localhost;</span><br><span class="line">         client_max_body_size 1024M;</span><br><span class="line">         location ~&#x2F;eduservice&#x2F;&#123;</span><br><span class="line">             proxy_pass http:&#x2F;&#x2F;localhost:8001;</span><br><span class="line">         &#125;</span><br><span class="line">         location ~&#x2F;eduoss&#x2F;&#123;</span><br><span class="line">             proxy_pass http:&#x2F;&#x2F;localhost:8002;</span><br><span class="line">         &#125;</span><br><span class="line">         location ~&#x2F;eduvod&#x2F;&#123;</span><br><span class="line">             proxy_pass http:&#x2F;&#x2F;localhost:8003;</span><br><span class="line">         &#125;</span><br><span class="line">         location ~&#x2F;educms&#x2F;&#123;</span><br><span class="line">             proxy_pass http:&#x2F;&#x2F;localhost:8004;</span><br><span class="line">         &#125;</span><br><span class="line">         location ~&#x2F;educenter&#x2F;&#123;</span><br><span class="line">             proxy_pass http:&#x2F;&#x2F;localhost:8150;</span><br><span class="line">         &#125;</span><br><span class="line">         location ~&#x2F;edumsm&#x2F;&#123;</span><br><span class="line">             proxy_pass http:&#x2F;&#x2F;localhost:8006;</span><br><span class="line">         &#125;</span><br><span class="line">         location ~&#x2F;eduorder&#x2F;&#123;</span><br><span class="line">             proxy_pass http:&#x2F;&#x2F;localhost:8007;</span><br><span class="line">         &#125;</span><br><span class="line">         location ~&#x2F;staservice&#x2F;&#123;</span><br><span class="line">             proxy_pass http:&#x2F;&#x2F;localhost:8008;</span><br><span class="line">         &#125;</span><br><span class="line">         location ~&#x2F;admin&#x2F;&#123;</span><br><span class="line">             proxy_pass http:&#x2F;&#x2F;localhost:8009;</span><br><span class="line">         &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>阿里云对象存储OSS的使用</p>
+<p>创建模块service_oss</p>
+<p>配置文件</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#服务端口</span></span><br><span class="line"><span class="meta">server.port</span>=<span class="string">8002</span></span><br><span class="line"><span class="comment">#服务名</span></span><br><span class="line"><span class="meta">spring.application.name</span>=<span class="string">service-oss</span></span><br><span class="line"><span class="comment">#环境设置：dev、test、prod</span></span><br><span class="line"><span class="meta">spring.profiles.active</span>=<span class="string">dev</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#阿里云 OSS</span></span><br><span class="line"><span class="comment">#不同的服务器，地址不同</span></span><br><span class="line"><span class="meta">aliyun.oss.file.endpoint</span>=<span class="string">oss-cn-beijing.aliyuncs.com</span></span><br><span class="line"><span class="meta">aliyun.oss.file.keyid</span>=<span class="string">LTAI4G8eTkF164AMM7gKDfJ2</span></span><br><span class="line"><span class="meta">aliyun.oss.file.keysecret</span>=<span class="string">A7X99PLbrIOEoUHHIypdMK2zZiajrk</span></span><br><span class="line"><span class="comment">#bucket可以在控制台创建，也可以使用java代码创建</span></span><br><span class="line"><span class="meta">aliyun.oss.file.bucketname</span>=<span class="string">edu-bibofu</span></span><br><span class="line"></span><br><span class="line"><span class="meta">spring.servlet.multipart.max-file-size</span>=<span class="string">100MB</span></span><br><span class="line"><span class="meta">spring.servlet.multipart.max-request-size</span>=<span class="string">100MB</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># nacos服务地址</span></span><br><span class="line"><span class="meta">spring.cloud.nacos.discovery.server-addr</span>=<span class="string">127.0.0.1:8848</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>开通阿里云OSS服务</p>
+<p>阿里云官网有详细API和SDK文档，此处用到了SDK开发（API相对更加底层）</p>
+<p>上传讲师头像核心代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">OssServiceImpl</span> <span class="keyword">implements</span> <span class="title">OssService</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">uploadFileAvatar</span><span class="params">(MultipartFile file)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 工具类获取值</span></span><br><span class="line">        String endpoint = ConstantPropertiesUtil.END_POINT;</span><br><span class="line">        String accessKeyId = ConstantPropertiesUtil.ACCESS_KEY_ID;</span><br><span class="line">        String accessKeySecret = ConstantPropertiesUtil.ACCESS_KEY_SECRET;</span><br><span class="line">        String bucketName = ConstantPropertiesUtil.BUCKET_NAME;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">// 创建OSS实例。</span></span><br><span class="line">            OSS ossClient = <span class="keyword">new</span> OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);</span><br><span class="line"></span><br><span class="line">            <span class="comment">//获取上传文件输入流</span></span><br><span class="line">            InputStream inputStream = file.getInputStream();</span><br><span class="line">            <span class="comment">//获取文件名称</span></span><br><span class="line">            String fileName = file.getOriginalFilename();</span><br><span class="line"></span><br><span class="line">            <span class="comment">//1 在文件名称里面添加随机唯一的值</span></span><br><span class="line">            String uuid = UUID.randomUUID().toString().replaceAll(<span class="string">&quot;-&quot;</span>,<span class="string">&quot;&quot;</span>);</span><br><span class="line">            <span class="comment">// yuy76t5rew01.jpg</span></span><br><span class="line">            fileName = uuid+fileName;</span><br><span class="line"></span><br><span class="line">            <span class="comment">//2 把文件按照日期进行分类</span></span><br><span class="line">            <span class="comment">//获取当前日期</span></span><br><span class="line">      </span><br><span class="line">            String datePath = <span class="keyword">new</span> DateTime().toString(<span class="string">&quot;yyyy/MM/dd&quot;</span>);</span><br><span class="line">            <span class="comment">//拼接</span></span><br><span class="line">            fileName = datePath+<span class="string">&quot;/&quot;</span>+fileName;</span><br><span class="line"></span><br><span class="line">            <span class="comment">//调用oss方法实现上传</span></span><br><span class="line">            <span class="comment">//第一个参数  Bucket名称</span></span><br><span class="line">            <span class="comment">//第二个参数  上传到oss文件路径和文件名称   aa/bb/1.jpg</span></span><br><span class="line">            <span class="comment">//第三个参数  上传文件输入流</span></span><br><span class="line">            ossClient.putObject(bucketName,fileName , inputStream);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 关闭OSSClient。</span></span><br><span class="line">            ossClient.shutdown();</span><br><span class="line"></span><br><span class="line">            <span class="comment">//把上传之后文件路径返回</span></span><br><span class="line">            <span class="comment">//需要把上传到阿里云oss路径手动拼接出来</span></span><br><span class="line">       </span><br><span class="line">            String url = <span class="string">&quot;https://&quot;</span>+bucketName+<span class="string">&quot;.&quot;</span>+endpoint+<span class="string">&quot;/&quot;</span>+fileName;</span><br><span class="line">            <span class="keyword">return</span> url;</span><br><span class="line">        &#125;<span class="keyword">catch</span>(Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>这里要注意，因为SpringBoot默认会加载数据库，而本模块没有配置数据库，启动时会报错</p>
+<p>解决办法：在启动类上加注解</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication(exclude = DataSourceAutoConfiguration.class)</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<p>EasyExcel的简单使用</p>
+<p>场景：通过excel文件导入课程分类，有一级分类和二级分类</p>
+<p>比如：后台开发：java，c++，go</p>
+<p>​            前端开发：vue，nodejs</p>
+<p>简单测试</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DemoData</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ExcelProperty(value = &quot;学生编号&quot;,index = 0)</span></span><br><span class="line">    <span class="keyword">private</span> Integer sno;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ExcelProperty(value = &quot;学生姓名&quot;,index = 1)</span></span><br><span class="line">    <span class="keyword">private</span> String sname;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestEasyExcel</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> List&lt;DemoData&gt; <span class="title">getList</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">        List&lt;DemoData&gt; list=<span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">            DemoData d=<span class="keyword">new</span> DemoData();</span><br><span class="line">            d.setSno(i+<span class="number">1</span>);</span><br><span class="line">            d.setSname(<span class="string">&quot;jack&quot;</span>+i);</span><br><span class="line">            list.add(d);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> list;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test1</span><span class="params">()</span></span>&#123;</span><br><span class="line">        String filename=<span class="string">&quot;/home/bibofu/write.xlsx&quot;</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        EasyExcel.write(filename,DemoData.class).sheet(<span class="string">&quot;学生列表&quot;</span>).doWrite(getList());</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test2</span><span class="params">()</span></span>&#123;</span><br><span class="line">        String fileName = <span class="string">&quot;/home/bibofu/write.xlsx&quot;</span>;</span><br><span class="line">        <span class="comment">// 这里 需要指定读用哪个class去读，然后读取第一个sheet 文件流会自动关闭</span></span><br><span class="line">        EasyExcel.read(fileName, DemoData.class, <span class="keyword">new</span> ExcelListener()).sheet().doRead();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<p>项目中的使用</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SubjectExcelListener</span> <span class="keyword">extends</span> <span class="title">AnalysisEventListener</span>&lt;<span class="title">SubjectData</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">//因为SubjectExcelListener不能交给spring进行管理，需要自己new，不能注入其他对象</span></span><br><span class="line">    <span class="comment">//不能实现数据库操作</span></span><br><span class="line">    <span class="keyword">public</span> EduSubjectService subjectService;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SubjectExcelListener</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SubjectExcelListener</span><span class="params">(EduSubjectService subjectService)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.subjectService = subjectService;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//读取excel内容，一行一行进行读取</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">invoke</span><span class="params">(SubjectData subjectData, AnalysisContext analysisContext)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(subjectData == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> MyException(<span class="number">20001</span>,<span class="string">&quot;文件数据为空&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//一行一行读取，每次读取有两个值，第一个值一级分类，第二个值二级分类</span></span><br><span class="line">        <span class="comment">//判断一级分类是否重复</span></span><br><span class="line">        EduSubject existOneSubject = <span class="keyword">this</span>.existOneSubject(subjectService, subjectData.getOneSubjectName());</span><br><span class="line">        <span class="keyword">if</span>(existOneSubject == <span class="keyword">null</span>) &#123; <span class="comment">//没有相同一级分类，进行添加</span></span><br><span class="line">            existOneSubject = <span class="keyword">new</span> EduSubject();</span><br><span class="line">            existOneSubject.setParentId(<span class="string">&quot;0&quot;</span>);</span><br><span class="line">            existOneSubject.setTitle(subjectData.getOneSubjectName());<span class="comment">//一级分类名称</span></span><br><span class="line">            subjectService.save(existOneSubject);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//获取一级分类id值</span></span><br><span class="line">        String pid = existOneSubject.getId();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//添加二级分类</span></span><br><span class="line">        <span class="comment">//判断二级分类是否重复</span></span><br><span class="line">        EduSubject existTwoSubject = <span class="keyword">this</span>.existTwoSubject(subjectService, subjectData.getTwoSubjectName(), pid);</span><br><span class="line">        <span class="keyword">if</span>(existTwoSubject == <span class="keyword">null</span>) &#123;</span><br><span class="line">            existTwoSubject = <span class="keyword">new</span> EduSubject();</span><br><span class="line">            existTwoSubject.setParentId(pid);</span><br><span class="line">            existTwoSubject.setTitle(subjectData.getTwoSubjectName());<span class="comment">//二级分类名称</span></span><br><span class="line">            subjectService.save(existTwoSubject);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//判断一级分类不能重复添加</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> EduSubject <span class="title">existOneSubject</span><span class="params">(EduSubjectService subjectService, String name)</span> </span>&#123;</span><br><span class="line">        QueryWrapper&lt;EduSubject&gt; wrapper = <span class="keyword">new</span> QueryWrapper&lt;&gt;();</span><br><span class="line">        wrapper.eq(<span class="string">&quot;title&quot;</span>,name);</span><br><span class="line">        wrapper.eq(<span class="string">&quot;parent_id&quot;</span>,<span class="string">&quot;0&quot;</span>);</span><br><span class="line">        EduSubject oneSubject = subjectService.getOne(wrapper);</span><br><span class="line">        <span class="keyword">return</span> oneSubject;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//判断二级分类不能重复添加</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> EduSubject <span class="title">existTwoSubject</span><span class="params">(EduSubjectService subjectService,String name,String pid)</span> </span>&#123;</span><br><span class="line">        QueryWrapper&lt;EduSubject&gt; wrapper = <span class="keyword">new</span> QueryWrapper&lt;&gt;();</span><br><span class="line">        wrapper.eq(<span class="string">&quot;title&quot;</span>,name);</span><br><span class="line">        wrapper.eq(<span class="string">&quot;parent_id&quot;</span>,pid);</span><br><span class="line">        EduSubject twoSubject = subjectService.getOne(wrapper);</span><br><span class="line">        <span class="keyword">return</span> twoSubject;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doAfterAllAnalysed</span><span class="params">(AnalysisContext analysisContext)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//添加课程分类</span></span><br><span class="line"></span><br><span class="line">   <span class="meta">@Override</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">saveSubject</span><span class="params">(MultipartFile file,EduSubjectService subjectService)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">       <span class="keyword">try</span> &#123;</span><br><span class="line">           <span class="comment">//文件输入流</span></span><br><span class="line">           InputStream in = file.getInputStream();</span><br><span class="line">           <span class="comment">//调用方法进行读取</span></span><br><span class="line">           EasyExcel.read(in, SubjectData.class,<span class="keyword">new</span> SubjectExcelListener(subjectService)).sheet().doRead();</span><br><span class="line">       &#125;<span class="keyword">catch</span>(Exception e)&#123;</span><br><span class="line">           e.printStackTrace();</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<p>阿里云视频点播服务的使用</p>
+<p>场景：在添加小节时，可以加上小节对应的视频</p>
+<p>类似于阿里云OSS，视频点播服务也要先进行开通</p>
+<p>创建模块service_vod</p>
+<p>配置文件</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 服务端口</span></span><br><span class="line"><span class="meta">server.port</span>=<span class="string">8003</span></span><br><span class="line"><span class="comment"># 服务名</span></span><br><span class="line"><span class="meta">spring.application.name</span>=<span class="string">service-vod</span></span><br><span class="line"><span class="comment"># 环境设置：dev、test、prod</span></span><br><span class="line"><span class="meta">spring.profiles.active</span>=<span class="string">dev</span></span><br><span class="line"><span class="comment">#阿里云 vod</span></span><br><span class="line"><span class="comment">#不同的服务器，地址不同</span></span><br><span class="line"><span class="meta">aliyun.vod.file.keyid</span>=<span class="string">LTAI4G8eTkF164AMM7gKDfJ2</span></span><br><span class="line"><span class="meta">aliyun.vod.file.keysecret</span>=<span class="string">A7X99PLbrIOEoUHHIypdMK2zZiajrk</span></span><br><span class="line"><span class="comment"># 最大上传单个文件大小：默认1M</span></span><br><span class="line"><span class="meta">spring.servlet.multipart.max-file-size</span>=<span class="string">1024MB</span></span><br><span class="line"><span class="comment"># 最大置总上传的数据大小 ：默认10M</span></span><br><span class="line"><span class="meta">spring.servlet.multipart.max-request-size</span>=<span class="string">1024MB</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># nacos服务地址</span></span><br><span class="line"><span class="meta">spring.cloud.nacos.discovery.server-addr</span>=<span class="string">127.0.0.1:8848</span></span><br></pre></td></tr></table></figure>
+
+<p>注意配置文件上传大小，nginx中也要配置，否则可能报错</p>
+<p>核心代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;eduvod/video&quot;)</span></span><br><span class="line"><span class="meta">@CrossOrigin</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">VodController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> VodService vodService;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@PostMapping(&quot;uploadVideo&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> R <span class="title">uploadVideo</span><span class="params">(MultipartFile file)</span></span>&#123;</span><br><span class="line"></span><br><span class="line">        String id=vodService.uploadAliVideo(file);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> R.ok().data(<span class="string">&quot;videoId&quot;</span>,id);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//根据视频id删除阿里云视频</span></span><br><span class="line">    <span class="meta">@DeleteMapping(&quot;deleteAliVideo/&#123;id&#125;&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> R <span class="title">deleteVideo</span><span class="params">(<span class="meta">@PathVariable</span> String id)</span></span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">//初始化对象</span></span><br><span class="line">            DefaultAcsClient client = InitVodClient.initVodClient(ConstantVodUtils.ACCESS_KEY_ID, ConstantVodUtils.ACCESS_KEY_SECRET);</span><br><span class="line">            <span class="comment">//创建删除视频request对象</span></span><br><span class="line">            DeleteVideoRequest request = <span class="keyword">new</span> DeleteVideoRequest();</span><br><span class="line">            <span class="comment">//向request设置视频id</span></span><br><span class="line">            request.setVideoIds(id);</span><br><span class="line">            <span class="comment">//调用初始化对象的方法实现删除</span></span><br><span class="line">            client.getAcsResponse(request);</span><br><span class="line">            <span class="keyword">return</span> R.ok();</span><br><span class="line">        &#125;<span class="keyword">catch</span>(Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> MyException(<span class="number">20001</span>,<span class="string">&quot;删除视频失败&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//删除多个阿里云视频的方法</span></span><br><span class="line">    <span class="comment">//参数多个视频id  List videoIdList</span></span><br><span class="line">    <span class="meta">@DeleteMapping(&quot;delete-batch&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> R <span class="title">deleteBatch</span><span class="params">(<span class="meta">@RequestParam(&quot;videoIdList&quot;)</span> List&lt;String&gt; videoIdList)</span> </span>&#123;</span><br><span class="line">        vodService.removeMoreAlyVideo(videoIdList);</span><br><span class="line">        <span class="keyword">return</span> R.ok();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">//根据视频id获取播放凭证</span></span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping(&quot;getPlayAuth/&#123;id&#125;&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> R <span class="title">getId</span><span class="params">(<span class="meta">@PathVariable</span> String id)</span></span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">//创建初始化对象</span></span><br><span class="line">            DefaultAcsClient client =</span><br><span class="line">                    InitVodClient.initVodClient(ConstantVodUtils.ACCESS_KEY_ID, ConstantVodUtils.ACCESS_KEY_SECRET);</span><br><span class="line">            <span class="comment">//创建获取凭证request和response对象</span></span><br><span class="line">            GetVideoPlayAuthRequest request = <span class="keyword">new</span> GetVideoPlayAuthRequest();</span><br><span class="line">            <span class="comment">//向request设置视频id</span></span><br><span class="line">            request.setVideoId(id);</span><br><span class="line">            <span class="comment">//调用方法得到凭证</span></span><br><span class="line">            GetVideoPlayAuthResponse response = client.getAcsResponse(request);</span><br><span class="line">            String playAuth = response.getPlayAuth();</span><br><span class="line">            <span class="keyword">return</span> R.ok().data(<span class="string">&quot;playAuth&quot;</span>,playAuth);</span><br><span class="line">        &#125;<span class="keyword">catch</span>(Exception e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> MyException(<span class="number">20001</span>,<span class="string">&quot;获取凭证失败&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">VodServiceImpl</span> <span class="keyword">implements</span> <span class="title">VodService</span> </span>&#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">uploadAliVideo</span><span class="params">(MultipartFile file)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">//accessKeyId, accessKeySecret</span></span><br><span class="line">            <span class="comment">//fileName：上传文件原始名称</span></span><br><span class="line">            <span class="comment">// 01.03.09.mp4</span></span><br><span class="line">            String fileName = file.getOriginalFilename();</span><br><span class="line">            <span class="comment">//title：上传之后显示名称</span></span><br><span class="line">            String title = fileName.substring(<span class="number">0</span>, fileName.lastIndexOf(<span class="string">&quot;.&quot;</span>));</span><br><span class="line">            <span class="comment">//inputStream：上传文件输入流</span></span><br><span class="line">            InputStream inputStream = file.getInputStream();</span><br><span class="line">            UploadStreamRequest request = <span class="keyword">new</span> UploadStreamRequest(ConstantVodUtils.ACCESS_KEY_ID,ConstantVodUtils.ACCESS_KEY_SECRET, title, fileName, inputStream);</span><br><span class="line"></span><br><span class="line">            UploadVideoImpl uploader = <span class="keyword">new</span> UploadVideoImpl();</span><br><span class="line">            UploadStreamResponse response = uploader.uploadStream(request);</span><br><span class="line"></span><br><span class="line">            String videoId = <span class="keyword">null</span>;</span><br><span class="line">            <span class="keyword">if</span> (response.isSuccess()) &#123;</span><br><span class="line">                videoId = response.getVideoId();</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123; <span class="comment">//如果设置回调URL无效，不影响视频上传，可以返回VideoId同时会返回错误码。其他情况上传失败时，VideoId为空，此时需要根据返回错误码分析具体错误原因</span></span><br><span class="line">                videoId = response.getVideoId();</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> videoId;</span><br><span class="line">        &#125;<span class="keyword">catch</span>(Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">removeMoreAlyVideo</span><span class="params">(List&lt;String&gt; videoIdList)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">//初始化对象</span></span><br><span class="line">            DefaultAcsClient client = InitVodClient.initVodClient(ConstantVodUtils.ACCESS_KEY_ID, ConstantVodUtils.ACCESS_KEY_SECRET);</span><br><span class="line">            <span class="comment">//创建删除视频request对象</span></span><br><span class="line">            DeleteVideoRequest request = <span class="keyword">new</span> DeleteVideoRequest();</span><br><span class="line"></span><br><span class="line">            <span class="comment">//videoIdList值转换成 1,2,3</span></span><br><span class="line">            String videoIds = StringUtils.join(videoIdList.toArray(), <span class="string">&quot;,&quot;</span>);</span><br><span class="line"></span><br><span class="line">            <span class="comment">//向request设置视频id</span></span><br><span class="line">            request.setVideoIds(videoIds);</span><br><span class="line">            <span class="comment">//调用初始化对象的方法实现删除</span></span><br><span class="line">            client.getAcsResponse(request);</span><br><span class="line">        &#125;<span class="keyword">catch</span>(Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> MyException(<span class="number">20001</span>,<span class="string">&quot;删除视频失败&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>这里写的不规范，controller中不应写核心业务逻辑…..</p>
+<h2 id="其他核心controller"><a href="#其他核心controller" class="headerlink" title="其他核心controller"></a>其他核心controller</h2><h3 id="讲师部分"><a href="#讲师部分" class="headerlink" title="讲师部分"></a>讲师部分</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Api(description=&quot;讲师管理&quot;)</span></span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/eduservice/teacher&quot;)</span></span><br><span class="line"><span class="meta">@CrossOrigin</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">EduTeacherController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> EduTeacherService teacherService;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@ApiOperation(value = &quot;所有讲师列表&quot;)</span></span><br><span class="line">    <span class="comment">//1. 查询讲师表所有数据</span></span><br><span class="line">    <span class="meta">@GetMapping(&quot;findAll&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> R <span class="title">finaAll</span><span class="params">()</span></span>&#123;</span><br><span class="line">        List&lt;EduTeacher&gt; teachers = teacherService.list(<span class="keyword">null</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> R.ok().data(<span class="string">&quot;teacher&quot;</span>,teachers);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@ApiOperation(value = &quot;根据id删除讲师&quot;)</span></span><br><span class="line">    <span class="comment">//2. 逻辑删除讲师,id值通过路径传递</span></span><br><span class="line">    <span class="meta">@DeleteMapping(&quot;&#123;id&#125;&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> R <span class="title">deleteTeacher</span><span class="params">(<span class="meta">@PathVariable</span> String id)</span></span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">boolean</span> b = teacherService.removeById(id);</span><br><span class="line">        <span class="keyword">if</span> (b)&#123;</span><br><span class="line">            <span class="keyword">return</span> R.ok();</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">return</span> R.error();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">//3. 分页查询讲师</span></span><br><span class="line">    <span class="meta">@GetMapping(&quot;pageTeacher/&#123;current&#125;/&#123;limit&#125;&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> R <span class="title">page</span><span class="params">(<span class="meta">@PathVariable</span> <span class="keyword">long</span> current,<span class="meta">@PathVariable</span> <span class="keyword">long</span> limit)</span></span>&#123;</span><br><span class="line">        Page&lt;EduTeacher&gt; page=<span class="keyword">new</span> Page&lt;&gt;(current,limit);</span><br><span class="line"></span><br><span class="line">        teacherService.page(page,<span class="keyword">null</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">long</span> total = page.getTotal();</span><br><span class="line">        List&lt;EduTeacher&gt; records = page.getRecords();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> R.ok().data(<span class="string">&quot;total&quot;</span>,total).data(<span class="string">&quot;rows&quot;</span>,records);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//4. 条件查询带分页</span></span><br><span class="line">    <span class="meta">@PostMapping(&quot;pageTeacherCondition/&#123;current&#125;/&#123;limit&#125;&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> R <span class="title">pageCondition</span><span class="params">(<span class="meta">@PathVariable</span> <span class="keyword">long</span> current, <span class="meta">@PathVariable</span> <span class="keyword">long</span> limit,</span></span></span><br><span class="line"><span class="function"><span class="params">                           <span class="meta">@RequestBody(required = false)</span> TeacherQuery teacherQuery)</span></span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//创建page对象</span></span><br><span class="line">        Page&lt;EduTeacher&gt; pageTeacher=<span class="keyword">new</span> Page&lt;&gt;(current,limit);</span><br><span class="line"></span><br><span class="line">        QueryWrapper&lt;EduTeacher&gt; wrapper=<span class="keyword">new</span> QueryWrapper&lt;&gt;();</span><br><span class="line"></span><br><span class="line">        String name = teacherQuery.getName();</span><br><span class="line">        Integer level = teacherQuery.getLevel();</span><br><span class="line">        String begin = teacherQuery.getBegin();</span><br><span class="line">        String end = teacherQuery.getEnd();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//判断条件值是否为空，不为空则拼接</span></span><br><span class="line">        <span class="keyword">if</span> (!StringUtils.isEmpty(name))&#123;</span><br><span class="line">            wrapper.like(<span class="string">&quot;name&quot;</span>,name);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (!StringUtils.isEmpty(level))&#123;</span><br><span class="line">            wrapper.eq(<span class="string">&quot;level&quot;</span>,level);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (!StringUtils.isEmpty(begin))&#123;</span><br><span class="line">            wrapper.ge(<span class="string">&quot;gmt_create&quot;</span>,begin);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (!StringUtils.isEmpty(end))&#123;</span><br><span class="line">            wrapper.eq(<span class="string">&quot;gmt_modified&quot;</span>,end);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        teacherService.page(pageTeacher,wrapper);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">long</span> total = pageTeacher.getTotal();</span><br><span class="line">        List&lt;EduTeacher&gt; records = pageTeacher.getRecords();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> R.ok().data(<span class="string">&quot;total&quot;</span>,total).data(<span class="string">&quot;rows&quot;</span>,records);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">//5. 添加讲师</span></span><br><span class="line">    <span class="meta">@PostMapping(&quot;addTeacher&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> R <span class="title">add</span><span class="params">(<span class="meta">@RequestBody</span> EduTeacher teacher)</span></span>&#123;</span><br><span class="line">        <span class="keyword">boolean</span> save = teacherService.save(teacher);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (save)&#123;</span><br><span class="line">            <span class="keyword">return</span> R.ok();</span><br><span class="line">        &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> R.error();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//6. 根据讲师id进行查询</span></span><br><span class="line">    <span class="meta">@GetMapping(&quot;getTeacher/&#123;id&#125;&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> R <span class="title">getTeacher</span><span class="params">(<span class="meta">@PathVariable</span> String id)</span></span>&#123;</span><br><span class="line"></span><br><span class="line">        EduTeacher teacher = teacherService.getById(id);</span><br><span class="line">        <span class="keyword">return</span> R.ok().data(<span class="string">&quot;teacher&quot;</span>,teacher);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//7. 讲师修改功能</span></span><br><span class="line">    <span class="meta">@PostMapping(&quot;updateTeacher&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> R <span class="title">updateTeacher</span><span class="params">(<span class="meta">@RequestBody</span> EduTeacher teacher)</span></span>&#123;</span><br><span class="line">        <span class="keyword">boolean</span> flag = teacherService.updateById(teacher);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (flag)&#123;</span><br><span class="line">            <span class="keyword">return</span> R.ok();</span><br><span class="line">        &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> R.error();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<p>注意：用到注解@RequestBody时，提交方式不能用get，只能用post</p>
+<h3 id="课程分类部分"><a href="#课程分类部分" class="headerlink" title="课程分类部分"></a>课程分类部分</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/eduservice/subject&quot;)</span></span><br><span class="line"><span class="meta">@CrossOrigin</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">EduSubjectController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> EduSubjectService subjectService;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//添加课程分类</span></span><br><span class="line">    <span class="meta">@PostMapping(&quot;addSubject&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> R <span class="title">addSubject</span><span class="params">(MultipartFile file)</span></span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//上传过来excel文件</span></span><br><span class="line">        subjectService.saveSubject(file,subjectService);</span><br><span class="line">        <span class="keyword">return</span> R.ok();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//课程分类列表</span></span><br><span class="line">    <span class="meta">@GetMapping(&quot;getAllSubject&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> R <span class="title">getAll</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">        List&lt;OneSubject&gt; subjectList=subjectService.getSubjectInfo();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> R.ok().data(<span class="string">&quot;subjectList&quot;</span>,subjectList);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="课程部分"><a href="#课程部分" class="headerlink" title="课程部分"></a>课程部分</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/eduservice/course&quot;)</span></span><br><span class="line"><span class="meta">@CrossOrigin</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">EduCourseController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> EduCourseService courseService;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//添加课程基本信息的方法</span></span><br><span class="line">    <span class="meta">@PostMapping(&quot;addCourseInfo&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> R <span class="title">addCourseInfo</span><span class="params">(<span class="meta">@RequestBody</span> CourseInfoVo courseInfoVo)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//返回添加之后课程id，为了后面添加大纲使用</span></span><br><span class="line">        String id = courseService.saveCourseInfo(courseInfoVo);</span><br><span class="line">        <span class="keyword">return</span> R.ok().data(<span class="string">&quot;courseId&quot;</span>,id);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//根据课程id查课程信息</span></span><br><span class="line">    <span class="meta">@GetMapping(&quot;getCourseInfo/&#123;courseId&#125;&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> R <span class="title">getCourseInfo</span><span class="params">(<span class="meta">@PathVariable</span> String courseId)</span></span>&#123;</span><br><span class="line"></span><br><span class="line">        CourseInfoVo courseInfo=courseService.getCourseInfo(courseId);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> R.ok().data(<span class="string">&quot;courseInfo&quot;</span>,courseInfo);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//修改课程信息</span></span><br><span class="line">    <span class="meta">@PostMapping(&quot;updateCourseInfo&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> R <span class="title">updateCourseInfo</span><span class="params">(<span class="meta">@RequestBody</span> CourseInfoVo courseInfoVo)</span> </span>&#123;</span><br><span class="line">        courseService.updateCourseInfo(courseInfoVo);</span><br><span class="line">        <span class="keyword">return</span> R.ok();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping(&quot;getPublishCourseInfo/&#123;id&#125;&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> R <span class="title">getPublishCourseInfo</span><span class="params">(<span class="meta">@PathVariable</span> String id)</span></span>&#123;</span><br><span class="line">        CoursePublishVo coursePublish=courseService.coursePublishInfo(id);</span><br><span class="line">        <span class="keyword">return</span> R.ok().data(<span class="string">&quot;coursePublish&quot;</span>,coursePublish);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//课程最终发布</span></span><br><span class="line">    <span class="comment">//修改课程状态</span></span><br><span class="line">    <span class="meta">@PostMapping(&quot;publishCourse/&#123;id&#125;&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> R <span class="title">publishCourse</span><span class="params">(<span class="meta">@PathVariable</span> String id)</span> </span>&#123;</span><br><span class="line">        EduCourse eduCourse = <span class="keyword">new</span> EduCourse();</span><br><span class="line">        eduCourse.setId(id);</span><br><span class="line">        eduCourse.setStatus(<span class="string">&quot;Normal&quot;</span>);<span class="comment">//设置课程发布状态</span></span><br><span class="line">        courseService.updateById(eduCourse);</span><br><span class="line">        <span class="keyword">return</span> R.ok();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> R <span class="title">getCourse</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">        List&lt;EduCourse&gt; courseList = courseService.list(<span class="keyword">null</span>);</span><br><span class="line">        <span class="keyword">return</span> R.ok().data(<span class="string">&quot;courseList&quot;</span>,courseList);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//删除课程</span></span><br><span class="line">    <span class="meta">@DeleteMapping(&quot;&#123;courseId&#125;&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> R <span class="title">deleteCourse</span><span class="params">(<span class="meta">@PathVariable</span> String courseId)</span> </span>&#123;</span><br><span class="line">        courseService.removeCourse(courseId);</span><br><span class="line">        <span class="keyword">return</span> R.ok();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<h3 id="章节部分"><a href="#章节部分" class="headerlink" title="章节部分"></a>章节部分</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/eduservice/chapter&quot;)</span></span><br><span class="line"><span class="meta">@CrossOrigin</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">EduChapterController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> EduChapterService chapterService;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//1 根据课程id获取章节和小节数据列表</span></span><br><span class="line">    <span class="meta">@GetMapping(&quot;getChapterVideo/&#123;courseId&#125;&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> R <span class="title">getChapterVideo</span><span class="params">(<span class="meta">@PathVariable</span> String courseId)</span></span>&#123;</span><br><span class="line"></span><br><span class="line">        List&lt;ChapterVo&gt; list=chapterService.getChapterVideoByCourseId(courseId);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> R.ok().data(<span class="string">&quot;chapterList&quot;</span>,list);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//2 添加章节</span></span><br><span class="line">    <span class="meta">@PostMapping(&quot;addChapter&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> R <span class="title">addChapter</span><span class="params">(<span class="meta">@RequestBody</span> EduChapter chapter)</span></span>&#123;</span><br><span class="line">        chapterService.save(chapter);</span><br><span class="line">        <span class="keyword">return</span> R.ok();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//3 根据章节id查询</span></span><br><span class="line">    <span class="meta">@GetMapping(&quot;getChapterInfo/&#123;chapterId&#125;&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> R <span class="title">getChapter</span><span class="params">(<span class="meta">@PathVariable</span> String chapterId)</span></span>&#123;</span><br><span class="line"></span><br><span class="line">        EduChapter chapter = chapterService.getById(chapterId);</span><br><span class="line">        <span class="keyword">return</span> R.ok().data(<span class="string">&quot;chapter&quot;</span>,chapter);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">//4 修改章节</span></span><br><span class="line">    <span class="meta">@PostMapping(&quot;updateChapter&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> R <span class="title">update</span><span class="params">(<span class="meta">@RequestBody</span> EduChapter chapter)</span></span>&#123;</span><br><span class="line"></span><br><span class="line">        chapterService.updateById(chapter);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> R.ok();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//5 删除章节</span></span><br><span class="line">    <span class="meta">@DeleteMapping(&quot;&#123;chapterId&#125;&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> R <span class="title">delete</span><span class="params">(<span class="meta">@PathVariable</span> String chapterId)</span></span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">boolean</span> flag = chapterService.deleteChapter(chapterId);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (flag)&#123;</span><br><span class="line">            <span class="keyword">return</span> R.ok();</span><br><span class="line"></span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">return</span> R.error();</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </div>
+
+    
+    
+    
+
+
+     
+       <div>
+         <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:24px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+
+       </div>
+     
+        <div class="reward-container">
+  <div>Your support will be the driving force of my creation</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="bibofu 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.png" alt="bibofu 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>bibofu
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://bibofu24.com/2021/05/16/onlineEdu_2/" title="在线教育项目 2">https://bibofu24.com/2021/05/16/onlineEdu_2/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E9%A1%B9%E7%9B%AE/" rel="tag"># 项目</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/05/16/JVM_3/" rel="prev" title="JVM 3">
+      <i class="fa fa-chevron-left"></i> JVM 3
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/05/16/onlineEdu_3/" rel="next" title="在线教育项目 3">
+      在线教育项目 3 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="lv-container" data-id="city" data-uid="MTAyMC81MzMyNy8yOTgwMQ=="></div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%8E%E5%8F%B0%E7%AE%A1%E7%90%86%E6%A8%A1%E5%9D%97"><span class="nav-number">1.</span> <span class="nav-text">后台管理模块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E6%A0%B8%E5%BF%83controller"><span class="nav-number">2.</span> <span class="nav-text">其他核心controller</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%B2%E5%B8%88%E9%83%A8%E5%88%86"><span class="nav-number">2.1.</span> <span class="nav-text">讲师部分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%BE%E7%A8%8B%E5%88%86%E7%B1%BB%E9%83%A8%E5%88%86"><span class="nav-number">2.2.</span> <span class="nav-text">课程分类部分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%BE%E7%A8%8B%E9%83%A8%E5%88%86"><span class="nav-number">2.3.</span> <span class="nav-text">课程部分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AB%A0%E8%8A%82%E9%83%A8%E5%88%86"><span class="nav-number">2.4.</span> <span class="nav-text">章节部分</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="bibofu"
+      src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name">bibofu</p>
+  <div class="site-description" itemprop="description">记录学习，分享生活</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">35</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/bibofu" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;bibofu" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/bibofu24@gmail.com" title="E-Mail → bibofu24@gmail.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/7401945924" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;7401945924" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/kobeball6" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;kobeball6" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://google.com/" title="https:&#x2F;&#x2F;google.com" rel="noopener" target="_blank">google</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://baidu.com/" title="https:&#x2F;&#x2F;baidu.com" rel="noopener" target="_blank">baidu</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">bibofu</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">128k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">1:56</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/canvas_lines.min.js"></script>
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+<script>
+NexT.utils.loadComments(document.querySelector('#lv-container'), () => {
+  window.livereOptions = {
+    refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+});
+</script>
+
+</body>
+</html>
