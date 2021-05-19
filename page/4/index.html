@@ -197,6 +197,191 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bibofu24.com/2021/04/25/JUC_2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="bibofu">
+      <meta itemprop="description" content="记录学习，分享生活">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="二十六画生">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/04/25/JUC_2/" class="post-title-link" itemprop="url">JUC 2</a>
+        </h2>
+
+        <div class="post-meta">
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-04-25 17:07:30" itemprop="dateCreated datePublished" datetime="2021-04-25T17:07:30+08:00">2021-04-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-05-16 17:02:09" itemprop="dateModified" datetime="2021-05-16T17:02:09+08:00">2021-05-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java%E5%B9%B6%E5%8F%91%E7%9F%A5%E8%AF%86/" itemprop="url" rel="index"><span itemprop="name">java并发知识</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>5.6k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>5 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="1-volatile"><a href="#1-volatile" class="headerlink" title="1. volatile"></a>1. volatile</h2><p>JVM提供的轻量级同步机制</p>
+<p>synchronized关键字用来加锁，volatile只是用来保证变量的可见性，通常适合于一个线程写，多个线程读的情形</p>
+<p>volatile不保证线程安全，他不保证原子性</p>
+<p>volatile禁止指令重排</p>
+<p>volatile保证可见性</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">VolatileDemo</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="comment">/*volatile*/</span> <span class="keyword">boolean</span> flag=<span class="keyword">true</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">new</span> Thread(()-&gt;&#123;</span><br><span class="line">            <span class="keyword">while</span> (flag)&#123;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">            System.out.println(<span class="string">&quot;Thread1 结束&quot;</span>);</span><br><span class="line">        &#125;).start();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Thread.sleep(<span class="number">1000</span>);</span><br><span class="line">        &#125;<span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">&quot;turn flag off&quot;</span>);</span><br><span class="line">        flag=<span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="https://www.javazhiyin.com/wp-content/uploads/2018/07/39338c36ecc3e22e264d01f52092db49.png" alt="çº¿ç¨Bè¯»volatileåçåå­ç¶æå¾"></p>
+<p>volatile通过内存屏障禁止指令重排</p>
+<p><img src="https://www.javazhiyin.com/wp-content/uploads/2018/07/498744fe0c99a6a4cd451cbf1cbe3980.png" alt="volatileåæå¥åå­å±éç¤ºæå¾"></p>
+<p><img src="https://www.javazhiyin.com/wp-content/uploads/2018/07/6d5b39322a646baf3d61f20b4fa6f4f9.png" alt="volatileè¯»æå¥åå­å±éç¤ºæå¾"></p>
+<p>Volatile实现禁止指令重排优化，从而避免了多线程环境下程序出现乱序执行的现象</p>
+<p>首先了解一个概念，内存屏障（Memory Barrier）又称内存栅栏，是一个CPU指令，它的作用有两个：</p>
+<p>保证特定操作的顺序保证某些变量的内存可见性（利用该特性实现volatile的内存可见性）</p>
+<p>由于编译器和处理器都能执行指令重排的优化，如果在指令键插入一条Memory Barrier则会告诉编译器和CPU,不管什么指令都不能和这条Memory Barrier指令重排序，也就是说，通过插入内存屏障前后的指令执行重排序优化。内存屏障另外一个作用是刷新出各种CPU的缓存数，因此任何cpu上的线程都能读取到这些数据的最新版本</p>
+<p>也就是在Volatile的写和读的时候，加入屏障，防止出现指令重排线程安全得到保证</p>
+<p>工作内存与主内存同步延迟现象导致的可见性问题</p>
+<ul>
+<li>可以使用synchronized或volatile关键字解决，它们都可以使得一个线程修改后的变量立即对其他线程可见。</li>
+<li>对于指令重排导致的可见性问题和有序性问题</li>
+<li>可以利用volatile关键字解决，因为volatile的另一个作用就是禁止重排序优化。</li>
+</ul>
+<h2 id="2-CAS"><a href="#2-CAS" class="headerlink" title="2. CAS"></a>2. CAS</h2><p>compare and set</p>
+<p><img src="https://z3.ax1x.com/2021/05/15/g6jUPI.png" alt="img"></p>
+<p><img src="https://z3.ax1x.com/2021/05/15/g6j6aj.png" alt="img"></p>
+<p>CAS ： 比较当前工作内存中的值和主内存中的值，如果这个值是期望的，那么则执行操作！如果不是就一直循环！<br>缺点：<br>1、 循环会耗时<br>2、一次性只能保证一个共享变量的原子性<br>3、ABA问题</p>
+<p><img src="https://z3.ax1x.com/2021/05/15/g6j7dJ.png" alt="img"></p>
+<p>解决ABA 问题，引入原子引用！ 对应的思想：乐观锁！<br>带版本号 的原子操作！</p>
+<h2 id="3-线程池"><a href="#3-线程池" class="headerlink" title="3. 线程池"></a>3. 线程池</h2><p><img src="https://z3.ax1x.com/2021/05/15/g6vKoj.png" alt="image 20210304161132403"></p>
+<p><img src="https://z3.ax1x.com/2021/05/15/gcS1fA.png" alt="dgsa"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Demo1</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">   <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 三大方法</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">     ExecutorService threadPool1 = Executors.newSingleThreadExecutor();<span class="comment">// 单个线程</span></span><br><span class="line"><span class="comment">//   ExecutorService threadPool2= Executors.newFixedThreadPool(5);// 创建一个固定大小的线程池</span></span><br><span class="line">  ExecutorService threadPool3= Executors.newCachedThreadPool();<span class="comment">// 可伸缩的，遇强则强，遇弱则弱</span></span><br><span class="line">   <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++) &#123;</span><br><span class="line"></span><br><span class="line">            threadPool3.execute(()-&gt;&#123;</span><br><span class="line">                System.out.println(Thread.currentThread().getName()+<span class="string">&quot; ok &quot;</span>);</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        threadPool3.shutdown();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    System.out.println(<span class="string">&quot;---------------&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 7大参数：</span></span><br><span class="line"><span class="comment">     * int corePoolSize, // 核心线程池大小</span></span><br><span class="line"><span class="comment">     * int maximumPoolSize, // 最大核心线程池大小</span></span><br><span class="line"><span class="comment">     * long keepAliveTime, // 超时了没有人调用就会释放</span></span><br><span class="line"><span class="comment">     * TimeUnit unit, // 超时单位</span></span><br><span class="line"><span class="comment">     * BlockingQueue&lt;Runnable&gt; workQueue, // 阻塞队列</span></span><br><span class="line"><span class="comment">     * ThreadFactory threadFactory, // 线程工厂：创建线程的，一般不用动</span></span><br><span class="line"><span class="comment">     * RejectedExecutionHandler handle // 拒绝策略</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 4大拒绝策略：</span></span><br><span class="line"><span class="comment">     * new ThreadPoolExecutor.AbortPolicy() // 银行满了，还有人进来，不处理这个人的，抛出异常</span></span><br><span class="line"><span class="comment">     * new ThreadPoolExecutor.CallerRunsPolicy() // 哪来的去哪里！</span></span><br><span class="line"><span class="comment">     * new ThreadPoolExecutor.DiscardPolicy() //队列满了，丢掉任务，不会抛出异常！</span></span><br><span class="line"><span class="comment">     * new ThreadPoolExecutor.DiscardOldestPolicy() //队列满了，尝试去和最早的竞争，也不会抛出异常！</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line"></span><br><span class="line">    System.out.println(Runtime.getRuntime().availableProcessors());</span><br><span class="line"></span><br><span class="line">    System.out.println(<span class="string">&quot;--------------&quot;</span>);</span><br><span class="line">    <span class="comment">//自定义线程池</span></span><br><span class="line">    ExecutorService threadPool2 = <span class="keyword">new</span> ThreadPoolExecutor(</span><br><span class="line">            <span class="number">2</span>,</span><br><span class="line">            <span class="number">5</span>,</span><br><span class="line">            <span class="number">3</span>,</span><br><span class="line">            TimeUnit.SECONDS,</span><br><span class="line">            <span class="keyword">new</span> LinkedBlockingDeque&lt;&gt;(<span class="number">3</span>),</span><br><span class="line">            Executors.defaultThreadFactory(),</span><br><span class="line">            <span class="keyword">new</span> ThreadPoolExecutor.AbortPolicy()</span><br><span class="line"></span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">9</span>; i++) &#123;</span><br><span class="line"></span><br><span class="line">            threadPool2.execute(()-&gt;&#123;</span><br><span class="line">                System.out.println(Thread.currentThread().getName()+<span class="string">&quot; ok &quot;</span>);</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        threadPool2.shutdown();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>核心线程池ThreadPoolExecutor内部参数：</p>
+<ol>
+<li>corePoolSize：指定了线程池中的线程数量</li>
+<li>maximumPoolSize：指定了线程池中的最大线程数量</li>
+<li>keepAliveTime：线程池维护线程所允许的空闲时间</li>
+<li>unit: keepAliveTime 的单位。</li>
+<li>workQueue：任务队列，被提交但尚未被执行的任务。</li>
+<li>threadFactory：线程工厂，用于创建线程，一般用默认的即可。</li>
+<li>handler：拒绝策略。当任务太多来不及处理，如何拒绝任务。</li>
+</ol>
+<p><strong>线程池的执行流程</strong></p>
+<ol>
+<li>如果正在运行的线程数量小于 corePoolSize，那么马上创建线程运行这个任务</li>
+<li>如果正在运行的线程数量大于或等于 corePoolSize，那么将这个任务放入队列</li>
+<li>如果这时候队列满了，而且正在运行的线程数量小于 maximumPoolSize，那么还是要创建非核心线程立刻运行这个任务</li>
+<li>如果队列满了，而且正在运行的线程数量大于或等于 maximumPoolSize，那么线程池会抛出异常RejectExecutionException</li>
+</ol>
+<p>线程池的拒绝策略</p>
+<ol>
+<li>ThreadPoolExecutor.<strong>Abort</strong>Policy:丢弃任务并抛出RejectedExecutionException异常。</li>
+<li>ThreadPoolExecutor.<strong>Discard</strong>Policy：丢弃任务，但是不抛出异常。</li>
+<li>ThreadPoolExecutor.<strong>DiscardOldest</strong>Policy：丢弃队列最前面的任务，然后重新提交被拒绝的任务</li>
+<li>ThreadPoolExecutor.<strong>CallerRuns</strong>Policy：由调用线程（提交任务的线程）处理该任务</li>
+</ol>
+<h2 id="4-ThreadLocal"><a href="#4-ThreadLocal" class="headerlink" title="4. ThreadLocal"></a>4. ThreadLocal</h2><p>案例演示</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Demo1</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String content;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> String <span class="title">getContent</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> content;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">setContent</span><span class="params">(String content)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.content = content;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Demo1 demo = <span class="keyword">new</span> Demo1();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++) &#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">            <span class="keyword">new</span> Thread(()-&gt;&#123;</span><br><span class="line">                demo.setContent(Thread.currentThread().getName() + <span class="string">&quot;的数据&quot;</span>);</span><br><span class="line">                System.out.println(<span class="string">&quot;-----------------------&quot;</span>);</span><br><span class="line">                System.out.println(Thread.currentThread().getName() + <span class="string">&quot;---&gt;&quot;</span> + demo.getContent());</span><br><span class="line">            &#125;,<span class="string">&quot;线程&quot;</span>+i).start();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>结果：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">-----------------------</span><br><span class="line">-----------------------</span><br><span class="line">线程<span class="number">2</span>---&gt;线程<span class="number">2</span>的数据</span><br><span class="line">-----------------------</span><br><span class="line">线程<span class="number">0</span>---&gt;线程<span class="number">2</span>的数据</span><br><span class="line">线程<span class="number">1</span>---&gt;线程<span class="number">2</span>的数据</span><br><span class="line">-----------------------</span><br><span class="line">线程<span class="number">3</span>---&gt;线程<span class="number">3</span>的数据</span><br><span class="line">-----------------------</span><br><span class="line">线程<span class="number">4</span>---&gt;线程<span class="number">4</span>的数据</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 使用ThreadLocal</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Demo2</span> </span>&#123;</span><br><span class="line">    ThreadLocal&lt;String&gt; t1=<span class="keyword">new</span> ThreadLocal&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String content;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> String <span class="title">getContent</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> t1.get();</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">setContent</span><span class="params">(String content)</span></span>&#123;</span><br><span class="line">        t1.set(content);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        Demo2 demo2 =<span class="keyword">new</span> Demo2();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++) &#123;</span><br><span class="line">            <span class="keyword">new</span> Thread(()-&gt;&#123;</span><br><span class="line">                demo2.setContent(Thread.currentThread().getName()+<span class="string">&quot;的数据&quot;</span>);</span><br><span class="line">                System.out.println(<span class="string">&quot;-------------&quot;</span>);</span><br><span class="line">                System.out.println(Thread.currentThread().getName()+<span class="string">&quot;---&gt;&quot;</span>+ demo2.getContent());</span><br><span class="line">            &#125;,<span class="string">&quot;线程&quot;</span>+i).start();</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>结果：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">-------------</span><br><span class="line">线程<span class="number">0</span>---&gt;线程<span class="number">0</span>的数据</span><br><span class="line">-------------</span><br><span class="line">线程<span class="number">1</span>---&gt;线程<span class="number">1</span>的数据</span><br><span class="line">-------------</span><br><span class="line">线程<span class="number">2</span>---&gt;线程<span class="number">2</span>的数据</span><br><span class="line">-------------</span><br><span class="line">线程<span class="number">3</span>---&gt;线程<span class="number">3</span>的数据</span><br><span class="line">-------------</span><br><span class="line">线程<span class="number">4</span>---&gt;线程<span class="number">4</span>的数据</span><br></pre></td></tr></table></figure>
+
+<p>从结果来看，这样很好的解决了多线程之间数据隔离的问题，十分方便。</p>
+<p>此外，加锁（synchronized）确实也可以解决这个问题，但是在这里是线程数据隔离的问题，并不是多线程共享数据的问题, 在这个案例中使用synchronized关键字是不合适的。</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>synchronized</th>
+<th>ThreadLocal</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>原理</td>
+<td>同步机制采用’以时间换空间’的方式, 只提供了一份变量,让不同的线程排队访问</td>
+<td>ThreadLocal采用’以空间换时间’的方式, 为每一个线程都提供了一份变量的副本,从而实现同时访问而相不干扰</td>
+</tr>
+<tr>
+<td>侧重点</td>
+<td>多个线程之间访问资源的同步</td>
+<td>多线程中让每个线程之间的数据相互隔离</td>
+</tr>
+</tbody></table>
+<p><strong>ThreadLocal的内部结构</strong></p>
+
+      
+    </div>
+
+    
+    
+    
+
+
+     
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://bibofu24.com/2021/04/25/JVM_1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -398,6 +583,236 @@
 <p>6.允许协议继续扩充：</p>
 <p>   技术总是在不断发展的，而新的应用也还会出现。而IPv4的功能是固定不变的。</p>
 <h2 id="3-IP地址和MAC地址"><a href="#3-IP地址和MAC地址" class="headerlink" title="3. IP地址和MAC地址"></a>3. IP地址和MAC地址</h2><p>MAC地址是烧录在网卡或者接口上的<strong>物理地址</strong>，具有<strong>全球唯一性</strong>，一般不能被改变。IP地址是网络中的主机或接口在网络中的<strong>逻辑地址</strong>，在<strong>同一个网络内具有唯一性</strong>。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+
+     
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bibofu24.com/2021/04/25/c_net2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="bibofu">
+      <meta itemprop="description" content="记录学习，分享生活">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="二十六画生">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/04/25/c_net2/" class="post-title-link" itemprop="url">计算机网络 2</a>
+        </h2>
+
+        <div class="post-meta">
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-04-25 17:07:30" itemprop="dateCreated datePublished" datetime="2021-04-25T17:07:30+08:00">2021-04-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-05-16 17:02:39" itemprop="dateModified" datetime="2021-05-16T17:02:39+08:00">2021-05-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>6.5k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>6 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>计算机网络传输层相关知识</p>
+<h2 id="1-TCP"><a href="#1-TCP" class="headerlink" title="1. TCP"></a>1. TCP</h2><h3 id="TCP报文格式"><a href="#TCP报文格式" class="headerlink" title="TCP报文格式"></a>TCP报文格式</h3><p><img src="https://img-blog.csdn.net/20140609125220296?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYTE5ODgxMDI5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt="img"></p>
+<h3 id="TCP连接简介"><a href="#TCP连接简介" class="headerlink" title="TCP连接简介"></a><strong>TCP连接简介</strong></h3><p><img src="https://pics1.baidu.com/feed/4afbfbedab64034f641e67dffe1d813408551d7f.jpeg?token=341c4a88025d5441f6efeadd184f0968&s=0A007B220D6A452093CDFDC8030070B1" alt="img"></p>
+<p>客户端与服务器之间数据的发送和返回的过程当中需要创建TCP Connection，在一个TCP连接上是可以发送多个http请求的，不同的版本这个模式不一样。</p>
+<p><strong>HTTP1.0</strong>中这个TCP连接是在http请求创建的时候同步创建的，http请求发送到服务器端，服务器端响应了之后，这个TCP连接就关闭了；</p>
+<p><strong>HTTP1.1</strong>中可以以某种方式声明这个连接一直保持，一个请求传输完之后，另一个请求可以接着传输。这样的好处是：在创建一个TCP连接的过程中需要“三次握手”的消耗，“三次握手”代表有三次网络传输。如果TCP连接保持，第二个请求发送就没有这“三次握手”的消耗。</p>
+<p><strong>HTTP2.0</strong>中同一个TCP连接里还可以并发地传输http请求。</p>
+<h3 id="3次握手"><a href="#3次握手" class="headerlink" title="3次握手"></a>3次握手</h3><p>建立TCP连接时，需要客户端和服务器共发送3个包。</p>
+<ul>
+<li>第一次：客户端发送初始序号x和syn=1请求标志</li>
+<li>第二次：服务器发送请求标志syn，发送确认标志ACK，发送自己的序号seq=y，发送客户端的确认序号ack=x+1</li>
+<li>第三次：客户端发送ACK确认号，发送自己的序号seq=x+1，发送对方的确认号ack=y+1</li>
+</ul>
+<p><img src="https://z3.ax1x.com/2021/05/15/gcSU0S.png" alt="sanciwoshou"></p>
+<ul>
+<li>第一次：客户端发送请求到服务器，服务器知道客户端发送，自己接收正常。SYN=1,seq=x</li>
+<li>第二次：服务器发给客户端，客户端知道自己发送、接收正常，服务器接收、发送正常。ACK=1,ack=x+1,SYN=1,seq=y</li>
+<li>第三次：客户端发给服务器：服务器知道客户端发送，接收正常，自己接收，发送也正常.seq=x+1,ACK=1,ack=y+1</li>
+</ul>
+<h3 id="4次挥手"><a href="#4次挥手" class="headerlink" title="4次挥手"></a>4次挥手</h3><ul>
+<li>第一次挥手：客户端发出释放FIN=1，自己序列号seq=u，进入FIN-WAIT-1状态</li>
+<li>第二次挥手：服务器收到客户端的后，发出ACK=1确认标志和客户端的确认号ack=u+1，自己的序列号seq=v，进入CLOSE-WAIT状态</li>
+<li>第三次挥手：客户端收到服务器确认结果后，进入FIN-WAIT-2状态。此时服务器发送释放FIN=1信号，确认标志ACK=1，确认序号ack=u+1，自己序号seq=w，服务器进入LAST-ACK（最后确认态）</li>
+<li>第四次挥手：客户端收到回复后，发送确认ACK=1，ack=w+1，自己的seq=u+1，客户端进入TIME-WAIT（时间等待）。客户端经过2个最长报文段寿命后，客户端CLOSE；服务器收到确认后，立刻进入CLOSE状态。</li>
+</ul>
+<p><img src="https://z3.ax1x.com/2021/05/15/g62wid.png" alt="img"></p>
+<ul>
+<li>第一次：客户端请求断开FIN,seq=u</li>
+<li>第二次：服务器确认客户端的断开请求ACK,ack=u+1,seq=v</li>
+<li>第三次：服务器请求断开FIN,seq=w,ACK,ack=u+1</li>
+<li>第四次：客户端确认服务器的断开ACK,ack=w+1,seq=u+1</li>
+</ul>
+<h3 id="相关问题"><a href="#相关问题" class="headerlink" title="相关问题"></a>相关问题</h3><p>1）为什么三次握手和四次挥手？</p>
+<ul>
+<li>三次握手时，服务器同时把ACK和SYN放在一起发送到了客户端那里</li>
+<li>四次挥手时，当收到对方的 FIN 报文时，仅仅表示对方不再发送数据了但是还能接收数据，己方是否现在关闭发送数据通道，需要上层应用来决定，因此，己方 ACK 和 FIN 一般都会分开发送。</li>
+</ul>
+<p>2）为什么客户端最后还要等待2MSL？</p>
+<ul>
+<li>客户端需要保证最后一次发送的ACK报文到服务器，如果服务器未收到，可以请求客户端重发，这样客户端还有时间再发，重启2MSL计时。</li>
+</ul>
+<p><strong>MSL</strong> : Max segment lifetime ，报文最大生存时间，是指任何报文在网络上存在的最长时间，超过这个时间报文将会被丢弃。在 Linux 系统中，MSL 被定义成 30 秒， 2MSL 就是 60 秒。</p>
+<p><strong>CLOSE-WAIT 状态问题：</strong></p>
+<p>客户端发送了 FIN 连接释放报文之后，服务器收到了这个报文，就进入了 CLOSE-WAIT 状态。这个状态是为了让服务器端发送还未传送完毕的数据，传送完毕之后，服务器会发送FIN 连接释放报文。</p>
+<p><strong>TIME-WAIT 状态问题：</strong></p>
+<p>客户端接收到服务器端的 FIN 报文后进入此状态，此时并不是直接进入 CLOSED 状态，还需要等待一个时间计时器设置的时间 2MSL。这么做有两个理由：</p>
+<p>确保最后一个确认报文能够到达。如果 B 没收到 A 发送来的确认报文，那么就会重新发送连接释放请求报文，A 等待一段时间就是为了处理这种情况的发生。</p>
+<p>等待一段时间是为了让本连接持续时间内所产生的所有报文都从网络中消失，使得下一 个新的连接不会出现旧的连接请求报文。</p>
+<p>通信双方建立TCP连接后，主动关闭连接的一方就会进入TIME_WAIT状态。</p>
+<p><strong>半关闭</strong></p>
+<blockquote>
+<p>当TCP链接中A向B发送 FIN 请求关闭，另一端B回应ACK之后，并没有立即发送 FIN 给A,A方处于半连接状态（半开关），此时A可以接收B发送的数据，但是A已经不能再向B发送数据。</p>
+</blockquote>
+<p><strong>半连接</strong></p>
+<blockquote>
+<p>发生在TCP三次握手中<br>如果A向B发起链接，B也按照正常情况响应了，但是A不进行三次握手，这就是半连接。<br><strong>半连接攻击：</strong>半连接，会造成B分配的内存资源就一直这么耗着，直到资源耗尽。（SYN攻击）</p>
+</blockquote>
+<h3 id="TCP拥塞控制"><a href="#TCP拥塞控制" class="headerlink" title="TCP拥塞控制"></a>TCP拥塞控制</h3><p>在某段时间，若<strong>对网络中某一资源的需求超过了该资源所能提供的可用部分，网络性能就要变坏</strong>，这种情况就叫做<strong>网络拥塞</strong>。</p>
+<p>在计算机网络中数位链路容量（即带宽）、交换结点中的缓存和处理机等，都是网络的资源。</p>
+<p>若<strong>出现拥塞而不进行控制</strong>，整个网络的<strong>吞吐量将随输入负荷的增大而下降</strong>。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190731190238241.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxNDMxNDA2,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>当输入的负载到达一定程度 吞吐量不会增加，即一部分网络资源会丢失掉，网络的吞吐量维持在其所能控制的最大值，转发节点的缓存不够大这造成分组的丢失是拥塞的征兆。<br>TCP的四种拥塞控制算法<br>1.慢开始（指数增长）<br>2.拥塞控制（线性增长）<br>3.快重传<br>4.快恢复<br>假定：<br>1.数据是单方向传送，而另一个方向只传送确认<br>2.接收方总是有足够大的缓存空间，因而发送发发送窗口的大小由网络的拥塞程度来决定<br>3.以TCP报文段的个数为讨论问题的单位，而不是以字节为单位</p>
+<p><img src="https://img-blog.csdnimg.cn/20190731155254165.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxNDMxNDA2,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>示例如下：<br>传输轮次：发送方给接收方发送数据报文段后，接收方给发送方发回相应的确认报文段，一个传输轮次所经历的时间就是往返时间RTT(RTT并非是恒定的数值），使用传输轮次是为了强调，把拥塞窗口cwnd所允许发送的报文段都连续发送出去，并收到了对已发送的最后一个报文段的确认，拥塞窗口cwnd会随着网络拥塞程度以及所使用的拥塞控制算法动态变化。</p>
+<p>在tcp双方建立逻辑链接关系时， 拥塞窗口cwnd的值被设置为1，还需设置慢开始门限ssthresh,在执行慢开始算法时，发送方每收到一个对新报文段的确认时，就把拥塞窗口cwnd的值加一，然后开始下一轮的传输，当拥塞窗口cwnd增长到慢开始门限值时，就使用拥塞避免算法。</p>
+<p>慢开始：<br>假设当前发送方拥塞窗口cwnd的值为1，而发送窗口swnd等于拥塞窗口cwnd，因此发送方当前只能发送一个数据报文段（拥塞窗口cwnd的值是几，就能发送几个数据报文段），接收方收到该数据报文段后，给发送方回复一个确认报文段，发送方收到该确认报文后，将拥塞窗口的值变为2，</p>
+<p>发送方此时可以连续发送两个数据报文段，接收方收到该数据报文段后，给发送方一次发回2个确认报文段，发送方收到这两个确认报文后，将拥塞窗口的值加2变为4，发送方此时可连续发送4个报文段，接收方收到4个报文段后，给发送方依次回复4个确认报文，发送方收到确认报文后，将拥塞窗口加4，置为8，发送方此时可以连续发送8个数据报文段，接收方收到该8个数据报文段后，给发送方一次发回8个确认报文段，发送方收到这8个确认报文后，将拥塞窗口的值加8变为16，</p>
+<p>当前的拥塞窗口cwnd的值已经等于慢开始门限值，之后改用拥塞避免算法。</p>
+<p>拥塞避免：<br>也就是每个传输轮次，拥塞窗口cwnd只能线性加一，而不是像慢开始算法时，每个传输轮次，拥塞窗口cwnd按指数增长。同理，16+1……直至到达24，假设24个报文段在传输过程中丢失4个，接收方只收到20个报文段，给发送方依次回复20个确认报文段，一段时间后，丢失的4个报文段的重传计时器超时了，发送发判断可能出现拥塞，更改cwnd和ssthresh.并重新开始慢开始算法，如图所示：</p>
+<p><img src="https://img-blog.csdnimg.cn/20190731165743903.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxNDMxNDA2,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p><img src="https://img-blog.csdnimg.cn/20190731165605396.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxNDMxNDA2,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>快速重传：<br>发送方发送1号数据报文段，接收方收到1号报文段后给发送方发回对1号报文段的确认，在1号报文段到达发送方之前，发送方还可以将发送窗口内的2号数据报文段发送出去，接收方收到2号报文段后给发送方发回对2号报文段的确认，在2号报文段到达发送方之前，发送方还可以将发送窗口内的3号数据报文段发送出去，</p>
+<p>假设该报文丢失，发送方便不会发送针对该报文的确认报文给发送方，发送方还可以将发送窗口内的4号数据报文段发送出去，接收方收到后，发现这不是按序到达的报文段，因此给发送方发送针对2号报文段的重复确认，表明我现在希望收到的是3号报文段，但是我没有收到3号报文段，而收到了未按序到达的报文段，发送方还可以将发送窗口中的5号报文段发送出去,接收方收到后，发现这不是按序到达的报文段，因此给发送方发送针对2号报文段的重复确认，表明我现在希望收到的是3号报文段，但是我没有收到3号报文段，而收到了未按序到达的报文段,，发送方还可以将发送窗口内的最后一个数据段即6号数据报文段发送出去，接收方收到后，发现这不是按序到达的报文段，因此给发送方发送针对2号报文段的重复确认，表明我现在希望收到的是3号报文段，但是我没有收到3号报文段，而收到了未按序到达的报文段，</p>
+<p>此时，发送方收到了累计3个连续的针对2号报文段的重复确认，立即重传3号报文段，接收方收到后，给发送方发回针对6号报文的确认，表明，序号到6为至的报文都收到了，这样就不会造成发送方对3号报文的超时重传，而是提早收到了重传。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190731184314574.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxNDMxNDA2,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p><img src="https://img-blog.csdnimg.cn/20190731184640178.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxNDMxNDA2,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p><img src="https://img-blog.csdnimg.cn/20190731184935595.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxNDMxNDA2,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h3 id="TCP客户端和服务器最大连接数"><a href="#TCP客户端和服务器最大连接数" class="headerlink" title="TCP客户端和服务器最大连接数"></a>TCP客户端和服务器最大连接数</h3><p>只要资源 （内存硬盘cpu）足够，理论上可以接收无限个链接。所谓65535的限制，是针对客户端的，客户机每链接一个服务，就必须开一个tcp端口与之对应。这样，链接到65535个服务后，本地端口就被占满。服务端口仅仅使用一个。一个tcp链接，是四个元素决定的，server IP：port+client IP：port。(local ip, local port,remote ip,remote port)</p>
+<p><strong>对于服务器，每一个tcp连接都要占一个文件描述符，一旦这个文件描述符使用完了，就会返回错误。</strong></p>
+<ul>
+<li>我们知道操作系统上端口号1024以下是系统保留的，从1024-65535是用户使用的。由于每个TCP连接都要占一个端口号，所以我们最多可以有60000多个并发连接？但是事实并不是这样。</li>
+<li>我们还知道对于TCP连接是由：原IP，原端口，目的IP，目的端口。但是监听server端TCP连接4元组中只有remote ip（也就是client ip）和remote port（客户端port）是可变的，因为它是固定在本地的端口上去监听，<strong>所以最大TCP连接为：客户端ip数×客户端port数</strong></li>
+</ul>
+<p>而对于客户端，网络通信过程中服务端监听一个固定的端口,客户端主动发起连接请求后要经过三次握手才能与服务器建立起一个TCP连接.客户端每次发起一个TCP连接时,系统会随机选取一个空闲的端口,该端口是独占的不能与其他TCP连接共享,因此理论上一台机器有多少空闲的端口,就能对外发起多少个TCP连接。</p>
+<h3 id="Linux检测tcp连接状态（攻击）"><a href="#Linux检测tcp连接状态（攻击）" class="headerlink" title="Linux检测tcp连接状态（攻击）"></a>Linux检测tcp连接状态（攻击）</h3><blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">netstat -na</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>显示所有连接到服务器的活跃的网络连接</p>
+<blockquote>
+<p>netstat -an | grep :80 | sort</p>
+</blockquote>
+<p>只显示连接到80段口的活跃的网络连接,80是http端口,这对于web服务器非常有用,并且对结果排序.对于你从许多的连接中找出单个发动洪水攻击IP非常有用</p>
+<blockquote>
+<p>netstat -n -p|grep SYN_REC | wc -l</p>
+</blockquote>
+<p>这个命令对于在服务器上找出活跃的SYNC_REC非常有用,数量应该很低,最好少于5.</p>
+<p>在dos攻击和邮件炸弹,这个数字可能非常高.然而值通常依赖于系统,所以高的值可能平分给另外的服务器.</p>
+<blockquote>
+<p>netstat -n -p | grep SYN_REC | sort -u</p>
+</blockquote>
+<p>列出所有包含的IP地址而不仅仅是计数.</p>
+<blockquote>
+<p>netstat -n -p | grep SYN_REC | awk ‘{print $5}’ | awk -F: ‘{print $1}’</p>
+</blockquote>
+<p>列出所有不同的IP地址节点发送SYN_REC的连接状态</p>
+<blockquote>
+<p>netstat -ntu | awk ‘{print $5}’ | cut -d: -f1 | sort | uniq -c | sort -n</p>
+</blockquote>
+<p>使用netstat命令来计算每个IP地址对服务器的连接数量</p>
+<blockquote>
+<p>netstat -anp |grep ‘tcp|udp’ | awk ‘{print $5}’ | cut -d: -f1 | sort | uniq -c | sort -n</p>
+</blockquote>
+<p>列出使用tcp和udp连接到服务器的数目</p>
+<blockquote>
+<p>netstat -ntu | grep ESTAB | awk ‘{print $5}’ | cut -d: -f1 | sort | uniq -c | sort -nr</p>
+</blockquote>
+<p>检查ESTABLISHED连接而不是所有连接,这可以每个ip的连接数</p>
+<blockquote>
+<p>netstat -plan|grep :80|awk {‘print $5’}|cut -d: -f 1|sort|uniq -c|sort -nk 1</p>
+</blockquote>
+<p>显示并且列出连接到80端口IP地址和连接数.80被用来作为HTTP</p>
+<h2 id="2-UDP"><a href="#2-UDP" class="headerlink" title="2. UDP"></a>2. UDP</h2><p>UDP是传输层的协议，功能即为在IP的数据报服务之上增加了最基本的服务：复用和分用以及差错检测。</p>
+<p>UDP提供不可靠服务，具有TCP所没有的优势：</p>
+<p>UDP无连接，时间上不存在建立连接需要的时延。空间上，TCP需要在端系统中维护连接状态，需要一定的开销。此连接装入包括接收和发送缓存，拥塞控制参数和序号与确认号的参数。UCP不维护连接状态，也不跟踪这些参数，开销小。空间和时间上都具有优势。<br>举个例子：</p>
+<p>DNS如果运行在TCP之上而不是UDP，那么DNS的速度将会慢很多。<br>HTTP使用TCP而不是UDP，是因为对于基于文本数据的Web网页来说，可靠性很重要。<br>同一种专用应用服务器在支持UDP时，一定能支持更多的活动客户机。</p>
+<p>分组首部开销小，TCP首部20字节，UDP首部8字节。</p>
+<p>UDP没有拥塞控制，应用层能够更好的控制要发送的数据和发送时间，网络中的拥塞控制也不会影响主机的发送速率。某些实时应用要求以稳定的速度发送，能容 忍一些数据的丢失，但是不能允许有较大的时延（比如实时视频，直播等）</p>
+<p>UDP提供尽最大努力的交付，不保证可靠交付。所有维护传输可靠性的工作需要用户在应用层来完成。没有TCP的确认机制、重传机制。如果因为网络原因没有传送到对端，UDP也不会给应用层返回错误信息</p>
+<p>UDP是面向报文的，对应用层交下来的报文，添加首部后直接乡下交付为IP层，既不合并，也不拆分，保留这些报文的边界。对IP层交上来UDP用户数据报，在去除首部后就原封不动地交付给上层应用进程，报文不可分割，是UDP数据报处理的最小单位。<br>正是因为这样，UDP显得不够灵活，不能控制读写数据的次数和数量。比如我们要发送100个字节的报文，我们调用一次sendto函数就会发送100字节，对端也需要用recvfrom函数一次性接收100字节，不能使用循环每次获取10个字节，获取十次这样的做法。</p>
+<p>UDP常用一次性传输比较少量数据的网络应用，如<strong>DNS,SNMP</strong>等，因为对于这些应用，若是采用TCP，为连接的创建，维护和拆除带来不小的开销。UDP也常用于多媒体应用（如<strong>IP电话，实时视频会议，流媒体</strong>等）数据的可靠传输对他们而言并不重要，TCP的拥塞控制会使他们有较大的延迟，也是不可容忍的</p>
+<p><strong>UDP实现可靠数据传输</strong></p>
+<p>TCP可靠数据传输机制：确认机制，重传机制，滑动窗口，是GBN协议和SR协议的混合体</p>
+<p>参考TCP，UDP传输层无法保证数据的可靠传输，只能通过应用层来实现了。实现的方式可以参照tcp可靠性传输的方式，只是实现不在传输层，实现转移到了应用层。</p>
+<p>​     实现确认机制、重传机制、窗口确认机制。</p>
+<p>​     如果不利用Linux协议栈以及上层socket机制，自己通过抓包和发包的方式去实现可靠性传输，那么必须实现如下功能：</p>
+<p>​     发送：包的分片、包确认、包的重发</p>
+<p>​     接收：包的调序、包的序号确认</p>
+<p>​     目前有一些开源程序利用udp实现了可靠的数据传输。分别为RUDP、RTP、UDT。</p>
 
       
     </div>
@@ -655,236 +1070,6 @@
 <p><img src="https://z3.ax1x.com/2021/05/16/gcqsJ0.png" alt="1"></p>
 <p><img src="https://z3.ax1x.com/2021/05/16/gcqfeJ.png" alt="2"></p>
 <p><img src="https://z3.ax1x.com/2021/05/16/gcqbQO.png" alt="3"></p>
-
-      
-    </div>
-
-    
-    
-    
-
-
-     
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://bibofu24.com/2021/04/25/c_net2/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="bibofu">
-      <meta itemprop="description" content="记录学习，分享生活">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="二十六画生">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/04/25/c_net2/" class="post-title-link" itemprop="url">计算机网络 2</a>
-        </h2>
-
-        <div class="post-meta">
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-04-25 17:07:30" itemprop="dateCreated datePublished" datetime="2021-04-25T17:07:30+08:00">2021-04-25</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-05-16 17:02:39" itemprop="dateModified" datetime="2021-05-16T17:02:39+08:00">2021-05-16</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>6.5k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>6 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>计算机网络传输层相关知识</p>
-<h2 id="1-TCP"><a href="#1-TCP" class="headerlink" title="1. TCP"></a>1. TCP</h2><h3 id="TCP报文格式"><a href="#TCP报文格式" class="headerlink" title="TCP报文格式"></a>TCP报文格式</h3><p><img src="https://img-blog.csdn.net/20140609125220296?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYTE5ODgxMDI5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt="img"></p>
-<h3 id="TCP连接简介"><a href="#TCP连接简介" class="headerlink" title="TCP连接简介"></a><strong>TCP连接简介</strong></h3><p><img src="https://pics1.baidu.com/feed/4afbfbedab64034f641e67dffe1d813408551d7f.jpeg?token=341c4a88025d5441f6efeadd184f0968&s=0A007B220D6A452093CDFDC8030070B1" alt="img"></p>
-<p>客户端与服务器之间数据的发送和返回的过程当中需要创建TCP Connection，在一个TCP连接上是可以发送多个http请求的，不同的版本这个模式不一样。</p>
-<p><strong>HTTP1.0</strong>中这个TCP连接是在http请求创建的时候同步创建的，http请求发送到服务器端，服务器端响应了之后，这个TCP连接就关闭了；</p>
-<p><strong>HTTP1.1</strong>中可以以某种方式声明这个连接一直保持，一个请求传输完之后，另一个请求可以接着传输。这样的好处是：在创建一个TCP连接的过程中需要“三次握手”的消耗，“三次握手”代表有三次网络传输。如果TCP连接保持，第二个请求发送就没有这“三次握手”的消耗。</p>
-<p><strong>HTTP2.0</strong>中同一个TCP连接里还可以并发地传输http请求。</p>
-<h3 id="3次握手"><a href="#3次握手" class="headerlink" title="3次握手"></a>3次握手</h3><p>建立TCP连接时，需要客户端和服务器共发送3个包。</p>
-<ul>
-<li>第一次：客户端发送初始序号x和syn=1请求标志</li>
-<li>第二次：服务器发送请求标志syn，发送确认标志ACK，发送自己的序号seq=y，发送客户端的确认序号ack=x+1</li>
-<li>第三次：客户端发送ACK确认号，发送自己的序号seq=x+1，发送对方的确认号ack=y+1</li>
-</ul>
-<p><img src="https://z3.ax1x.com/2021/05/15/gcSU0S.png" alt="sanciwoshou"></p>
-<ul>
-<li>第一次：客户端发送请求到服务器，服务器知道客户端发送，自己接收正常。SYN=1,seq=x</li>
-<li>第二次：服务器发给客户端，客户端知道自己发送、接收正常，服务器接收、发送正常。ACK=1,ack=x+1,SYN=1,seq=y</li>
-<li>第三次：客户端发给服务器：服务器知道客户端发送，接收正常，自己接收，发送也正常.seq=x+1,ACK=1,ack=y+1</li>
-</ul>
-<h3 id="4次挥手"><a href="#4次挥手" class="headerlink" title="4次挥手"></a>4次挥手</h3><ul>
-<li>第一次挥手：客户端发出释放FIN=1，自己序列号seq=u，进入FIN-WAIT-1状态</li>
-<li>第二次挥手：服务器收到客户端的后，发出ACK=1确认标志和客户端的确认号ack=u+1，自己的序列号seq=v，进入CLOSE-WAIT状态</li>
-<li>第三次挥手：客户端收到服务器确认结果后，进入FIN-WAIT-2状态。此时服务器发送释放FIN=1信号，确认标志ACK=1，确认序号ack=u+1，自己序号seq=w，服务器进入LAST-ACK（最后确认态）</li>
-<li>第四次挥手：客户端收到回复后，发送确认ACK=1，ack=w+1，自己的seq=u+1，客户端进入TIME-WAIT（时间等待）。客户端经过2个最长报文段寿命后，客户端CLOSE；服务器收到确认后，立刻进入CLOSE状态。</li>
-</ul>
-<p><img src="https://z3.ax1x.com/2021/05/15/g62wid.png" alt="img"></p>
-<ul>
-<li>第一次：客户端请求断开FIN,seq=u</li>
-<li>第二次：服务器确认客户端的断开请求ACK,ack=u+1,seq=v</li>
-<li>第三次：服务器请求断开FIN,seq=w,ACK,ack=u+1</li>
-<li>第四次：客户端确认服务器的断开ACK,ack=w+1,seq=u+1</li>
-</ul>
-<h3 id="相关问题"><a href="#相关问题" class="headerlink" title="相关问题"></a>相关问题</h3><p>1）为什么三次握手和四次挥手？</p>
-<ul>
-<li>三次握手时，服务器同时把ACK和SYN放在一起发送到了客户端那里</li>
-<li>四次挥手时，当收到对方的 FIN 报文时，仅仅表示对方不再发送数据了但是还能接收数据，己方是否现在关闭发送数据通道，需要上层应用来决定，因此，己方 ACK 和 FIN 一般都会分开发送。</li>
-</ul>
-<p>2）为什么客户端最后还要等待2MSL？</p>
-<ul>
-<li>客户端需要保证最后一次发送的ACK报文到服务器，如果服务器未收到，可以请求客户端重发，这样客户端还有时间再发，重启2MSL计时。</li>
-</ul>
-<p><strong>MSL</strong> : Max segment lifetime ，报文最大生存时间，是指任何报文在网络上存在的最长时间，超过这个时间报文将会被丢弃。在 Linux 系统中，MSL 被定义成 30 秒， 2MSL 就是 60 秒。</p>
-<p><strong>CLOSE-WAIT 状态问题：</strong></p>
-<p>客户端发送了 FIN 连接释放报文之后，服务器收到了这个报文，就进入了 CLOSE-WAIT 状态。这个状态是为了让服务器端发送还未传送完毕的数据，传送完毕之后，服务器会发送FIN 连接释放报文。</p>
-<p><strong>TIME-WAIT 状态问题：</strong></p>
-<p>客户端接收到服务器端的 FIN 报文后进入此状态，此时并不是直接进入 CLOSED 状态，还需要等待一个时间计时器设置的时间 2MSL。这么做有两个理由：</p>
-<p>确保最后一个确认报文能够到达。如果 B 没收到 A 发送来的确认报文，那么就会重新发送连接释放请求报文，A 等待一段时间就是为了处理这种情况的发生。</p>
-<p>等待一段时间是为了让本连接持续时间内所产生的所有报文都从网络中消失，使得下一 个新的连接不会出现旧的连接请求报文。</p>
-<p>通信双方建立TCP连接后，主动关闭连接的一方就会进入TIME_WAIT状态。</p>
-<p><strong>半关闭</strong></p>
-<blockquote>
-<p>当TCP链接中A向B发送 FIN 请求关闭，另一端B回应ACK之后，并没有立即发送 FIN 给A,A方处于半连接状态（半开关），此时A可以接收B发送的数据，但是A已经不能再向B发送数据。</p>
-</blockquote>
-<p><strong>半连接</strong></p>
-<blockquote>
-<p>发生在TCP三次握手中<br>如果A向B发起链接，B也按照正常情况响应了，但是A不进行三次握手，这就是半连接。<br><strong>半连接攻击：</strong>半连接，会造成B分配的内存资源就一直这么耗着，直到资源耗尽。（SYN攻击）</p>
-</blockquote>
-<h3 id="TCP拥塞控制"><a href="#TCP拥塞控制" class="headerlink" title="TCP拥塞控制"></a>TCP拥塞控制</h3><p>在某段时间，若<strong>对网络中某一资源的需求超过了该资源所能提供的可用部分，网络性能就要变坏</strong>，这种情况就叫做<strong>网络拥塞</strong>。</p>
-<p>在计算机网络中数位链路容量（即带宽）、交换结点中的缓存和处理机等，都是网络的资源。</p>
-<p>若<strong>出现拥塞而不进行控制</strong>，整个网络的<strong>吞吐量将随输入负荷的增大而下降</strong>。</p>
-<p><img src="https://img-blog.csdnimg.cn/20190731190238241.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxNDMxNDA2,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
-<p>当输入的负载到达一定程度 吞吐量不会增加，即一部分网络资源会丢失掉，网络的吞吐量维持在其所能控制的最大值，转发节点的缓存不够大这造成分组的丢失是拥塞的征兆。<br>TCP的四种拥塞控制算法<br>1.慢开始（指数增长）<br>2.拥塞控制（线性增长）<br>3.快重传<br>4.快恢复<br>假定：<br>1.数据是单方向传送，而另一个方向只传送确认<br>2.接收方总是有足够大的缓存空间，因而发送发发送窗口的大小由网络的拥塞程度来决定<br>3.以TCP报文段的个数为讨论问题的单位，而不是以字节为单位</p>
-<p><img src="https://img-blog.csdnimg.cn/20190731155254165.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxNDMxNDA2,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
-<p>示例如下：<br>传输轮次：发送方给接收方发送数据报文段后，接收方给发送方发回相应的确认报文段，一个传输轮次所经历的时间就是往返时间RTT(RTT并非是恒定的数值），使用传输轮次是为了强调，把拥塞窗口cwnd所允许发送的报文段都连续发送出去，并收到了对已发送的最后一个报文段的确认，拥塞窗口cwnd会随着网络拥塞程度以及所使用的拥塞控制算法动态变化。</p>
-<p>在tcp双方建立逻辑链接关系时， 拥塞窗口cwnd的值被设置为1，还需设置慢开始门限ssthresh,在执行慢开始算法时，发送方每收到一个对新报文段的确认时，就把拥塞窗口cwnd的值加一，然后开始下一轮的传输，当拥塞窗口cwnd增长到慢开始门限值时，就使用拥塞避免算法。</p>
-<p>慢开始：<br>假设当前发送方拥塞窗口cwnd的值为1，而发送窗口swnd等于拥塞窗口cwnd，因此发送方当前只能发送一个数据报文段（拥塞窗口cwnd的值是几，就能发送几个数据报文段），接收方收到该数据报文段后，给发送方回复一个确认报文段，发送方收到该确认报文后，将拥塞窗口的值变为2，</p>
-<p>发送方此时可以连续发送两个数据报文段，接收方收到该数据报文段后，给发送方一次发回2个确认报文段，发送方收到这两个确认报文后，将拥塞窗口的值加2变为4，发送方此时可连续发送4个报文段，接收方收到4个报文段后，给发送方依次回复4个确认报文，发送方收到确认报文后，将拥塞窗口加4，置为8，发送方此时可以连续发送8个数据报文段，接收方收到该8个数据报文段后，给发送方一次发回8个确认报文段，发送方收到这8个确认报文后，将拥塞窗口的值加8变为16，</p>
-<p>当前的拥塞窗口cwnd的值已经等于慢开始门限值，之后改用拥塞避免算法。</p>
-<p>拥塞避免：<br>也就是每个传输轮次，拥塞窗口cwnd只能线性加一，而不是像慢开始算法时，每个传输轮次，拥塞窗口cwnd按指数增长。同理，16+1……直至到达24，假设24个报文段在传输过程中丢失4个，接收方只收到20个报文段，给发送方依次回复20个确认报文段，一段时间后，丢失的4个报文段的重传计时器超时了，发送发判断可能出现拥塞，更改cwnd和ssthresh.并重新开始慢开始算法，如图所示：</p>
-<p><img src="https://img-blog.csdnimg.cn/20190731165743903.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxNDMxNDA2,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
-<p><img src="https://img-blog.csdnimg.cn/20190731165605396.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxNDMxNDA2,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
-<p>快速重传：<br>发送方发送1号数据报文段，接收方收到1号报文段后给发送方发回对1号报文段的确认，在1号报文段到达发送方之前，发送方还可以将发送窗口内的2号数据报文段发送出去，接收方收到2号报文段后给发送方发回对2号报文段的确认，在2号报文段到达发送方之前，发送方还可以将发送窗口内的3号数据报文段发送出去，</p>
-<p>假设该报文丢失，发送方便不会发送针对该报文的确认报文给发送方，发送方还可以将发送窗口内的4号数据报文段发送出去，接收方收到后，发现这不是按序到达的报文段，因此给发送方发送针对2号报文段的重复确认，表明我现在希望收到的是3号报文段，但是我没有收到3号报文段，而收到了未按序到达的报文段，发送方还可以将发送窗口中的5号报文段发送出去,接收方收到后，发现这不是按序到达的报文段，因此给发送方发送针对2号报文段的重复确认，表明我现在希望收到的是3号报文段，但是我没有收到3号报文段，而收到了未按序到达的报文段,，发送方还可以将发送窗口内的最后一个数据段即6号数据报文段发送出去，接收方收到后，发现这不是按序到达的报文段，因此给发送方发送针对2号报文段的重复确认，表明我现在希望收到的是3号报文段，但是我没有收到3号报文段，而收到了未按序到达的报文段，</p>
-<p>此时，发送方收到了累计3个连续的针对2号报文段的重复确认，立即重传3号报文段，接收方收到后，给发送方发回针对6号报文的确认，表明，序号到6为至的报文都收到了，这样就不会造成发送方对3号报文的超时重传，而是提早收到了重传。</p>
-<p><img src="https://img-blog.csdnimg.cn/20190731184314574.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxNDMxNDA2,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
-<p><img src="https://img-blog.csdnimg.cn/20190731184640178.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxNDMxNDA2,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
-<p><img src="https://img-blog.csdnimg.cn/20190731184935595.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxNDMxNDA2,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
-<h3 id="TCP客户端和服务器最大连接数"><a href="#TCP客户端和服务器最大连接数" class="headerlink" title="TCP客户端和服务器最大连接数"></a>TCP客户端和服务器最大连接数</h3><p>只要资源 （内存硬盘cpu）足够，理论上可以接收无限个链接。所谓65535的限制，是针对客户端的，客户机每链接一个服务，就必须开一个tcp端口与之对应。这样，链接到65535个服务后，本地端口就被占满。服务端口仅仅使用一个。一个tcp链接，是四个元素决定的，server IP：port+client IP：port。(local ip, local port,remote ip,remote port)</p>
-<p><strong>对于服务器，每一个tcp连接都要占一个文件描述符，一旦这个文件描述符使用完了，就会返回错误。</strong></p>
-<ul>
-<li>我们知道操作系统上端口号1024以下是系统保留的，从1024-65535是用户使用的。由于每个TCP连接都要占一个端口号，所以我们最多可以有60000多个并发连接？但是事实并不是这样。</li>
-<li>我们还知道对于TCP连接是由：原IP，原端口，目的IP，目的端口。但是监听server端TCP连接4元组中只有remote ip（也就是client ip）和remote port（客户端port）是可变的，因为它是固定在本地的端口上去监听，<strong>所以最大TCP连接为：客户端ip数×客户端port数</strong></li>
-</ul>
-<p>而对于客户端，网络通信过程中服务端监听一个固定的端口,客户端主动发起连接请求后要经过三次握手才能与服务器建立起一个TCP连接.客户端每次发起一个TCP连接时,系统会随机选取一个空闲的端口,该端口是独占的不能与其他TCP连接共享,因此理论上一台机器有多少空闲的端口,就能对外发起多少个TCP连接。</p>
-<h3 id="Linux检测tcp连接状态（攻击）"><a href="#Linux检测tcp连接状态（攻击）" class="headerlink" title="Linux检测tcp连接状态（攻击）"></a>Linux检测tcp连接状态（攻击）</h3><blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">netstat -na</span><br></pre></td></tr></table></figure>
-</blockquote>
-<p>显示所有连接到服务器的活跃的网络连接</p>
-<blockquote>
-<p>netstat -an | grep :80 | sort</p>
-</blockquote>
-<p>只显示连接到80段口的活跃的网络连接,80是http端口,这对于web服务器非常有用,并且对结果排序.对于你从许多的连接中找出单个发动洪水攻击IP非常有用</p>
-<blockquote>
-<p>netstat -n -p|grep SYN_REC | wc -l</p>
-</blockquote>
-<p>这个命令对于在服务器上找出活跃的SYNC_REC非常有用,数量应该很低,最好少于5.</p>
-<p>在dos攻击和邮件炸弹,这个数字可能非常高.然而值通常依赖于系统,所以高的值可能平分给另外的服务器.</p>
-<blockquote>
-<p>netstat -n -p | grep SYN_REC | sort -u</p>
-</blockquote>
-<p>列出所有包含的IP地址而不仅仅是计数.</p>
-<blockquote>
-<p>netstat -n -p | grep SYN_REC | awk ‘{print $5}’ | awk -F: ‘{print $1}’</p>
-</blockquote>
-<p>列出所有不同的IP地址节点发送SYN_REC的连接状态</p>
-<blockquote>
-<p>netstat -ntu | awk ‘{print $5}’ | cut -d: -f1 | sort | uniq -c | sort -n</p>
-</blockquote>
-<p>使用netstat命令来计算每个IP地址对服务器的连接数量</p>
-<blockquote>
-<p>netstat -anp |grep ‘tcp|udp’ | awk ‘{print $5}’ | cut -d: -f1 | sort | uniq -c | sort -n</p>
-</blockquote>
-<p>列出使用tcp和udp连接到服务器的数目</p>
-<blockquote>
-<p>netstat -ntu | grep ESTAB | awk ‘{print $5}’ | cut -d: -f1 | sort | uniq -c | sort -nr</p>
-</blockquote>
-<p>检查ESTABLISHED连接而不是所有连接,这可以每个ip的连接数</p>
-<blockquote>
-<p>netstat -plan|grep :80|awk {‘print $5’}|cut -d: -f 1|sort|uniq -c|sort -nk 1</p>
-</blockquote>
-<p>显示并且列出连接到80端口IP地址和连接数.80被用来作为HTTP</p>
-<h2 id="2-UDP"><a href="#2-UDP" class="headerlink" title="2. UDP"></a>2. UDP</h2><p>UDP是传输层的协议，功能即为在IP的数据报服务之上增加了最基本的服务：复用和分用以及差错检测。</p>
-<p>UDP提供不可靠服务，具有TCP所没有的优势：</p>
-<p>UDP无连接，时间上不存在建立连接需要的时延。空间上，TCP需要在端系统中维护连接状态，需要一定的开销。此连接装入包括接收和发送缓存，拥塞控制参数和序号与确认号的参数。UCP不维护连接状态，也不跟踪这些参数，开销小。空间和时间上都具有优势。<br>举个例子：</p>
-<p>DNS如果运行在TCP之上而不是UDP，那么DNS的速度将会慢很多。<br>HTTP使用TCP而不是UDP，是因为对于基于文本数据的Web网页来说，可靠性很重要。<br>同一种专用应用服务器在支持UDP时，一定能支持更多的活动客户机。</p>
-<p>分组首部开销小，TCP首部20字节，UDP首部8字节。</p>
-<p>UDP没有拥塞控制，应用层能够更好的控制要发送的数据和发送时间，网络中的拥塞控制也不会影响主机的发送速率。某些实时应用要求以稳定的速度发送，能容 忍一些数据的丢失，但是不能允许有较大的时延（比如实时视频，直播等）</p>
-<p>UDP提供尽最大努力的交付，不保证可靠交付。所有维护传输可靠性的工作需要用户在应用层来完成。没有TCP的确认机制、重传机制。如果因为网络原因没有传送到对端，UDP也不会给应用层返回错误信息</p>
-<p>UDP是面向报文的，对应用层交下来的报文，添加首部后直接乡下交付为IP层，既不合并，也不拆分，保留这些报文的边界。对IP层交上来UDP用户数据报，在去除首部后就原封不动地交付给上层应用进程，报文不可分割，是UDP数据报处理的最小单位。<br>正是因为这样，UDP显得不够灵活，不能控制读写数据的次数和数量。比如我们要发送100个字节的报文，我们调用一次sendto函数就会发送100字节，对端也需要用recvfrom函数一次性接收100字节，不能使用循环每次获取10个字节，获取十次这样的做法。</p>
-<p>UDP常用一次性传输比较少量数据的网络应用，如<strong>DNS,SNMP</strong>等，因为对于这些应用，若是采用TCP，为连接的创建，维护和拆除带来不小的开销。UDP也常用于多媒体应用（如<strong>IP电话，实时视频会议，流媒体</strong>等）数据的可靠传输对他们而言并不重要，TCP的拥塞控制会使他们有较大的延迟，也是不可容忍的</p>
-<p><strong>UDP实现可靠数据传输</strong></p>
-<p>TCP可靠数据传输机制：确认机制，重传机制，滑动窗口，是GBN协议和SR协议的混合体</p>
-<p>参考TCP，UDP传输层无法保证数据的可靠传输，只能通过应用层来实现了。实现的方式可以参照tcp可靠性传输的方式，只是实现不在传输层，实现转移到了应用层。</p>
-<p>​     实现确认机制、重传机制、窗口确认机制。</p>
-<p>​     如果不利用Linux协议栈以及上层socket机制，自己通过抓包和发包的方式去实现可靠性传输，那么必须实现如下功能：</p>
-<p>​     发送：包的分片、包确认、包的重发</p>
-<p>​     接收：包的调序、包的序号确认</p>
-<p>​     目前有一些开源程序利用udp实现了可靠的数据传输。分别为RUDP、RTP、UDT。</p>
 
       
     </div>
@@ -1277,14 +1462,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">36</span>
+          <span class="site-state-item-count">37</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -1353,12 +1538,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">130k</span>
+    <span title="站点总字数">132k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">1:58</span>
+    <span title="站点阅读时长">2:01</span>
 </div>
 
         
