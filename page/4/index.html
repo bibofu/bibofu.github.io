@@ -197,7 +197,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://bibofu24.com/2021/04/25/JVM_1/">
+    <link itemprop="mainEntityOfPage" href="https://bibofu24.com/2021/04/25/JUC_1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -211,7 +211,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/04/25/JVM_1/" class="post-title-link" itemprop="url">JVM 1</a>
+            <a href="/2021/04/25/JUC_1/" class="post-title-link" itemprop="url">JUC 1</a>
         </h2>
 
         <div class="post-meta">
@@ -230,7 +230,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-05-16 15:55:34" itemprop="dateModified" datetime="2021-05-16T15:55:34+08:00">2021-05-16</time>
+                <time title="修改时间：2021-05-16 17:01:55" itemprop="dateModified" datetime="2021-05-16T17:01:55+08:00">2021-05-16</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -238,7 +238,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JVM/" itemprop="url" rel="index"><span itemprop="name">JVM</span></a>
+                  <a href="/categories/java%E5%B9%B6%E5%8F%91%E7%9F%A5%E8%AF%86/" itemprop="url" rel="index"><span itemprop="name">java并发知识</span></a>
                 </span>
             </span>
 
@@ -248,14 +248,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>1.4k</span>
+              <span>3k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
+              <span>3 分钟</span>
             </span>
 
         </div>
@@ -267,26 +267,52 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>JVM类加载及运行时数据区知识</p>
-<h2 id="1-类加载过程"><a href="#1-类加载过程" class="headerlink" title="1. 类加载过程"></a>1. 类加载过程</h2><p>加载 </p>
-<p>验证 准备 解析</p>
-<p>初始化</p>
-<p>使用</p>
-<p>卸载</p>
-<p><img src="https://z3.ax1x.com/2021/05/16/gcXezV.png" alt="jvm1"></p>
-<h2 id="2-双亲委派机制"><a href="#2-双亲委派机制" class="headerlink" title="2. 双亲委派机制"></a>2. 双亲委派机制</h2><p>双亲委派机制，其工作原理的是，如果一个类加载器收到了类加载请求，它并不会自己先去加载，而是把这个请求委托给父类的加载器去执行，如果父类加载器还存在其父类加载器，则进一步向上委托，依次递归，请求最终将到达顶层的启动类加载器，如果父类加载器可以完成类加载任务，就成功返回，倘若父类加载器无法完成此加载任务，子加载器才会尝试自己去加载，这就是双亲委派模式，即每个儿子都很懒，每次有活就丢给父亲去干，直到父亲说这件事我也干不了时，儿子自己才想办法去完成。</p>
-<p>双亲委派机制的优势：采用双亲委派模式的是好处是Java类随着它的类加载器一起具备了一种带有优先级的层次关系，通过这种层级关可以避免类的重复加载，当父亲已经加载了该类时，就没有必要子ClassLoader再加载一次。其次是考虑到安全因素，java核心api中定义类型不会被随意替换，假设通过网络传递一个名为java.lang.Integer的类，通过双亲委托模式传递到启动类加载器，而启动类加载器在核心Java API发现这个名字的类，发现该类已被加载，并不会重新加载网络传递的过来的java.lang.Integer，而直接返回已加载过的Integer.class，这样便可以防止核心API库被随意篡改。</p>
-<p>findClass（）用于写类加载逻辑、loadClass（）方法的逻辑里如果父类加载器加载失败则会调用自己的findClass（）方法完成加载，保证了双亲委派规则。</p>
-<p>1、如果不想打破双亲委派模型，那么只需要重写findClass方法即可</p>
-<p>2、如果想打破双亲委派模型，那么就重写整个loadClass方法</p>
-<p>打破双亲委派场景：</p>
-<p>JDBC Driver类</p>
-<h2 id="3-运行时数据区详解"><a href="#3-运行时数据区详解" class="headerlink" title="3. 运行时数据区详解"></a>3. 运行时数据区详解</h2><p><img src="https://z3.ax1x.com/2021/05/16/gcXJRx.png" alt="jvm2"></p>
-<p><strong>程序计数器(线程私有)：</strong><br>是当前线程锁执行字节码的行号治时期，每条线程都有一个独立的程序计数器，这类内存也称为“线程私有”的内存。正在执行java方法的话，计数器记录的是虚拟机字节码指令的地址(当前指令的地址)。如果是Natice方法，则为空。</p>
-<p><strong>java 虚拟机栈是线程私有的（线程私有）</strong><br>每个方法在执行的时候也会创建一个栈帧，存储了局部变量，操作数，动态链接，方法返回地址。<br>每个方法从调用到执行完毕，对应一个栈帧在虚拟机栈中的入栈和出栈。<br>通常所说的栈，一般是指在虚拟机栈中的局部变量部分。<br>局部变量所需内存在编译期间完成分配，<br>如果线程请求的栈深度大于虚拟机所允许的深度，则StackOverflowError。<br>如果虚拟机栈可以动态扩展，扩展到无法申请足够的内存，则OutOfMemoryError。</p>
-<p><strong>本地方法栈（线程私有）</strong><br>和虚拟机栈类似，主要为虚拟机使用到的Native方法服务。也会抛出StackOverflowError 和OutOfMemoryError。</p>
-<p><strong>Java堆（线程共享）</strong><br>被所有线程共享的一块内存区域，在虚拟机启动的时候创建，用于存放对象实例。<br>对可以按照可扩展来实现（通过-Xmx 和-Xms 来控制）<br>当队中没有内存可分配给实例，也无法再扩展时，则抛出OutOfMemoryError异常。</p>
-<p><strong>方法区（线程共享）</strong><br>被所有方法线程共享的一块内存区域。<br>用于存储已经被虚拟机加载的类信息，常量，静态变量等。<br>这个区域的内存回收目标主要针对常量池的回收和堆类型的卸载。</p>
+          <p>synchronized和ReentrantLock</p>
+<h2 id="1-synchronized"><a href="#1-synchronized" class="headerlink" title="1. synchronized"></a>1. synchronized</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>Java中每一个对象都可以作为锁，这是synchronized实现同步的基础：</p>
+<p>普通同步方法（实例方法），锁是当前实例对象 ，进入同步代码前要获得当前实例的锁<br>静态同步方法，锁是当前类的class对象 ，进入同步代码前要获得当前类对象的锁<br>同步方法块，锁是括号里面的对象，对给定对象加锁，进入同步代码库前要获得给定对象的锁。</p>
+<p>synchronized关键字解决的是多个线程之间访问资源的同步性，调用操作系统内核态做同 步，synchronized关键字可以保证被它修饰的方法或者代码块在任意时刻只能有一个线程执行。</p>
+<p>在 Java 早期版本中，synchronized属于重量级锁，效率低下，因为监视器锁（monitor）是依赖于底层的操作系统的 Mutex Lock 来实现的，Java 的线程是映射到操作系统的原生线程之上的。JDK1.6对锁的实现引入了大量的优化，如自旋锁、适应性自旋锁、锁消除、锁粗化、偏向锁、轻量级锁等技术来减少锁操作的开销。</p>
+<p>synchronized关键字最主要的三种使用方式：</p>
+<p>修饰实例方法**:** 作用于当前对象实例加锁，进入同步代码前要获得当前对象实例的锁</p>
+<p>修饰静态方法**:** 也就是给当前类加锁，会作用于类的所有对象实例。因为访问静态synchronized 方法占用的锁是当前类的锁，而访问非静态 synchronized 方法占用的锁是当前实例对象锁。</p>
+<p>修饰代码块**:** 指定加锁对象，对给定对象加锁，进入同步代码库前要获得给定对象的锁。</p>
+<p>synchronized 关键字底层原理属于 JVM 层面。</p>
+<p>① synchronized 同步语句块的情况：synchronized 同步语句块的实现使用的是monitorenter和 monitorexit 指令，其中 monitorenter 指令指向同步代码块的开始位置，monitorexit 指令则指明同步代码块的结束位置。</p>
+<p>② synchronized 修饰方法的的情况：JVM 通过该 ACC_SYNCHRONIZED 访问标志来辨别一个方法是否声明为同步方法，从而执行相应的同步调用。</p>
+<h3 id="Java对象头"><a href="#Java对象头" class="headerlink" title="Java对象头"></a>Java对象头</h3><p>在JVM中，对象在内存中的布局分为三块区域：对象头、实例数据和对齐填充。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190310224348833.jpg" alt="在这里插入图片描述"></p>
+<p>HotSpot虚拟机的对象头分为两部分信息，第一部分用于存储对象自身运行时数据，如哈希码、GC分代年龄等，这部分数据的长度在32位和64位的虚拟机中分别为32位和64位。官方称为Mark Word。另一部分用于存储指向对象类型数据的指针，如果是数组对象的话，还会有一个额外的部分存储数组长度。</p>
+<p>由于对象头的信息是与对象自身定义的数据没有关系的额外存储成本，因此考虑到JVM的空间效率，Mark Word 被设计成为一个非固定的数据结构，以便存储更多有效的数据，它会根据对象本身的状态复用自己的存储空间。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190310225911793.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zODQ4MTk2Mw==,size_16,color_FFFFFF,t_70" alt="img"></p>
+<h3 id="锁升级过程"><a href="#锁升级过程" class="headerlink" title="锁升级过程"></a>锁升级过程</h3><p>锁的4中状态：无锁状态、偏向锁状态、轻量级锁状态、重量级锁状态（级别从低到高）</p>
+<p>（1）偏向锁-&gt;轻量级锁：</p>
+<p>为什么要引入偏向锁？</p>
+<p>因为经过HotSpot的作者大量的研究发现，大多数时候是不存在锁竞争的，常常是一个线程多次获得同一个锁，因此如果每次都要竞争锁会增大很多没有必要付出的代价，为了降低获取锁的代价，才引入的偏向锁。</p>
+<p>偏向锁的升级</p>
+<p>当线程1访问代码块并获取锁对象时，会在java对象头和栈帧中记录偏向的锁的threadID，因为偏向锁不会主动释放锁，因此以后线程1再次获取锁的时候，需要比较当前线程的threadID和Java对象头中的threadID是否一致，如果一致（还是线程1获取锁对象），则无需使用CAS来加锁、解锁；如果不一致（其他线程，如线程2要竞争锁对象，而偏向锁不会主动释放因此还是存储的线程1的threadID），那么需要查看Java对象头中记录的线程1是否存活，如果没有存活，那么锁对象被重置为无锁状态，其它线程（线程2）可以竞争将其设置为偏向锁；如果存活，那么立刻查找该线程（线程1）的栈帧信息，如果还是需要继续持有这个锁对象，那么暂停当前线程1，撤销偏向锁，升级为轻量级锁，如果线程1 不再使用该锁对象，那么将锁对象状态设为无锁状态，重新偏向新的线程。</p>
+<ol start="2">
+<li>  轻量级锁到重量级锁</li>
+</ol>
+<p>线程1获取轻量级锁时会先把锁对象的对象头MarkWord复制一份到线程1的栈帧中创建的用于存储锁记录的空间（称为DisplacedMarkWord），然后使用CAS把对象头中的内容替换为线程1存储的锁记录（DisplacedMarkWord）的地址；</p>
+<p>如果在线程1复制对象头的同时（在线程1CAS之前），线程2也准备获取锁，复制了对象头到线程2的锁记录空间中，但是在线程2CAS的时候，发现线程1已经把对象头换了，线程2的CAS失败，那么线程2就尝试使用自旋锁来等待线程1释放锁。</p>
+<p>但是如果自旋的时间太长也不行，因为自旋是要消耗CPU的，因此自旋的次数是有限制的，比如10次或者100次，如果自旋次数到了线程1还没有释放锁，或者线程1还在执行，线程2还在自旋等待，这时又有一个线程3过来竞争这个锁对象，那么这个时候轻量级锁就会膨胀为重量级锁。重量级锁把除了拥有锁的线程都阻塞，防止CPU空转。</p>
+<p><strong>注意：</strong>为了避免无用的自旋，轻量级锁一旦膨胀为重量级锁就不会再降级为轻量级锁了；偏向锁升级为轻量级锁也不能再降级为偏向锁。一句话就是锁可以升级不可以降级，但是偏向锁状态可以被重置为无锁状态。</p>
+<p><img src="https://z3.ax1x.com/2021/05/15/gcSVQx.jpg" alt="2018032217003676"></p>
+<h2 id="2-synchronized和lock"><a href="#2-synchronized和lock" class="headerlink" title="2. synchronized和lock"></a>2. synchronized和lock</h2><p>1、Synchronized 内置的Java关键字， Lock 是一个Java接口<br>2、Synchronized 无法判断获取锁的状态，Lock 可以判断是否获取到了锁<br>3、Synchronized 会自动释放锁，lock 必须要手动释放锁！如果不释放锁，死锁<br>4、Synchronized 线程 1（获得锁，阻塞）、线程2（等待，傻傻的等）；Lock锁就不一定会等待下去；<br>5、Synchronized 可重入锁，不可以中断的，非公平；Lock ，可重入锁，可以判断锁，非公平（可以自己设置）；<br>6、Synchronized 适合锁少量的代码同步问题，Lock 适合锁大量的同步代码！</p>
+<h2 id="3-ReentrantLock"><a href="#3-ReentrantLock" class="headerlink" title="3. ReentrantLock"></a>3. ReentrantLock</h2><p>独占锁，可以中断</p>
+<p>手动lock ，unlock</p>
+<p>可以实现公平锁，默认非公平</p>
+<p>ReentrantLock底层使用了CAS+AQS队列</p>
+<p>0.每一个ReentrantLock自身维护一个AQS队列记录申请锁的线程信息；</p>
+<p>1.通过大量CAS保证多个线程竞争锁的时候的并发安全；</p>
+<p>2.可重入的功能是通过维护state变量来记录重入次数实现的。</p>
+<p>3.公平锁需要维护队列，通过AQS队列的先后顺序获取锁，缺点是会造成大量线程上下文切换；</p>
+<p>4.非公平锁可以直接抢占，所以效率更高；</p>
+<p>ReentrantLock的基本实现可以概括为：先通过CAS尝试获取锁。如果此时已经有线程占据了锁，那就加入AQS队列并且被挂起。当锁被释放之后，排在CLH队列队首的线程会被唤醒，然后CAS再次尝试获取锁。</p>
+<p><img src="https://img-blog.csdnimg.cn/20181104201101705.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2Z1eXV3ZWkyMDE1,size_16,color_FFFFFF,t_70" alt="img"></p>
+<p>ReentrantLock是可重入的独占锁。比起synchronized功能更加丰富，支持公平锁实现，支持中断响应以及限时等待等等。可以配合一个或多个Condition条件方便的实现等待通知机制</p>
+<p>AQS：</p>
+<p><img src="https://img-blog.csdnimg.cn/20181128142923147.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L211bGluc2VuNzc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
 
       
     </div>
@@ -472,6 +498,118 @@
 </tr>
 </tbody></table>
 <p><strong>ThreadLocal的内部结构</strong></p>
+
+      
+    </div>
+
+    
+    
+    
+
+
+     
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bibofu24.com/2021/04/25/JVM_1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="bibofu">
+      <meta itemprop="description" content="记录学习，分享生活">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="二十六画生">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/04/25/JVM_1/" class="post-title-link" itemprop="url">JVM 1</a>
+        </h2>
+
+        <div class="post-meta">
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-04-25 17:07:30" itemprop="dateCreated datePublished" datetime="2021-04-25T17:07:30+08:00">2021-04-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-05-16 15:55:34" itemprop="dateModified" datetime="2021-05-16T15:55:34+08:00">2021-05-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JVM/" itemprop="url" rel="index"><span itemprop="name">JVM</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.4k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>JVM类加载及运行时数据区知识</p>
+<h2 id="1-类加载过程"><a href="#1-类加载过程" class="headerlink" title="1. 类加载过程"></a>1. 类加载过程</h2><p>加载 </p>
+<p>验证 准备 解析</p>
+<p>初始化</p>
+<p>使用</p>
+<p>卸载</p>
+<p><img src="https://z3.ax1x.com/2021/05/16/gcXezV.png" alt="jvm1"></p>
+<h2 id="2-双亲委派机制"><a href="#2-双亲委派机制" class="headerlink" title="2. 双亲委派机制"></a>2. 双亲委派机制</h2><p>双亲委派机制，其工作原理的是，如果一个类加载器收到了类加载请求，它并不会自己先去加载，而是把这个请求委托给父类的加载器去执行，如果父类加载器还存在其父类加载器，则进一步向上委托，依次递归，请求最终将到达顶层的启动类加载器，如果父类加载器可以完成类加载任务，就成功返回，倘若父类加载器无法完成此加载任务，子加载器才会尝试自己去加载，这就是双亲委派模式，即每个儿子都很懒，每次有活就丢给父亲去干，直到父亲说这件事我也干不了时，儿子自己才想办法去完成。</p>
+<p>双亲委派机制的优势：采用双亲委派模式的是好处是Java类随着它的类加载器一起具备了一种带有优先级的层次关系，通过这种层级关可以避免类的重复加载，当父亲已经加载了该类时，就没有必要子ClassLoader再加载一次。其次是考虑到安全因素，java核心api中定义类型不会被随意替换，假设通过网络传递一个名为java.lang.Integer的类，通过双亲委托模式传递到启动类加载器，而启动类加载器在核心Java API发现这个名字的类，发现该类已被加载，并不会重新加载网络传递的过来的java.lang.Integer，而直接返回已加载过的Integer.class，这样便可以防止核心API库被随意篡改。</p>
+<p>findClass（）用于写类加载逻辑、loadClass（）方法的逻辑里如果父类加载器加载失败则会调用自己的findClass（）方法完成加载，保证了双亲委派规则。</p>
+<p>1、如果不想打破双亲委派模型，那么只需要重写findClass方法即可</p>
+<p>2、如果想打破双亲委派模型，那么就重写整个loadClass方法</p>
+<p>打破双亲委派场景：</p>
+<p>JDBC Driver类</p>
+<h2 id="3-运行时数据区详解"><a href="#3-运行时数据区详解" class="headerlink" title="3. 运行时数据区详解"></a>3. 运行时数据区详解</h2><p><img src="https://z3.ax1x.com/2021/05/16/gcXJRx.png" alt="jvm2"></p>
+<p><strong>程序计数器(线程私有)：</strong><br>是当前线程锁执行字节码的行号治时期，每条线程都有一个独立的程序计数器，这类内存也称为“线程私有”的内存。正在执行java方法的话，计数器记录的是虚拟机字节码指令的地址(当前指令的地址)。如果是Natice方法，则为空。</p>
+<p><strong>java 虚拟机栈是线程私有的（线程私有）</strong><br>每个方法在执行的时候也会创建一个栈帧，存储了局部变量，操作数，动态链接，方法返回地址。<br>每个方法从调用到执行完毕，对应一个栈帧在虚拟机栈中的入栈和出栈。<br>通常所说的栈，一般是指在虚拟机栈中的局部变量部分。<br>局部变量所需内存在编译期间完成分配，<br>如果线程请求的栈深度大于虚拟机所允许的深度，则StackOverflowError。<br>如果虚拟机栈可以动态扩展，扩展到无法申请足够的内存，则OutOfMemoryError。</p>
+<p><strong>本地方法栈（线程私有）</strong><br>和虚拟机栈类似，主要为虚拟机使用到的Native方法服务。也会抛出StackOverflowError 和OutOfMemoryError。</p>
+<p><strong>Java堆（线程共享）</strong><br>被所有线程共享的一块内存区域，在虚拟机启动的时候创建，用于存放对象实例。<br>对可以按照可扩展来实现（通过-Xmx 和-Xms 来控制）<br>当队中没有内存可分配给实例，也无法再扩展时，则抛出OutOfMemoryError异常。</p>
+<p><strong>方法区（线程共享）</strong><br>被所有方法线程共享的一块内存区域。<br>用于存储已经被虚拟机加载的类信息，常量，静态变量等。<br>这个区域的内存回收目标主要针对常量池的回收和堆类型的卸载。</p>
 
       
     </div>
@@ -1462,7 +1600,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">37</span>
+          <span class="site-state-item-count">38</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1538,7 +1676,7 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">132k</span>
+    <span title="站点总字数">133k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
