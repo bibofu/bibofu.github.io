@@ -197,6 +197,114 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bibofu24.com/2021/05/16/JVM_3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="bibofu">
+      <meta itemprop="description" content="记录学习，分享生活">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="二十六画生">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/05/16/JVM_3/" class="post-title-link" itemprop="url">JVM 3</a>
+        </h2>
+
+        <div class="post-meta">
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-05-16 16:33:39 / 修改时间：16:44:30" itemprop="dateCreated datePublished" datetime="2021-05-16T16:33:39+08:00">2021-05-16</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JVM/" itemprop="url" rel="index"><span itemprop="name">JVM</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.4k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>jvm其他常见问题</p>
+<h2 id="1-内存泄露和内存溢出"><a href="#1-内存泄露和内存溢出" class="headerlink" title="1. 内存泄露和内存溢出"></a>1. 内存泄露和内存溢出</h2><p>内存溢出 out of memory，是指程序在申请内存时，没有足够的内存空间供其使用，出现out of memory；比如申请了一个integer,但给它存了long才能存下的数，那就是内存溢出。</p>
+<p>内存泄露 memory leak，是指程序在申请内存后，无法释放已申请的内存空间，一次内存泄露危害可以忽略，但内存泄露堆积后果很严重，无论多少内存,迟早会被占光。</p>
+<h2 id="2-四种引用"><a href="#2-四种引用" class="headerlink" title="2. 四种引用"></a>2. 四种引用</h2><p><img src="https://z3.ax1x.com/2021/05/16/gczFXV.png" alt="jvm8"></p>
+<h2 id="3-new的对象一定在堆中吗"><a href="#3-new的对象一定在堆中吗" class="headerlink" title="3. new的对象一定在堆中吗"></a>3. new的对象一定在堆中吗</h2><p>不一定，也可能在栈上</p>
+<h2 id="4-栈溢出和堆溢出"><a href="#4-栈溢出和堆溢出" class="headerlink" title="4. 栈溢出和堆溢出"></a>4. 栈溢出和堆溢出</h2><p>在jvm运行java程序时，如果程序运行所需要的内存大于系统的堆最大内存(-Xmx)，就会出现堆溢出问题。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 介绍:执行该段代码需要大于10m内存空间</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HeadOverflow</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        List&lt;Object&gt; listObj = <span class="keyword">new</span> ArrayList&lt;Object&gt;();</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;<span class="number">10</span>; i++)&#123;</span><br><span class="line">            Byte[] bytes = <span class="keyword">new</span> Byte[<span class="number">1</span>*<span class="number">1024</span>*<span class="number">1024</span>];</span><br><span class="line">            listObj.add(bytes);</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(<span class="string">&quot;添加success&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>在正式项目部署环境程序默认读取的是系统的内存,一般设置程序的堆初始内存(-Xms) == 堆最大可用内存(-Xmx)</p>
+<p>a、线程请求的栈深度大于虚拟机允许的最大深度 StackOverflowError</p>
+<p>b、虚拟机在扩展栈深度时，无法申请到足够的内存空间 OutOfMemoryError</p>
+<p>理解：每次方法调用都会有一个栈帧压入虚拟机栈，操作系统给JVM分配的内存是有限的，JVM分配给“虚拟机栈”的内存是有限的。如果方法调用过多，导致虚拟机栈满了就会溢出。这里栈深度就是指栈帧的数量。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 循环递归调用,一直达到jvm的最大深度</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StackOverflow</span> </span>&#123;</span><br><span class="line">     <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> count;</span><br><span class="line">     </span><br><span class="line">     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">count</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">             count++;</span><br><span class="line">             count(); </span><br><span class="line">        &#125; <span class="keyword">catch</span> (Throwable e) &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;最大深度:&quot;</span>+count);</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">     &#125;</span><br><span class="line">     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">         count();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>总结：每个计算机都会有一个极限最大调用深度,避免递归在代码中无限循环。</p>
+<p>​     局部变量表内容越多，栈帧越大，栈深度越小。</p>
+<h2 id="5-OOM的情形"><a href="#5-OOM的情形" class="headerlink" title="5. OOM的情形"></a>5. OOM的情形</h2><p>1、堆空间 -&gt; 堆空间已经装不下新创建的对象；<br>2、方法区 -&gt; 方法区（落地实现）空间不足；<br>3、虚拟机栈 -&gt; 创建的线程太多，每一个线程私有的栈空间又很大，就会申请不到内存空间；<br>4、本地方法栈 -&gt; 本地方法栈也是私有的，当线程很多时也会出现OOM。</p>
+<p>也就是说，运行时数据区中，只有程序计数器（占用空间极小）才不会导致程序报 OOM</p>
+
+      
+    </div>
+
+    
+    
+    
+
+
+     
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://bibofu24.com/2021/05/15/dpattern_1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1352,112 +1460,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://bibofu24.com/2021/04/27/2021CBA_Predict/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="bibofu">
-      <meta itemprop="description" content="记录学习，分享生活">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="二十六画生">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/04/27/2021CBA_Predict/" class="post-title-link" itemprop="url">2021CBA总决赛</a>
-        </h2>
-
-        <div class="post-meta">
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-04-27 19:27:20" itemprop="dateCreated datePublished" datetime="2021-04-27T19:27:20+08:00">2021-04-27</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-05-03 17:57:33" itemprop="dateModified" datetime="2021-05-03T17:57:33+08:00">2021-05-03</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E9%9A%8F%E7%AC%94/" itemprop="url" rel="index"><span itemprop="name">随笔</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>898</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>​        还有10分钟左右，CBA总决赛就要开始了。对阵和去年一样，辽宁VS广东，不同的是，似乎这次辽宁阵容更为齐整，整体实力也要高广东一档。</p>
-<p>​        预测一下，辽宁2：1。剧情大概如下：</p>
-<p>​        第一场：广东上来就上强度，辽宁似乎准备不足，在第一节结束后落后。然后，在赵继伟的带领下逐渐追上比分，半场结束两边难解难分。进入下半场，广东手感下降，辽宁不断冲击广东孱弱的内线，把比分反超。进入第四节，广东发起最后一波攻击，几乎把比分追上，最后辽宁小外援收下比赛。分差在5-10分</p>
-<p>​        第二场：第一场打完再写……..</p>
-<hr>
-<p>​        G1赛后：剧情发展出乎意料，广东展现了强大的战术素养，打出了堪称完美的比赛，辽宁这边打的唯唯诺诺，赵继伟简直灾难，教练整场梦游….如果杜锋是100分，杨鸣大概，，，60分吧。</p>
-<p>​        预测第二场，辽宁会改变首发，至少不会把郭艾伦放在替补。吸取第一场教训，辽宁会增加对内线的冲击并在退防上有所改善。辽宁大概率会拿下这一场，因为，，，好比赛应该多来几场哈哈哈哈</p>
-<hr>
-<p>​         G2赛后：这场只看了下半场，战术和场面上广东依旧是上风的一方，但在常规时间最后一防上存在重大问题，赵继伟投进了救赎三分。最后几分钟广东进攻上胡明轩赵睿都有贡献，但是到加时还是太依赖维姆斯，不懂为啥不给徐杰上场机会。培养一个顶级本土playmaker可能是杜锋下一个挑战…</p>
-<p>​         辽宁…..杨鸣回去感谢郭艾伦和张镇麟吧</p>
-<p>​         预测第三场，，，不预测了，希望两边都有精彩发挥</p>
-<hr>
-<p>​        G3赛后：双方带来了一场史诗级的“抢三”，广东依然是占据主动的一方，但在郭艾伦和张镇麟的努力下，比赛被拖到加时。加时赛杨鸣犯了很多错误（马后炮来说），辽宁也似乎到了强弩之末，遗憾的再拿一个亚军。</p>
-<p>​        纵观3场总决赛，郭艾伦再次证明自己的实力，赵继伟也反向证明了自己….张镇麟第一次总决赛也表现的很出色，未来可期，付豪在G3也表现出色，但是韩德君、刘志轩就很一般了，吴昌泽 朱荣振几乎0作用。广东这边，赵睿看起来成熟了许多，胡明轩也敢打敢拼，周鹏还是稳如狗，徐杰杜润旺王薪凯曾繁日也发挥了自己的作用。使用一套实力不如辽宁的阵容，杜锋可以人尽其用，杨鸣却得良将而不能用之，最后广东夺得队史第11冠也就理所应当了</p>
-
-      
-    </div>
-
-    
-    
-    
-
-
-     
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1529,7 +1531,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">39</span>
+          <span class="site-state-item-count">40</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1605,7 +1607,7 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">137k</span>
+    <span title="站点总字数">138k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>

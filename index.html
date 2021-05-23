@@ -296,6 +296,130 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bibofu24.com/2021/05/22/software_test/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="bibofu">
+      <meta itemprop="description" content="记录学习，分享生活">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="二十六画生">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/05/22/software_test/" class="post-title-link" itemprop="url">软件测试</a>
+        </h2>
+
+        <div class="post-meta">
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-05-22 14:49:02" itemprop="dateCreated datePublished" datetime="2021-05-22T14:49:02+08:00">2021-05-22</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-05-23 14:45:02" itemprop="dateModified" datetime="2021-05-23T14:45:02+08:00">2021-05-23</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%A4%A7%E5%AD%A6%E8%AF%BE%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">大学课程</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>827</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="软件测试定义及基本概念"><a href="#软件测试定义及基本概念" class="headerlink" title="软件测试定义及基本概念"></a>软件测试定义及基本概念</h2><p>测试是为了证明程序有错，通过运行程序发现其中存在的问题。”<br>• 软件测试可以证明软件有错；<br>• 软件测试不可以证明软件没有错</p>
+<p>使用人工或者自动手段来运行或测试某个系统的过程,其目的在于检验它是否满足规定的需求或弄清预期结果与实际结果之间的差别</p>
+<p>缺陷在软件开发每个阶段都会产生，所以软件测试应该贯穿软件开发始终</p>
+<p><strong>Debug不属于测试</strong>，属于开发调试</p>
+<h2 id="Fault-Error-amp-Failure"><a href="#Fault-Error-amp-Failure" class="headerlink" title="Fault, Error &amp; Failure"></a>Fault, Error &amp; Failure</h2><p><strong>Fault</strong>的定义：软件中的静态缺陷，<strong>可能导致系统或功能失效的异常条件</strong>（Abnormal condition that can cause an element or an item tofail.），可译为“故障”。</p>
+<p><strong>Error</strong>的定义：错误的内部状态<strong>是某些故障的表现</strong>，计算、观察或测量值或条件，与真实、规定或理论上正确的值或条件之间的差异（Discrepancy between a computed, observed or measured value or condition and the true, specified, or theoretically correct value or condition.），可译为“错误”。Error是能够导致系统出现Failure的系统内部状态。</p>
+<p><strong>Failure</strong>的定义：关于预期行为的要求或其他描述的外部不正确行为，<strong>当一个系统不能执行所要求的功能时，即为Failure</strong>，可译为“失效”。（Termination of the ability of an element or an item to perform a function as required.）</p>
+<p>　<strong>举例</strong></p>
+<p>　　病人告诉医生自己的各种症状，身体没有健康地工作 – Failures </p>
+<p>　　医生想找出疾病的根源，如病毒 – Fault</p>
+<p>　　病人身体状态异常，比如血压较高，心跳不规律等 – Errors</p>
+<p><img src="https://z3.ax1x.com/2021/05/23/gOXbOP.png" alt="2021 05 23 14 23 02屏幕截图"></p>
+<p><img src="https://z3.ax1x.com/2021/05/23/gOXLef.png" alt="2021 05 23 14 23 17屏幕截图"></p>
+<p><img src="https://z3.ax1x.com/2021/05/23/gOXXTS.png" alt="2021 05 23 14 23 32屏幕截图"></p>
+<p><img src="https://z3.ax1x.com/2021/05/23/gOXvFg.png" alt="2021 05 23 14 24 01屏幕截图"></p>
+<p><img src="https://z3.ax1x.com/2021/05/23/gOXOw8.png" alt="2021 05 23 14 24 42屏幕截图"></p>
+<hr>
+<p><img src="https://z3.ax1x.com/2021/05/23/gOv029.png" alt="2021 05 23 14 30 37屏幕截图"></p>
+<p><strong>Fault is defined by fixing</strong></p>
+<p><img src="https://z3.ax1x.com/2021/05/23/gOvdC4.png" alt="2021 05 23 14 31 32屏幕截图"></p>
+<p><strong>Fault is defined by testing!</strong></p>
+<p><img src="https://z3.ax1x.com/2021/05/23/gOvNUU.png" alt="2021 05 23 14 31 53屏幕截图"></p>
+<p><img src="https://z3.ax1x.com/2021/05/23/gOvU5F.png" alt="2021 05 23 14 32 11屏幕截图"></p>
+<p><img src="https://z3.ax1x.com/2021/05/23/gOvw8J.png" alt="2021 05 23 14 32 36屏幕截图"></p>
+<p><img src="https://z3.ax1x.com/2021/05/23/gOvBvR.png" alt="2021 05 23 14 32 50屏幕截图"></p>
+<p><img src="https://z3.ax1x.com/2021/05/23/gOO8u6.png" alt="2021 05 23 14 18 53屏幕截图"></p>
+<h2 id="软件测试级别"><a href="#软件测试级别" class="headerlink" title="软件测试级别"></a><strong>软件测试级别</strong></h2><p> • <strong>单元测试</strong>（组件测试）</p>
+<p> • 集成测试</p>
+<p> • 系统测试</p>
+<p> • 验收测试</p>
+<p> • 维护测试</p>
+<p><img src="https://z3.ax1x.com/2021/05/23/gXSdPS.png" alt="2021 05 23 14 44 20屏幕截图"></p>
+
+      
+    </div>
+
+    
+    
+    
+
+
+     
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://bibofu24.com/2021/05/21/javabasic_1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -520,7 +644,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-05-21 23:59:05" itemprop="dateModified" datetime="2021-05-21T23:59:05+08:00">2021-05-21</time>
+                <time title="修改时间：2021-05-22 14:48:03" itemprop="dateModified" datetime="2021-05-22T14:48:03+08:00">2021-05-22</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -538,7 +662,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>4.5k</span>
+              <span>4.6k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -557,7 +681,8 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="1-软件项目管理概述"><a href="#1-软件项目管理概述" class="headerlink" title="1 软件项目管理概述"></a>1 软件项目管理概述</h2><p>实现项目目标的制约因素有<strong>（项目范围）、（成本）、（进度计划）、（客户满意度）</strong>等</p>
+          <p>资料地址：链接: <a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1qWchSZDzCcsyPZhUvELXxQ">https://pan.baidu.com/s/1qWchSZDzCcsyPZhUvELXxQ</a>  密码: pi11</p>
+<h2 id="1-软件项目管理概述"><a href="#1-软件项目管理概述" class="headerlink" title="1 软件项目管理概述"></a>1 软件项目管理概述</h2><p>实现项目目标的制约因素有<strong>（项目范围）、（成本）、（进度计划）、（客户满意度）</strong>等</p>
 <p>项目管理包括<strong>（启动过程组）、（计划过程组）、（执行过程组）、（控制过程组）、（收尾过程组）</strong> 5 个过程组</p>
 <p>项目的特征是： <strong>目标性、相关性、临时性、独特性、资源约束性、不确定性</strong> </p>
 <p><strong>项目</strong>：项目是一系列具有特定目标 , 有明确开始和终止日期，资金有限，消耗资源的活动和任务。</p>
@@ -1510,114 +1635,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://bibofu24.com/2021/05/16/JVM_3/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="bibofu">
-      <meta itemprop="description" content="记录学习，分享生活">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="二十六画生">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/05/16/JVM_3/" class="post-title-link" itemprop="url">JVM 3</a>
-        </h2>
-
-        <div class="post-meta">
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-05-16 16:33:39 / 修改时间：16:44:30" itemprop="dateCreated datePublished" datetime="2021-05-16T16:33:39+08:00">2021-05-16</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JVM/" itemprop="url" rel="index"><span itemprop="name">JVM</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>1.4k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>jvm其他常见问题</p>
-<h2 id="1-内存泄露和内存溢出"><a href="#1-内存泄露和内存溢出" class="headerlink" title="1. 内存泄露和内存溢出"></a>1. 内存泄露和内存溢出</h2><p>内存溢出 out of memory，是指程序在申请内存时，没有足够的内存空间供其使用，出现out of memory；比如申请了一个integer,但给它存了long才能存下的数，那就是内存溢出。</p>
-<p>内存泄露 memory leak，是指程序在申请内存后，无法释放已申请的内存空间，一次内存泄露危害可以忽略，但内存泄露堆积后果很严重，无论多少内存,迟早会被占光。</p>
-<h2 id="2-四种引用"><a href="#2-四种引用" class="headerlink" title="2. 四种引用"></a>2. 四种引用</h2><p><img src="https://z3.ax1x.com/2021/05/16/gczFXV.png" alt="jvm8"></p>
-<h2 id="3-new的对象一定在堆中吗"><a href="#3-new的对象一定在堆中吗" class="headerlink" title="3. new的对象一定在堆中吗"></a>3. new的对象一定在堆中吗</h2><p>不一定，也可能在栈上</p>
-<h2 id="4-栈溢出和堆溢出"><a href="#4-栈溢出和堆溢出" class="headerlink" title="4. 栈溢出和堆溢出"></a>4. 栈溢出和堆溢出</h2><p>在jvm运行java程序时，如果程序运行所需要的内存大于系统的堆最大内存(-Xmx)，就会出现堆溢出问题。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 介绍:执行该段代码需要大于10m内存空间</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HeadOverflow</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        List&lt;Object&gt; listObj = <span class="keyword">new</span> ArrayList&lt;Object&gt;();</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;<span class="number">10</span>; i++)&#123;</span><br><span class="line">            Byte[] bytes = <span class="keyword">new</span> Byte[<span class="number">1</span>*<span class="number">1024</span>*<span class="number">1024</span>];</span><br><span class="line">            listObj.add(bytes);</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(<span class="string">&quot;添加success&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>在正式项目部署环境程序默认读取的是系统的内存,一般设置程序的堆初始内存(-Xms) == 堆最大可用内存(-Xmx)</p>
-<p>a、线程请求的栈深度大于虚拟机允许的最大深度 StackOverflowError</p>
-<p>b、虚拟机在扩展栈深度时，无法申请到足够的内存空间 OutOfMemoryError</p>
-<p>理解：每次方法调用都会有一个栈帧压入虚拟机栈，操作系统给JVM分配的内存是有限的，JVM分配给“虚拟机栈”的内存是有限的。如果方法调用过多，导致虚拟机栈满了就会溢出。这里栈深度就是指栈帧的数量。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 循环递归调用,一直达到jvm的最大深度</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StackOverflow</span> </span>&#123;</span><br><span class="line">     <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> count;</span><br><span class="line">     </span><br><span class="line">     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">count</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">             count++;</span><br><span class="line">             count(); </span><br><span class="line">        &#125; <span class="keyword">catch</span> (Throwable e) &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;最大深度:&quot;</span>+count);</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">     &#125;</span><br><span class="line">     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">         count();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>总结：每个计算机都会有一个极限最大调用深度,避免递归在代码中无限循环。</p>
-<p>​     局部变量表内容越多，栈帧越大，栈深度越小。</p>
-<h2 id="5-OOM的情形"><a href="#5-OOM的情形" class="headerlink" title="5. OOM的情形"></a>5. OOM的情形</h2><p>1、堆空间 -&gt; 堆空间已经装不下新创建的对象；<br>2、方法区 -&gt; 方法区（落地实现）空间不足；<br>3、虚拟机栈 -&gt; 创建的线程太多，每一个线程私有的栈空间又很大，就会申请不到内存空间；<br>4、本地方法栈 -&gt; 本地方法栈也是私有的，当线程很多时也会出现OOM。</p>
-<p>也就是说，运行时数据区中，只有程序计数器（占用空间极小）才不会导致程序报 OOM</p>
-
-      
-    </div>
-
-    
-    
-    
-
-
-     
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1689,7 +1706,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">39</span>
+          <span class="site-state-item-count">40</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1765,7 +1782,7 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">137k</span>
+    <span title="站点总字数">138k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
