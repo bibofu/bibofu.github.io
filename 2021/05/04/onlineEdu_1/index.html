@@ -22,24 +22,23 @@
     var CONFIG = {"hostname":"bibofu24.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"manual","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="项目概况一个B2C模式的在线教育系统，分为前台用户系统和后台运营平台。 架构概览  功能模块  技术点  MybatisPlus分布式系统主键生成策略  条件查询  MyBatisPlus实现增删改查操作 application.properties文件配置 12345678910spring.datasource.driver-class-name&#x3D;com.mysql.cj.jdbc.Drive">
+  <meta name="description" content="项目概况一个B2C模式的在线教育系统，分为前台用户系统和后台运营平台。 架构概览  功能模块  技术点  MybatisPlus分布式系统主键生成策略  MyBatisPlus实现增删改查操作 application.properties文件配置 12345678910spring.datasource.driver-class-name&#x3D;com.mysql.cj.jdbc.Driversprin">
 <meta property="og:type" content="article">
 <meta property="og:title" content="在线教育项目 1">
 <meta property="og:url" content="https://bibofu24.com/2021/05/04/onlineEdu_1/index.html">
 <meta property="og:site_name" content="二十六画生">
-<meta property="og:description" content="项目概况一个B2C模式的在线教育系统，分为前台用户系统和后台运营平台。 架构概览  功能模块  技术点  MybatisPlus分布式系统主键生成策略  条件查询  MyBatisPlus实现增删改查操作 application.properties文件配置 12345678910spring.datasource.driver-class-name&#x3D;com.mysql.cj.jdbc.Drive">
+<meta property="og:description" content="项目概况一个B2C模式的在线教育系统，分为前台用户系统和后台运营平台。 架构概览  功能模块  技术点  MybatisPlus分布式系统主键生成策略  MyBatisPlus实现增删改查操作 application.properties文件配置 12345678910spring.datasource.driver-class-name&#x3D;com.mysql.cj.jdbc.Driversprin">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://edu-bibofu.oss-cn-beijing.aliyuncs.com/day01%E9%9A%8F%E5%A0%82%E7%AC%94%E8%AE%B0/0%20%E9%A1%B9%E7%9B%AE%E6%9E%B6%E6%9E%84.png?Expires=1620221327&OSSAccessKeyId=TMP.3KhakD29DfWofqD3MCHZcEinMntLyZtR5r417YJfvREpZWJ2YidBEQyUXdHC5aAPT9R4D5FoayR1rxpaKrLZUTbFsVUBfn&Signature=4mbxEB4gSkArRtosBcwM9tyGDtc=">
-<meta property="og:image" content="https://edu-bibofu.oss-cn-beijing.aliyuncs.com/day01%E9%9A%8F%E5%A0%82%E7%AC%94%E8%AE%B0/3%20%E9%A1%B9%E7%9B%AE%E5%8A%9F%E8%83%BD%E6%A8%A1%E5%9D%97.png?Expires=1620221470&OSSAccessKeyId=TMP.3KhakD29DfWofqD3MCHZcEinMntLyZtR5r417YJfvREpZWJ2YidBEQyUXdHC5aAPT9R4D5FoayR1rxpaKrLZUTbFsVUBfn&Signature=EE1HKfW4Z+7on9d+675sMzzutV8=">
-<meta property="og:image" content="https://edu-bibofu.oss-cn-beijing.aliyuncs.com/day01%E9%9A%8F%E5%A0%82%E7%AC%94%E8%AE%B0/4%20%E9%A1%B9%E7%9B%AE%E6%8A%80%E6%9C%AF%E7%82%B9.png?Expires=1620221523&OSSAccessKeyId=TMP.3KhakD29DfWofqD3MCHZcEinMntLyZtR5r417YJfvREpZWJ2YidBEQyUXdHC5aAPT9R4D5FoayR1rxpaKrLZUTbFsVUBfn&Signature=DnQQsR3+p2mePminwT0NIGj7r1w=">
-<meta property="og:image" content="https://edu-bibofu.oss-cn-beijing.aliyuncs.com/day01%E9%9A%8F%E5%A0%82%E7%AC%94%E8%AE%B0/6%20%E4%B8%BB%E9%94%AE%E7%94%9F%E6%88%90%E7%AD%96%E7%95%A5.png?Expires=1620221656&OSSAccessKeyId=TMP.3KhakD29DfWofqD3MCHZcEinMntLyZtR5r417YJfvREpZWJ2YidBEQyUXdHC5aAPT9R4D5FoayR1rxpaKrLZUTbFsVUBfn&Signature=SQ+km11AUjlPzW0uly7DvM+8h8I=">
-<meta property="og:image" content="https://edu-bibofu.oss-cn-beijing.aliyuncs.com/day01%E9%9A%8F%E5%A0%82%E7%AC%94%E8%AE%B0/13%20mp%E5%AE%9E%E7%8E%B0%E5%A4%8D%E6%9D%82%E6%9F%A5%E8%AF%A2.png?Expires=1620222073&OSSAccessKeyId=TMP.3KhakD29DfWofqD3MCHZcEinMntLyZtR5r417YJfvREpZWJ2YidBEQyUXdHC5aAPT9R4D5FoayR1rxpaKrLZUTbFsVUBfn&Signature=QYxLZNf6GbtTo5nT3dlzpCBkfe4=">
+<meta property="og:image" content="https://z3.ax1x.com/2021/05/23/gXubdO.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/05/23/gXuHeK.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/05/23/gXuTL6.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/05/23/gXuosx.png">
 <meta property="article:published_time" content="2021-05-04T14:30:43.600Z">
-<meta property="article:modified_time" content="2021-05-05T13:37:40.781Z">
+<meta property="article:modified_time" content="2021-05-23T09:01:47.763Z">
 <meta property="article:author" content="bibofu">
 <meta property="article:tag" content="项目">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://edu-bibofu.oss-cn-beijing.aliyuncs.com/day01%E9%9A%8F%E5%A0%82%E7%AC%94%E8%AE%B0/0%20%E9%A1%B9%E7%9B%AE%E6%9E%B6%E6%9E%84.png?Expires=1620221327&OSSAccessKeyId=TMP.3KhakD29DfWofqD3MCHZcEinMntLyZtR5r417YJfvREpZWJ2YidBEQyUXdHC5aAPT9R4D5FoayR1rxpaKrLZUTbFsVUBfn&Signature=4mbxEB4gSkArRtosBcwM9tyGDtc=">
+<meta name="twitter:image" content="https://z3.ax1x.com/2021/05/23/gXubdO.png">
 
 <link rel="canonical" href="https://bibofu24.com/2021/05/04/onlineEdu_1/">
 
@@ -239,7 +238,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-05-05 21:37:40" itemprop="dateModified" datetime="2021-05-05T21:37:40+08:00">2021-05-05</time>
+                <time title="修改时间：2021-05-23 17:01:47" itemprop="dateModified" datetime="2021-05-23T17:01:47+08:00">2021-05-23</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -285,15 +284,13 @@
       
         <h2 id="项目概况"><a href="#项目概况" class="headerlink" title="项目概况"></a>项目概况</h2><p>一个B2C模式的在线教育系统，分为前台用户系统和后台运营平台。</p>
 <p><strong>架构概览</strong></p>
-<p><img src="https://edu-bibofu.oss-cn-beijing.aliyuncs.com/day01%E9%9A%8F%E5%A0%82%E7%AC%94%E8%AE%B0/0%20%E9%A1%B9%E7%9B%AE%E6%9E%B6%E6%9E%84.png?Expires=1620221327&OSSAccessKeyId=TMP.3KhakD29DfWofqD3MCHZcEinMntLyZtR5r417YJfvREpZWJ2YidBEQyUXdHC5aAPT9R4D5FoayR1rxpaKrLZUTbFsVUBfn&Signature=4mbxEB4gSkArRtosBcwM9tyGDtc=" alt="文件无法预览。"></p>
+<p><img src="https://z3.ax1x.com/2021/05/23/gXubdO.png" alt="0 项目架构"></p>
 <p><strong>功能模块</strong></p>
-<p><img src="https://edu-bibofu.oss-cn-beijing.aliyuncs.com/day01%E9%9A%8F%E5%A0%82%E7%AC%94%E8%AE%B0/3%20%E9%A1%B9%E7%9B%AE%E5%8A%9F%E8%83%BD%E6%A8%A1%E5%9D%97.png?Expires=1620221470&OSSAccessKeyId=TMP.3KhakD29DfWofqD3MCHZcEinMntLyZtR5r417YJfvREpZWJ2YidBEQyUXdHC5aAPT9R4D5FoayR1rxpaKrLZUTbFsVUBfn&Signature=EE1HKfW4Z+7on9d+675sMzzutV8=" alt="文件无法预览。"></p>
+<p><img src="https://z3.ax1x.com/2021/05/23/gXuHeK.png" alt="3 项目功能模块"></p>
 <p><strong>技术点</strong></p>
-<p><img src="https://edu-bibofu.oss-cn-beijing.aliyuncs.com/day01%E9%9A%8F%E5%A0%82%E7%AC%94%E8%AE%B0/4%20%E9%A1%B9%E7%9B%AE%E6%8A%80%E6%9C%AF%E7%82%B9.png?Expires=1620221523&OSSAccessKeyId=TMP.3KhakD29DfWofqD3MCHZcEinMntLyZtR5r417YJfvREpZWJ2YidBEQyUXdHC5aAPT9R4D5FoayR1rxpaKrLZUTbFsVUBfn&Signature=DnQQsR3+p2mePminwT0NIGj7r1w=" alt="文件无法预览。"></p>
+<p><img src="https://z3.ax1x.com/2021/05/23/gXuTL6.png" alt="4 项目技术点"></p>
 <h2 id="MybatisPlus"><a href="#MybatisPlus" class="headerlink" title="MybatisPlus"></a>MybatisPlus</h2><p><strong>分布式系统主键生成策略</strong></p>
-<p><img src="https://edu-bibofu.oss-cn-beijing.aliyuncs.com/day01%E9%9A%8F%E5%A0%82%E7%AC%94%E8%AE%B0/6%20%E4%B8%BB%E9%94%AE%E7%94%9F%E6%88%90%E7%AD%96%E7%95%A5.png?Expires=1620221656&OSSAccessKeyId=TMP.3KhakD29DfWofqD3MCHZcEinMntLyZtR5r417YJfvREpZWJ2YidBEQyUXdHC5aAPT9R4D5FoayR1rxpaKrLZUTbFsVUBfn&Signature=SQ+km11AUjlPzW0uly7DvM+8h8I=" alt="文件无法预览。"></p>
-<p><strong>条件查询</strong></p>
-<p><img src="https://edu-bibofu.oss-cn-beijing.aliyuncs.com/day01%E9%9A%8F%E5%A0%82%E7%AC%94%E8%AE%B0/13%20mp%E5%AE%9E%E7%8E%B0%E5%A4%8D%E6%9D%82%E6%9F%A5%E8%AF%A2.png?Expires=1620222073&OSSAccessKeyId=TMP.3KhakD29DfWofqD3MCHZcEinMntLyZtR5r417YJfvREpZWJ2YidBEQyUXdHC5aAPT9R4D5FoayR1rxpaKrLZUTbFsVUBfn&Signature=QYxLZNf6GbtTo5nT3dlzpCBkfe4=" alt="文件无法预览。"></p>
+<p><img src="https://z3.ax1x.com/2021/05/23/gXuosx.png" alt="6 主键生成策略"></p>
 <p><strong>MyBatisPlus实现增删改查操作</strong></p>
 <p>application.properties文件配置</p>
 <figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">spring.datasource.driver-class-name</span>=<span class="string">com.mysql.cj.jdbc.Driver</span></span><br><span class="line"><span class="meta">spring.datasource.url</span>=<span class="string">jdbc:mysql://localhost:3306/mybatis_plus?serverTimezone=GMT%2B8&amp;useUnicode=true&amp;characterEncoding=utf8</span></span><br><span class="line"><span class="meta">spring.datasource.username</span>=<span class="string">root</span></span><br><span class="line"><span class="meta">spring.datasource.password</span>=<span class="string">123456</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#生产环境</span></span><br><span class="line"><span class="meta">spring.profiles.active</span>=<span class="string">dev</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#mybatis日志</span></span><br><span class="line"><span class="meta">mybatis-plus.configuration.log-impl</span>=<span class="string">org.apache.ibatis.logging.stdout.StdOutImpl</span></span><br></pre></td></tr></table></figure>
@@ -476,7 +473,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">40</span>
+          <span class="site-state-item-count">41</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -557,7 +554,7 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">2:05</span>
+    <span title="站点阅读时长">2:06</span>
 </div>
 
         

@@ -22,33 +22,30 @@
     var CONFIG = {"hostname":"bibofu24.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"manual","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="热门面试题 1 1. 两数之和leetcode地址 123456789101112131415161718192021222324class Solution &amp;#123;    public int[] twoSum(int[] nums, int target) &amp;#123;        Map&lt;Integer,Integer&gt; map&#x3D;new HashMap&lt;&gt;()">
-<meta property="og:type" content="article">
-<meta property="og:title" content="LeetCode 1">
-<meta property="og:url" content="https://bibofu24.com/2021/04/23/LeetCode_1/index.html">
+  <meta name="description" content="记录学习，分享生活">
+<meta property="og:type" content="website">
+<meta property="og:title" content="二十六画生">
+<meta property="og:url" content="https://bibofu24.com/page/5/index.html">
 <meta property="og:site_name" content="二十六画生">
-<meta property="og:description" content="热门面试题 1 1. 两数之和leetcode地址 123456789101112131415161718192021222324class Solution &amp;#123;    public int[] twoSum(int[] nums, int target) &amp;#123;        Map&lt;Integer,Integer&gt; map&#x3D;new HashMap&lt;&gt;()">
+<meta property="og:description" content="记录学习，分享生活">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2021-04-23T15:13:28.707Z">
-<meta property="article:modified_time" content="2021-04-25T09:11:39.516Z">
 <meta property="article:author" content="bibofu">
-<meta property="article:tag" content="热门面试题">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://bibofu24.com/2021/04/23/LeetCode_1/">
+<link rel="canonical" href="https://bibofu24.com/page/5/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : false,
-    isPost : true,
+    isHome : true,
+    isPost : false,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>LeetCode 1 | 二十六画生</title>
+  <title>二十六画生</title>
   
 
 
@@ -194,10 +191,9 @@
         <div class="content-wrap">
           
 
-          <div class="content post posts-expand">
+          <div class="content index posts-expand">
             
-
-    
+      
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
@@ -213,9 +209,10 @@
       <meta itemprop="name" content="二十六画生">
     </span>
       <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          LeetCode 1
-        </h1>
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/04/23/LeetCode_1/" class="post-title-link" itemprop="url">LeetCode 1</a>
+        </h2>
 
         <div class="post-meta">
 
@@ -245,14 +242,7 @@
                 </span>
             </span>
 
-          
-            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span id="busuanzi_value_page_pv"></span>
-            </span><br>
+          <br>
             <span class="post-meta-item" title="本文字数">
               <span class="post-meta-item-icon">
                 <i class="far fa-file-word"></i>
@@ -277,7 +267,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>热门面试题 1</p>
+          <p>热门面试题 1</p>
 <h2 id="1-两数之和"><a href="#1-两数之和" class="headerlink" title="1. 两数之和"></a>1. 两数之和</h2><p><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/two-sum/">leetcode地址</a></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span>[] twoSum(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> target) &#123;</span><br><span class="line">        Map&lt;Integer,Integer&gt; map=<span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;nums.length;i++)&#123;</span><br><span class="line">            map.put(nums[i],i);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span>[] res=<span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">2</span>];</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;nums.length;i++)&#123;</span><br><span class="line">            <span class="keyword">int</span> need=target-nums[i];</span><br><span class="line">            <span class="keyword">if</span>(map.containsKey(need)&amp;&amp;map.get(need)!=i)&#123;</span><br><span class="line">                res[<span class="number">0</span>]=i;</span><br><span class="line">                res[<span class="number">1</span>]=map.get(need);</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -327,6 +317,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">maxProfit</span><span class="params">(<span class="keyword">int</span>[] prices)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> minPrice=prices[<span class="number">0</span>];</span><br><span class="line">        <span class="keyword">int</span> maxProfit=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i:prices)&#123;</span><br><span class="line">            <span class="keyword">if</span>(i&lt;minPrice)&#123;</span><br><span class="line">                minPrice=i;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(i-minPrice&gt;maxProfit)&#123;</span><br><span class="line">                maxProfit=i-minPrice;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> maxProfit;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
+      
     </div>
 
     
@@ -335,88 +326,24 @@
 
 
      
-       <div>
-         <div>
-    
-        <div style="text-align:center;color: #ccc;font-size:24px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
-    
-</div>
-
-       </div>
-     
-        <div class="reward-container">
-  <div>Your support will be the driving force of my creation</div>
-  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
-    打赏
-  </button>
-  <div id="qr" style="display: none;">
-      
-      <div style="display: inline-block;">
-        <img src="/images/wechatpay.png" alt="bibofu 微信支付">
-        <p>微信支付</p>
-      </div>
-      
-      <div style="display: inline-block;">
-        <img src="/images/alipay.png" alt="bibofu 支付宝">
-        <p>支付宝</p>
-      </div>
-
-  </div>
-</div>
-
-        
-
-<div>
-<ul class="post-copyright">
-  <li class="post-copyright-author">
-    <strong>本文作者： </strong>bibofu
-  </li>
-  <li class="post-copyright-link">
-    <strong>本文链接：</strong>
-    <a href="https://bibofu24.com/2021/04/23/LeetCode_1/" title="LeetCode 1">https://bibofu24.com/2021/04/23/LeetCode_1/</a>
-  </li>
-  <li class="post-copyright-license">
-    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
-  </li>
-</ul>
-</div>
-
-
       <footer class="post-footer">
-          <div class="post-tags">
-              <a href="/tags/%E7%83%AD%E9%97%A8%E9%9D%A2%E8%AF%95%E9%A2%98/" rel="tag"># 热门面试题</a>
-          </div>
-
-        
-
-
-        
-    <div class="post-nav">
-      <div class="post-nav-item">
-    <a href="/2021/04/22/first-blog/" rel="prev" title="第一篇博客">
-      <i class="fa fa-chevron-left"></i> 第一篇博客
-    </a></div>
-      <div class="post-nav-item">
-    <a href="/2021/04/24/LeetCode_2/" rel="next" title="LeetCode 2">
-      LeetCode 2 <i class="fa fa-chevron-right"></i>
-    </a></div>
-    </div>
+        <div class="post-eof"></div>
       </footer>
-    
   </article>
   
   
   
 
 
+  
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span>
+  </nav>
+
+
 
           </div>
           
-    
-  <div class="comments">
-    <div id="lv-container" data-id="city" data-uid="MTAyMC81MzMyNy8yOTgwMQ=="></div>
-  </div>
-  
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -463,7 +390,6 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E4%B8%A4%E6%95%B0%E4%B9%8B%E5%92%8C"><span class="nav-number">1.</span> <span class="nav-text">1. 两数之和</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E4%B8%A4%E6%95%B0%E7%9B%B8%E5%8A%A0"><span class="nav-number">2.</span> <span class="nav-text">2. 两数相加</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E6%97%A0%E9%87%8D%E5%A4%8D%E5%AD%97%E7%AC%A6%E6%9C%80%E9%95%BF%E5%AD%90%E4%B8%B2"><span class="nav-number">3.</span> <span class="nav-text">3. 无重复字符最长子串</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#206-%E5%8F%8D%E8%BD%AC%E9%93%BE%E8%A1%A8"><span class="nav-number">4.</span> <span class="nav-text">206. 反转链表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#146-LRU%E7%BC%93%E5%AD%98%E6%9C%BA%E5%88%B6"><span class="nav-number">5.</span> <span class="nav-text">146. LRU缓存机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#102-%E4%BA%8C%E5%8F%89%E6%A0%91%E5%B1%82%E5%BA%8F%E9%81%8D%E5%8E%86"><span class="nav-number">6.</span> <span class="nav-text">102. 二叉树层序遍历</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#215-%E6%95%B0%E7%BB%84%E4%B8%AD%E7%AC%ACK%E4%B8%AA%E6%9C%80%E5%A4%A7%E5%85%83%E7%B4%A0"><span class="nav-number">7.</span> <span class="nav-text">215. 数组中第K个最大元素</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#25-K%E4%B8%AA%E4%B8%80%E7%BB%84%E7%BF%BB%E8%BD%AC%E9%93%BE%E8%A1%A8"><span class="nav-number">8.</span> <span class="nav-text">25. K个一组翻转链表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#15%EF%BC%9A%E4%B8%89%E6%95%B0%E4%B9%8B%E5%92%8C"><span class="nav-number">9.</span> <span class="nav-text">15：三数之和</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#121%EF%BC%9A%E4%B9%B0%E5%8D%96%E8%82%A1%E7%A5%A8%E6%9C%80%E4%BD%B3%E6%97%B6%E6%9C%BA"><span class="nav-number">10.</span> <span class="nav-text">121：买卖股票最佳时机</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -642,21 +568,6 @@
 
   
 
-<script>
-NexT.utils.loadComments(document.querySelector('#lv-container'), () => {
-  window.livereOptions = {
-    refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
-  };
-  (function(d, s) {
-    var j, e = d.getElementsByTagName(s)[0];
-    if (typeof LivereTower === 'function') { return; }
-    j = d.createElement(s);
-    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
-    j.async = true;
-    e.parentNode.insertBefore(j, e);
-  })(document, 'script');
-});
-</script>
 
 </body>
 </html>

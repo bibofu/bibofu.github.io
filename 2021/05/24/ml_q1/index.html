@@ -22,33 +22,26 @@
     var CONFIG = {"hostname":"bibofu24.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"manual","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="软件测试定义及基本概念测试是为了证明程序有错，通过运行程序发现其中存在的问题。”• 软件测试可以证明软件有错；• 软件测试不可以证明软件没有错 使用人工或者自动手段来运行或测试某个系统的过程,其目的在于检验它是否满足规定的需求或弄清预期结果与实际结果之间的差别 缺陷在软件开发每个阶段都会产生，所以软件测试应该贯穿软件开发始终 Debug不属于测试，属于开发调试 Fault, Error &amp;">
+  <meta name="description" content="给定3个数据点：正例点x1&#x3D;(3,3),x2&#x3D;(4,3),负x3&#x3D;(1,1),求线性可分支持向量机。三个点画出来：  1.首先确定目标函数  2.求得目标函数的极值  3.将求得的极值代入从而求得最优参数w,b  a1&#x3D;a3&#x3D;1&#x2F;4对应的点x1,x3就是支持向量机代入公式： 得到w1&#x3D;w2&#x3D;0.5, b&#x3D;-2 4.因此得到分离超平面为">
 <meta property="og:type" content="article">
-<meta property="og:title" content="软件测试">
-<meta property="og:url" content="https://bibofu24.com/2021/05/22/software_test/index.html">
+<meta property="og:title" content="SVM练习">
+<meta property="og:url" content="https://bibofu24.com/2021/05/24/ml_q1/index.html">
 <meta property="og:site_name" content="二十六画生">
-<meta property="og:description" content="软件测试定义及基本概念测试是为了证明程序有错，通过运行程序发现其中存在的问题。”• 软件测试可以证明软件有错；• 软件测试不可以证明软件没有错 使用人工或者自动手段来运行或测试某个系统的过程,其目的在于检验它是否满足规定的需求或弄清预期结果与实际结果之间的差别 缺陷在软件开发每个阶段都会产生，所以软件测试应该贯穿软件开发始终 Debug不属于测试，属于开发调试 Fault, Error &amp;">
+<meta property="og:description" content="给定3个数据点：正例点x1&#x3D;(3,3),x2&#x3D;(4,3),负x3&#x3D;(1,1),求线性可分支持向量机。三个点画出来：  1.首先确定目标函数  2.求得目标函数的极值  3.将求得的极值代入从而求得最优参数w,b  a1&#x3D;a3&#x3D;1&#x2F;4对应的点x1,x3就是支持向量机代入公式： 得到w1&#x3D;w2&#x3D;0.5, b&#x3D;-2 4.因此得到分离超平面为">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://z3.ax1x.com/2021/05/23/gOXbOP.png">
-<meta property="og:image" content="https://z3.ax1x.com/2021/05/23/gOXLef.png">
-<meta property="og:image" content="https://z3.ax1x.com/2021/05/23/gOXXTS.png">
-<meta property="og:image" content="https://z3.ax1x.com/2021/05/23/gOXvFg.png">
-<meta property="og:image" content="https://z3.ax1x.com/2021/05/23/gOXOw8.png">
-<meta property="og:image" content="https://z3.ax1x.com/2021/05/23/gOv029.png">
-<meta property="og:image" content="https://z3.ax1x.com/2021/05/23/gOvdC4.png">
-<meta property="og:image" content="https://z3.ax1x.com/2021/05/23/gOvNUU.png">
-<meta property="og:image" content="https://z3.ax1x.com/2021/05/23/gOvU5F.png">
-<meta property="og:image" content="https://z3.ax1x.com/2021/05/23/gOvw8J.png">
-<meta property="og:image" content="https://z3.ax1x.com/2021/05/23/gOvBvR.png">
-<meta property="og:image" content="https://z3.ax1x.com/2021/05/23/gOO8u6.png">
-<meta property="og:image" content="https://z3.ax1x.com/2021/05/23/gXSdPS.png">
-<meta property="article:published_time" content="2021-05-22T06:49:02.608Z">
-<meta property="article:modified_time" content="2021-05-24T02:35:52.409Z">
+<meta property="og:image" content="https://z3.ax1x.com/2021/05/24/gvTcYd.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/05/24/gvTgfA.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/05/24/gvTRSI.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/05/24/gvT6FH.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/05/24/gvTsTe.png">
+<meta property="article:published_time" content="2021-05-24T09:32:17.846Z">
+<meta property="article:modified_time" content="2021-05-24T09:37:16.322Z">
 <meta property="article:author" content="bibofu">
+<meta property="article:tag" content="进阶">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://z3.ax1x.com/2021/05/23/gOXbOP.png">
+<meta name="twitter:image" content="https://z3.ax1x.com/2021/05/24/gvTcYd.png">
 
-<link rel="canonical" href="https://bibofu24.com/2021/05/22/software_test/">
+<link rel="canonical" href="https://bibofu24.com/2021/05/24/ml_q1/">
 
 
 <script id="page-configurations">
@@ -61,7 +54,7 @@
   };
 </script>
 
-  <title>软件测试 | 二十六画生</title>
+  <title>SVM练习 | 二十六画生</title>
   
 
 
@@ -214,7 +207,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://bibofu24.com/2021/05/22/software_test/">
+    <link itemprop="mainEntityOfPage" href="https://bibofu24.com/2021/05/24/ml_q1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -227,7 +220,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          软件测试
+          SVM练习
         </h1>
 
         <div class="post-meta">
@@ -238,23 +231,17 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2021-05-22 14:49:02" itemprop="dateCreated datePublished" datetime="2021-05-22T14:49:02+08:00">2021-05-22</time>
+              <time title="创建时间：2021-05-24 17:32:17 / 修改时间：17:37:16" itemprop="dateCreated datePublished" datetime="2021-05-24T17:32:17+08:00">2021-05-24</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-05-24 10:35:52" itemprop="dateModified" datetime="2021-05-24T10:35:52+08:00">2021-05-24</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%A4%A7%E5%AD%A6%E8%AF%BE%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">大学课程</span></a>
+                  <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
                 </span>
             </span>
 
@@ -271,7 +258,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>831</span>
+              <span>157</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -290,39 +277,19 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="软件测试定义及基本概念"><a href="#软件测试定义及基本概念" class="headerlink" title="软件测试定义及基本概念"></a>软件测试定义及基本概念</h2><p>测试是为了证明程序有错，通过运行程序发现其中存在的问题。”<br>• 软件测试可以证明软件有错；<br>• 软件测试不可以证明软件没有错</p>
-<p>使用人工或者自动手段来运行或测试某个系统的过程,其目的在于检验它是否满足规定的需求或弄清预期结果与实际结果之间的差别</p>
-<p>缺陷在软件开发每个阶段都会产生，所以软件测试应该贯穿软件开发始终</p>
-<p><strong>Debug不属于测试</strong>，属于开发调试</p>
-<h2 id="Fault-Error-amp-Failure"><a href="#Fault-Error-amp-Failure" class="headerlink" title="Fault, Error &amp; Failure"></a>Fault, Error &amp; Failure</h2><p><strong>Fault</strong>的定义：软件中的静态缺陷，<strong>可能导致系统或功能失效的异常条件</strong>（Abnormal condition that can cause an element or an item tofail.），可译为“故障”。</p>
-<p><strong>Error</strong>的定义：错误的内部状态<strong>是某些故障的表现</strong>，计算、观察或测量值或条件，与真实、规定或理论上正确的值或条件之间的差异（Discrepancy between a computed, observed or measured value or condition and the true, specified, or theoretically correct value or condition.），可译为“错误”。Error是能够导致系统出现Failure的系统内部状态。</p>
-<p><strong>Failure</strong>的定义：关于预期行为的要求或其他描述的外部不正确行为，<strong>当一个系统不能执行所要求的功能时，即为Failure</strong>，可译为“失效”。（Termination of the ability of an element or an item to perform a function as required.）</p>
-<p>　<strong>举例</strong></p>
-<p>　　病人告诉医生自己的各种症状，身体没有健康地工作 – Failures </p>
-<p>　　医生想找出疾病的根源，如病毒 – Fault</p>
-<p>　　病人身体状态异常，比如血压较高，心跳不规律等 – Errors</p>
-<p><img src="https://z3.ax1x.com/2021/05/23/gOXbOP.png" alt="2021 05 23 14 23 02屏幕截图"></p>
-<p><img src="https://z3.ax1x.com/2021/05/23/gOXLef.png" alt="2021 05 23 14 23 17屏幕截图"></p>
-<p><img src="https://z3.ax1x.com/2021/05/23/gOXXTS.png" alt="2021 05 23 14 23 32屏幕截图"></p>
-<p><img src="https://z3.ax1x.com/2021/05/23/gOXvFg.png" alt="2021 05 23 14 24 01屏幕截图"></p>
-<p><img src="https://z3.ax1x.com/2021/05/23/gOXOw8.png" alt="2021 05 23 14 24 42屏幕截图"></p>
-<hr>
-<p><img src="https://z3.ax1x.com/2021/05/23/gOv029.png" alt="2021 05 23 14 30 37屏幕截图"></p>
-<p><strong>Fault is defined by fixing</strong></p>
-<p><img src="https://z3.ax1x.com/2021/05/23/gOvdC4.png" alt="2021 05 23 14 31 32屏幕截图"></p>
-<p><strong>Fault is defined by testing!</strong></p>
-<p><img src="https://z3.ax1x.com/2021/05/23/gOvNUU.png" alt="2021 05 23 14 31 53屏幕截图"></p>
-<p><img src="https://z3.ax1x.com/2021/05/23/gOvU5F.png" alt="2021 05 23 14 32 11屏幕截图"></p>
-<p><img src="https://z3.ax1x.com/2021/05/23/gOvw8J.png" alt="2021 05 23 14 32 36屏幕截图"></p>
-<p><img src="https://z3.ax1x.com/2021/05/23/gOvBvR.png" alt="2021 05 23 14 32 50屏幕截图"></p>
-<p><img src="https://z3.ax1x.com/2021/05/23/gOO8u6.png" alt="2021 05 23 14 18 53屏幕截图"></p>
-<h2 id="软件测试级别"><a href="#软件测试级别" class="headerlink" title="软件测试级别"></a><strong>软件测试级别</strong></h2><p> • <strong>单元测试</strong>（组件测试）</p>
-<p> • 集成测试</p>
-<p> • 系统测试</p>
-<p> • 验收测试</p>
-<p> • 维护测试</p>
-<p><img src="https://z3.ax1x.com/2021/05/23/gXSdPS.png" alt="2021 05 23 14 44 20屏幕截图"></p>
-<h2 id="白盒测试"><a href="#白盒测试" class="headerlink" title="白盒测试"></a>白盒测试</h2>
+        <p>给定3个数据点：正例点x1=(3,3),x2=(4,3),负x3=(1,1),求线性可分支持向量机。<br>三个点画出来：</p>
+<p><img src="https://z3.ax1x.com/2021/05/24/gvTcYd.png" alt="image 1b1vpnodb1b799lo8l2e23122h78"></p>
+<p>1.首先确定目标函数</p>
+<p><img src="https://z3.ax1x.com/2021/05/24/gvTgfA.png" alt="image 1b1vpp1i8168k1haq1m9m15fctco7l"></p>
+<p>2.求得目标函数的极值</p>
+<p><img src="https://z3.ax1x.com/2021/05/24/gvTRSI.png" alt="image 1b1vprj9k165r2vre2cgj2ocp9"></p>
+<p>3.将求得的极值代入从而求得最优参数w,b</p>
+<p><img src="https://z3.ax1x.com/2021/05/24/gvT6FH.png" alt="image 1b1vpvo2k17871nch1c11o32vgcm"></p>
+<p>a1=a3=1/4对应的点x1,x3就是支持向量机<br>代入公式：</p>
+<p>得到w1=w2=0.5, b=-2</p>
+<p>4.因此得到分离超平面为</p>
+<p><img src="https://z3.ax1x.com/2021/05/24/gvTsTe.png" alt="image 1b1vq1idm13qfc9rs661r8c124r13"></p>
+
     </div>
 
     
@@ -369,7 +336,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://bibofu24.com/2021/05/22/software_test/" title="软件测试">https://bibofu24.com/2021/05/22/software_test/</a>
+    <a href="https://bibofu24.com/2021/05/24/ml_q1/" title="SVM练习">https://bibofu24.com/2021/05/24/ml_q1/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -379,6 +346,9 @@
 
 
       <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E8%BF%9B%E9%98%B6/" rel="tag"># 进阶</a>
+          </div>
 
         
 
@@ -386,13 +356,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2021/05/21/javabasic_1/" rel="prev" title="Java反射">
-      <i class="fa fa-chevron-left"></i> Java反射
+    <a href="/2021/05/22/software_test/" rel="prev" title="软件测试">
+      <i class="fa fa-chevron-left"></i> 软件测试
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2021/05/24/ml_q1/" rel="next" title="SVM练习">
-      SVM练习 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -456,7 +423,6 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BD%AF%E4%BB%B6%E6%B5%8B%E8%AF%95%E5%AE%9A%E4%B9%89%E5%8F%8A%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-number">1.</span> <span class="nav-text">软件测试定义及基本概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Fault-Error-amp-Failure"><span class="nav-number">2.</span> <span class="nav-text">Fault, Error &amp; Failure</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BD%AF%E4%BB%B6%E6%B5%8B%E8%AF%95%E7%BA%A7%E5%88%AB"><span class="nav-number">3.</span> <span class="nav-text">软件测试级别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%99%BD%E7%9B%92%E6%B5%8B%E8%AF%95"><span class="nav-number">4.</span> <span class="nav-text">白盒测试</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
