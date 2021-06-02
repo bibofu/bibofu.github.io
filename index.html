@@ -296,6 +296,439 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bibofu24.com/2021/05/28/python_road/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="bibofu">
+      <meta itemprop="description" content="记录学习，分享生活">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="二十六画生">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/05/28/python_road/" class="post-title-link" itemprop="url">python基础</a>
+        </h2>
+
+        <div class="post-meta">
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-05-28 17:49:34" itemprop="dateCreated datePublished" datetime="2021-05-28T17:49:34+08:00">2021-05-28</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-06-02 19:44:40" itemprop="dateModified" datetime="2021-06-02T19:44:40+08:00">2021-06-02</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>8.9k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>8 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h2><p>在ubuntu18上使用vscode，版本为python3.6.9，配置环境较为简单，不具体写了…</p>
+<h2 id="字符串编码问题"><a href="#字符串编码问题" class="headerlink" title="字符串编码问题"></a>字符串编码问题</h2><p>我们都知道计算机只能处理数字，如果要处理文本，就必须先把文本转换为数字才能处理。最早的计算机在设计时采用8个比特（bit）作为一个字节（byte），所以，一个字节能表示的最大的整数就是255（二进制11111111=十进制255），0 - 255被用来表示大小写英文字母、数字和一些符号，这个编码表被称为ASCII编码，比如大写字母 A 的编码是 65，小写字母 z 的编码是 122。</p>
+<p>如果要表示中文，显然一个字节是不够的，至少需要两个字节，而且还不能和 ASCII 编码冲突，所以，中国制定了 GB2312 编码，用来把中文编进去。</p>
+<p>类似的，日文和韩文等其他语言也有这个问题。为了统一所有文字的编码，Unicode 应运而生。Unicode 把所有语言都统一到一套编码里，这样就不会再有乱码问题了。</p>
+<p>Unicode 通常用两个字节表示一个字符，原有的英文编码从单字节变成双字节，只需要把高字节全部填为 0 就可以。</p>
+<p>因为 Python 的诞生比 Unicode 标准发布的时间还要早，所以最早的Python 只支持 ASCII 编码，普通的字符串 ‘ABC’ 在 Python 内部都是 ASCII 编码的。</p>
+<p>Python 在后来添加了对 Unicode 的支持，以 Unicode 表示的字符串用<code>u&#39;...&#39;</code>表示。</p>
+<p>不过在最新的 Python 3 版本中，字符串是以 Unicode 编码的，也就是说，Python 的字符串支持多语言。就像上面的例子一样，我的代码中没有加<code>u&#39;...&#39;</code>，也能正常显示。</p>
+<p>不过由于 Python 源代码也是一个文本文件，所以，当你的源代码中包含中文的时候，在保存源代码时，就需要务必指定保存为 UTF-8 编码。当Python 解释器读取源代码时，为了让它按 UTF-8 编码读取，我们通常在文件开头写上这两行：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python3</span></span><br><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br></pre></td></tr></table></figure>
+
+<p>第一行注释是为了告诉 Linux/OS X 系统，这是一个 Python 可执行程序，Windows 系统会忽略这个注释；</p>
+<p>第二行注释是为了告诉 Python 解释器，按照 UTF-8 编码读取源代码，否则，你在源代码中写的中文输出可能会有乱码。</p>
+<p>申明了 UTF-8 编码并不意味着你的 .py 文件就是 UTF-8 编码的，必须并且要确保文本编辑器正在使用 UTF-8 without BOM 编码</p>
+<h2 id="基本数据类型"><a href="#基本数据类型" class="headerlink" title="基本数据类型"></a>基本数据类型</h2><p><img src="https://z3.ax1x.com/2021/06/02/2lSspj.png" alt="python算数运算符"></p>
+<h3 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">str1=<span class="string">&#x27;付碧波&#x27;</span></span><br><span class="line">str2=<span class="string">&quot;付碧波&quot;</span></span><br><span class="line">str3=<span class="string">&#x27;&#x27;&#x27;付碧波&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="built_in">print</span>(str1)</span><br><span class="line"><span class="built_in">print</span>(str2)</span><br><span class="line"><span class="built_in">print</span>(str3)</span><br><span class="line"></span><br><span class="line">str4=<span class="string">&quot;付&#x27;碧&#x27;波&quot;</span></span><br><span class="line">str5=<span class="string">&#x27;&#x27;&#x27;付&quot;碧&quot;波&#x27;&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(str4)</span><br><span class="line"><span class="built_in">print</span>(str5)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">付碧波</span><br><span class="line">付碧波</span><br><span class="line">付碧波</span><br><span class="line">付<span class="string">&#x27;碧&#x27;</span>波</span><br><span class="line">付<span class="string">&quot;碧&quot;</span>波</span><br></pre></td></tr></table></figure>
+
+
+
+<p>转义字符：</p>
+<p>单引号，可以使用 <code>\&#39;</code> 来表示，双引号可以使用 <code>\&quot;</code> 来表示。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">str6=<span class="string">&#x27;付\&#x27;碧\&#x27;波&#x27;</span></span><br><span class="line">str7=<span class="string">&#x27;付\&quot;碧\&quot;波&#x27;</span></span><br><span class="line"><span class="built_in">print</span>(str6)</span><br><span class="line"><span class="built_in">print</span>(str7)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">付<span class="string">&#x27;碧&#x27;</span>波</span><br><span class="line">付<span class="string">&quot;碧&quot;</span>波</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="整数"><a href="#整数" class="headerlink" title="整数"></a>整数</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">int1=<span class="number">1</span>+<span class="number">2</span></span><br><span class="line">int2=<span class="number">1</span>-<span class="number">2</span></span><br><span class="line">int3=<span class="number">1</span>*<span class="number">2</span></span><br><span class="line">int4=<span class="number">1</span>/<span class="number">2</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(int1)</span><br><span class="line"><span class="built_in">print</span>(int2)</span><br><span class="line"><span class="built_in">print</span>(int3)</span><br><span class="line"><span class="built_in">print</span>(int4)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">type</span>(int1))</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">type</span>(int2))</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">type</span>(int3))</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">type</span>(int4))</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">3</span></span><br><span class="line">-<span class="number">1</span></span><br><span class="line"><span class="number">2</span></span><br><span class="line"><span class="number">0.5</span></span><br><span class="line">&lt;<span class="class"><span class="keyword">class</span> &#x27;<span class="title">int</span>&#x27;&gt;</span></span><br><span class="line"><span class="class">&lt;<span class="title">class</span> &#x27;<span class="title">int</span>&#x27;&gt;</span></span><br><span class="line"><span class="class">&lt;<span class="title">class</span> &#x27;<span class="title">int</span>&#x27;&gt;</span></span><br><span class="line"><span class="class">&lt;<span class="title">class</span> &#x27;<span class="title">float</span>&#x27;&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="浮点数"><a href="#浮点数" class="headerlink" title="浮点数"></a>浮点数</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(<span class="number">0.55</span>+<span class="number">0.4</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="number">0.55</span>+<span class="number">0.41</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="number">0.55</span>+<span class="number">0.411</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0.9500000000000001</span></span><br><span class="line"><span class="number">0.96</span></span><br><span class="line"><span class="number">0.9610000000000001</span></span><br></pre></td></tr></table></figure>
+
+<p>因为计算机对浮点数的表达本身是不精确的。保存在计算机中的是二进制数，二进制对有些数字不能准确表达，只能非常接近这个数。</p>
+<p>所以我们在对浮点数做运算和比较大小的时候要小心。</p>
+<h3 id="布尔值"><a href="#布尔值" class="headerlink" title="布尔值"></a>布尔值</h3><p>布尔值和布尔代数的表示完全一致，一个布尔值只有 <code>True</code> 、 <code>False </code>两种值，要么是 <code>True</code>，要么是 <code>False</code>，在 Python 中，可以直接用 True、False 表示布尔值（请注意大小写），也可以通过布尔运算计算出来。</p>
+<p>布尔值可以用 <code>and</code>、<code>or</code> 和 <code>not</code> 运算。</p>
+<p><code>and</code> 运算是与运算，只有所有都为 True，and 运算结果才是 True。</p>
+<p><code>or</code> 运算是或运算，只要其中有一个为 True，or 运算结果就是 True。</p>
+<p><code>not</code> 运算是非运算，它是一个单目运算符，把 True 变成 False，False 变成 True。</p>
+<h3 id="空值"><a href="#空值" class="headerlink" title="空值"></a>空值</h3><p>基本上每种编程语言都有自己的特殊值——空值，在 Python 中，用 None 来表示</p>
+<h2 id="基本数据类型转换"><a href="#基本数据类型转换" class="headerlink" title="基本数据类型转换"></a>基本数据类型转换</h2><p><img src="https://z3.ax1x.com/2021/06/02/2lSDhQ.png" alt="python类型转换"></p>
+<h2 id="Python中的变量"><a href="#Python中的变量" class="headerlink" title="Python中的变量"></a>Python中的变量</h2><h3 id="变量的创建和赋值"><a href="#变量的创建和赋值" class="headerlink" title="变量的创建和赋值"></a>变量的创建和赋值</h3><p>在 Python 程序中，变量是用一个变量名表示，可以是任意数据类型，变量名必须是大小写英文、数字和下划线（_）的组合，且不能用数字开头</p>
+<p>Python 是不用声明数据类型的。在 Python 中 <code>=</code> 是赋值语句，跟其他的编程语言也是一样的，因为 Python 定义变量时不需要声明数据类型，因此可以把任意的数据类型赋值给变量，且同一个变量可以反复赋值，而且可以是不同的数据类型。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">a=<span class="string">&#x27;付碧波&#x27;</span></span><br><span class="line"><span class="built_in">print</span>(a)</span><br><span class="line">a=<span class="number">123</span></span><br><span class="line"><span class="built_in">print</span>(a)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">付碧波</span><br><span class="line"><span class="number">123</span></span><br></pre></td></tr></table></figure>
+
+<p>这种变量本身类型不固定的语言称之为动态语言，与之对应的是静态语言。静态语言在定义变量时必须指定变量类型，如果赋值的时候类型不匹配，就会报错。例如 Java 是静态语言。</p>
+<h3 id="变量的指向"><a href="#变量的指向" class="headerlink" title="变量的指向"></a>变量的指向</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">a=<span class="string">&#x27;hello python&#x27;</span></span><br><span class="line">b=a</span><br><span class="line">a=<span class="number">123</span></span><br><span class="line"><span class="built_in">print</span>(b)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hello python</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="多个变量赋值"><a href="#多个变量赋值" class="headerlink" title="多个变量赋值"></a>多个变量赋值</h3><p>Python 允许同时为多个变量赋值。例如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a=b=c=<span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>以上实例，创建一个整型对象，值为 1，三个变量被分配到相同的内存空间上。</p>
+<p>当然也可以为多个对象指定多个变量。例如</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a, b, c = <span class="number">1</span>, <span class="number">2</span>, <span class="string">&quot;liangdianshui&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>以上实例，两个整型对象 1 和 2 的分配给变量 a 和 b，字符串对象 “liangdianshui” 分配给变量 c。</p>
+<h2 id="List"><a href="#List" class="headerlink" title="List"></a>List</h2><h3 id="定义list"><a href="#定义list" class="headerlink" title="定义list"></a>定义list</h3><p>可以定义为空，如nums=[]</p>
+<p><img src="https://z3.ax1x.com/2021/05/28/2FjDDf.png" alt="2021 05 28 17 54 49屏幕截图"></p>
+<p><img src="https://z3.ax1x.com/2021/05/28/2FjBKP.png" alt="2021 05 28 17 55 17屏幕截图"></p>
+<h3 id="访问list"><a href="#访问list" class="headerlink" title="访问list"></a>访问list</h3><p><img src="https://z3.ax1x.com/2021/05/28/2FjH54.png" alt="2021 05 28 17 59 02屏幕截图"></p>
+<p><img src="https://z3.ax1x.com/2021/05/28/2Fj7aF.png" alt="2021 05 28 17 59 14屏幕截图"></p>
+<p>myname[0:2]表示访问myname从0位置开始，一共两个元素，左闭右开</p>
+<h3 id="修改list"><a href="#修改list" class="headerlink" title="修改list"></a>修改list</h3><p><img src="https://z3.ax1x.com/2021/05/28/2FvNZT.png" alt="2021 05 28 18 03 27屏幕截图"></p>
+<p><img src="https://z3.ax1x.com/2021/05/28/2FvYLV.png" alt="2021 05 28 18 03 47屏幕截图"></p>
+<p>增加和删除元素</p>
+<h2 id="tuple-元组"><a href="#tuple-元组" class="headerlink" title="tuple(元组)"></a>tuple(元组)</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>tuple 和 List 非常类似，但是 tuple 一旦初始化就不能修改。 也就是说元组（tuple）是不可变的，类似于java或C语言中的数组，那么不可变是指什么意思呢？</p>
+<p>元组（tuple） 不可变是指当你创建了 tuple 时候，它就不能改变了，也就是说它也没有 append()，insert() 这样的方法，但它也有获取某个索引值的方法，但是不能赋值。</p>
+<p>那么为什么要有 tuple 呢？</p>
+<p>那是因为 tuple 是不可变的，所以代码更安全。</p>
+<p>所以建议能用 tuple 代替 list 就尽量用 tuple 。</p>
+<h3 id="定义tuple"><a href="#定义tuple" class="headerlink" title="定义tuple"></a>定义tuple</h3><p>元组创建很简单，只需要在括号中添加元素，并使用逗号隔开即可</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tuple1=(<span class="string">&#x27;fu&#x27;</span>,<span class="string">&#x27;bi&#x27;</span>,<span class="string">&#x27;bo&#x27;</span>,<span class="number">666</span>)</span><br><span class="line">tuple2=(<span class="number">12</span>,<span class="number">23</span>,<span class="number">34</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+<p>空元组</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tuple3=()</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="访问tuple"><a href="#访问tuple" class="headerlink" title="访问tuple"></a>访问tuple</h3><p>元组下标索引也是从 0 开始，元组（tuple）可以使用下标索引来访问元组中的值。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">tuple1=(<span class="string">&#x27;fu&#x27;</span>,<span class="string">&#x27;bi&#x27;</span>,<span class="string">&#x27;bo&#x27;</span>)</span><br><span class="line">tuple2=(<span class="number">12</span>,<span class="number">23</span>,<span class="number">34</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(tuple1[<span class="number">0</span>])</span><br><span class="line"><span class="built_in">print</span>(tuple2[<span class="number">1</span>])</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="修改tuple"><a href="#修改tuple" class="headerlink" title="修改tuple"></a>修改tuple</h3><p>tuple无法进行append，insert等操作，但可以通过修改已有元素实现修改</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">list1=[<span class="number">123</span>,<span class="number">456</span>]</span><br><span class="line">tuple1=(<span class="string">&#x27;bibofu&#x27;</span>,<span class="string">&#x27;jack&#x27;</span>,<span class="string">&#x27;tom&#x27;</span>,list1)</span><br><span class="line"><span class="built_in">print</span>(tuple1)</span><br><span class="line">list1[<span class="number">0</span>]=<span class="number">789</span></span><br><span class="line">list1[<span class="number">1</span>]=<span class="number">100</span></span><br><span class="line"><span class="built_in">print</span>(tuple1)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(<span class="string">&#x27;bibofu&#x27;</span>, <span class="string">&#x27;jack&#x27;</span>, <span class="string">&#x27;tom&#x27;</span>, [<span class="number">123</span>, <span class="number">456</span>])</span><br><span class="line">(<span class="string">&#x27;bibofu&#x27;</span>, <span class="string">&#x27;jack&#x27;</span>, <span class="string">&#x27;tom&#x27;</span>, [<span class="number">789</span>, <span class="number">100</span>])</span><br></pre></td></tr></table></figure>
+
+<p>tuple 所谓的“不变”是说，tuple 的每个元素，指向永远不变。注意是 tupe1 中的第四个元素还是指向原来的 list ，是没有变的，我们修改的只是列表 List 里面的元素。</p>
+<h3 id="删除tuple"><a href="#删除tuple" class="headerlink" title="删除tuple"></a>删除tuple</h3><p>tuple 元组中的元素值是不允许删除的，但我们可以使用 del 语句来删除整个元组</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">del</span>(tuple1)</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="tuple运算符"><a href="#tuple运算符" class="headerlink" title="tuple运算符"></a>tuple运算符</h3><table>
+<thead>
+<tr>
+<th>python表达式</th>
+<th>结果</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>len((1, 2, 3))</td>
+<td>3</td>
+<td>计算元素个数</td>
+</tr>
+<tr>
+<td>(1, 2, 3) + (4, 5, 6)</td>
+<td>(1, 2, 3, 4, 5, 6)</td>
+<td>连接</td>
+</tr>
+<tr>
+<td>(‘Hi!’,) * 4</td>
+<td>(‘Hi!’, ‘Hi!’, ‘Hi!’, ‘Hi!’)</td>
+<td>复制</td>
+</tr>
+<tr>
+<td>3 in (1, 2, 3)</td>
+<td>True</td>
+<td>元素是否存在</td>
+</tr>
+<tr>
+<td>for x in (1, 2, 3): print(x)</td>
+<td>1 2 3</td>
+<td>for循环</td>
+</tr>
+</tbody></table>
+<h3 id="tuple内置函数"><a href="#tuple内置函数" class="headerlink" title="tuple内置函数"></a>tuple内置函数</h3><table>
+<thead>
+<tr>
+<th>方法</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>len(tuple)</td>
+<td>计算元组元素个数</td>
+</tr>
+<tr>
+<td>max(tuple)</td>
+<td>返回元组中元素最大值</td>
+</tr>
+<tr>
+<td>min(tuple)</td>
+<td>返回元组中元素最小值</td>
+</tr>
+<tr>
+<td>tuple(seq)</td>
+<td>将列表转换为元组</td>
+</tr>
+</tbody></table>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">name1 = (<span class="string">&#x27;一&#x27;</span>, <span class="string">&#x27;二&#x27;</span>, <span class="string">&#x27;三&#x27;</span>, <span class="string">&#x27;四&#x27;</span>, <span class="string">&#x27;五&#x27;</span>)</span><br><span class="line"></span><br><span class="line">name2 = (<span class="string">&#x27;1&#x27;</span>, <span class="string">&#x27;2&#x27;</span>, <span class="string">&#x27;3&#x27;</span>, <span class="string">&#x27;4&#x27;</span>, <span class="string">&#x27;5&#x27;</span>)</span><br><span class="line"></span><br><span class="line">list1 = [<span class="number">11</span>,<span class="number">22</span>, <span class="number">33</span>, <span class="number">44</span>, <span class="number">55</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 计算元素个数</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">len</span>(name1))</span><br><span class="line"><span class="comment"># 连接,两个元组相加</span></span><br><span class="line"><span class="built_in">print</span>(name1 + name2)</span><br><span class="line"><span class="comment"># 复制元组</span></span><br><span class="line"><span class="built_in">print</span>(name1 * <span class="number">2</span>)</span><br><span class="line"><span class="comment"># 元素是否存在 (name1 这个元组中是否含有一点水这个元素)</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;一点水&#x27;</span> <span class="keyword">in</span> name1)</span><br><span class="line"><span class="comment"># 元素的最大值</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">max</span>(name2))</span><br><span class="line"><span class="comment"># 元素的最小值</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">min</span>(name2))</span><br><span class="line"><span class="comment"># 将列表转换为元组</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">tuple</span>(list1))</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">5</span></span><br><span class="line">(<span class="string">&#x27;一&#x27;</span>, <span class="string">&#x27;二&#x27;</span>, <span class="string">&#x27;三&#x27;</span>, <span class="string">&#x27;四&#x27;</span>, <span class="string">&#x27;五&#x27;</span>, <span class="string">&#x27;1&#x27;</span>, <span class="string">&#x27;2&#x27;</span>, <span class="string">&#x27;3&#x27;</span>, <span class="string">&#x27;4&#x27;</span>, <span class="string">&#x27;5&#x27;</span>)</span><br><span class="line">(<span class="string">&#x27;一&#x27;</span>, <span class="string">&#x27;二&#x27;</span>, <span class="string">&#x27;三&#x27;</span>, <span class="string">&#x27;四&#x27;</span>, <span class="string">&#x27;五&#x27;</span>, <span class="string">&#x27;一&#x27;</span>, <span class="string">&#x27;二&#x27;</span>, <span class="string">&#x27;三&#x27;</span>, <span class="string">&#x27;四&#x27;</span>, <span class="string">&#x27;五&#x27;</span>)</span><br><span class="line"><span class="literal">False</span></span><br><span class="line"><span class="number">5</span></span><br><span class="line"><span class="number">1</span></span><br><span class="line">(<span class="number">11</span>, <span class="number">22</span>, <span class="number">33</span>, <span class="number">44</span>, <span class="number">55</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Dictionary-字典"><a href="#Dictionary-字典" class="headerlink" title="Dictionary(字典)"></a>Dictionary(字典)</h2><p>类似于map</p>
+<h3 id="创建dic"><a href="#创建dic" class="headerlink" title="创建dic"></a>创建dic</h3><p>字典是另一种可变容器模型，且可存储任意类型对象。</p>
+<p>字典的每个键值(key=&gt;value)对用冒号(:)分割，每个对之间用逗号(,)分割，整个字典包括在花括号({})中 ,格式如下所示：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">dict</span> = &#123;key1 : value1, key2 : value2 &#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意：键必须是唯一的，但值则不必。值可以取任何数据类型，但键必须是不可变的。</p>
+<p>创建 dict（字典）实例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">dict1=&#123;<span class="string">&#x27;aaa&#x27;</span>:<span class="string">&#x27;111111&#x27;</span> ,<span class="string">&#x27;bbb&#x27;</span>:<span class="string">&#x27;222222&#x27;</span> ,<span class="string">&#x27;哈哈哈&#x27;</span>:<span class="string">&#x27;333333&#x27;</span>&#125;</span><br><span class="line">dict2=&#123;<span class="string">&#x27;abc&#x27;</span>:<span class="number">1234</span>,<span class="number">1234</span>:<span class="string">&#x27;abc&#x27;</span>&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="访问dic"><a href="#访问dic" class="headerlink" title="访问dic"></a>访问dic</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">dic=&#123;<span class="string">&#x27;james&#x27;</span>:<span class="number">1</span>,<span class="string">&#x27;jordan&#x27;</span>:<span class="number">2</span>,<span class="string">&#x27;harden&#x27;</span>:<span class="number">3</span>&#125;</span><br><span class="line"><span class="built_in">print</span>(dic[<span class="string">&#x27;james&#x27;</span>])</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1</span><br></pre></td></tr></table></figure>
+
+<p>这里需要注意的一点是：如果字典中没有这个键，是会报错的。</p>
+<h3 id="修改dic"><a href="#修改dic" class="headerlink" title="修改dic"></a>修改dic</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">dict1=&#123;<span class="string">&#x27;kobe&#x27;</span>:<span class="string">&#x27;111111&#x27;</span> ,<span class="string">&#x27;james&#x27;</span>:<span class="string">&#x27;222222&#x27;</span> ,<span class="string">&#x27;库里&#x27;</span>:<span class="string">&#x27;333333&#x27;</span>&#125;</span><br><span class="line"><span class="built_in">print</span>(dict1)</span><br><span class="line"><span class="comment"># 新增一个键值对</span></span><br><span class="line">dict1[<span class="string">&#x27;harden&#x27;</span>]=<span class="string">&#x27;444444&#x27;</span></span><br><span class="line"><span class="built_in">print</span>(dict1)</span><br><span class="line"><span class="comment"># 修改键值对</span></span><br><span class="line">dict1[<span class="string">&#x27;james&#x27;</span>]=<span class="string">&#x27;555555&#x27;</span></span><br><span class="line"><span class="built_in">print</span>(dict1)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#39;kobe&#39;: &#39;111111&#39;, &#39;james&#39;: &#39;222222&#39;, &#39;库里&#39;: &#39;333333&#39;&#125;</span><br><span class="line">&#123;&#39;kobe&#39;: &#39;111111&#39;, &#39;james&#39;: &#39;222222&#39;, &#39;库里&#39;: &#39;333333&#39;, &#39;harden&#39;: &#39;444444&#39;&#125;</span><br><span class="line">&#123;&#39;kobe&#39;: &#39;111111&#39;, &#39;james&#39;: &#39;555555&#39;, &#39;库里&#39;: &#39;333333&#39;, &#39;harden&#39;: &#39;444444&#39;&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="删除dic"><a href="#删除dic" class="headerlink" title="删除dic"></a>删除dic</h3><p>通过 <code>del</code> 可以删除 dict （字典）中的某个元素，也能删除 dict （字典）</p>
+<p>通过调用 <code>clear()</code> 方法可以清除字典中的所有元素</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">dict1=&#123;<span class="string">&#x27;kobe&#x27;</span>:<span class="string">&#x27;111111&#x27;</span> ,<span class="string">&#x27;james&#x27;</span>:<span class="string">&#x27;222222&#x27;</span> ,<span class="string">&#x27;库里&#x27;</span>:<span class="string">&#x27;333333&#x27;</span>&#125;</span><br><span class="line"><span class="built_in">print</span>(dict1)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除一个键值对</span></span><br><span class="line"><span class="keyword">del</span>(dict1[<span class="string">&#x27;kobe&#x27;</span>])</span><br><span class="line"><span class="built_in">print</span>(dict1)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除字典</span></span><br><span class="line">dict1.clear()</span><br><span class="line"><span class="built_in">print</span>(dict1)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#39;kobe&#39;: &#39;111111&#39;, &#39;james&#39;: &#39;222222&#39;, &#39;库里&#39;: &#39;333333&#39;&#125;</span><br><span class="line">&#123;&#39;james&#39;: &#39;222222&#39;, &#39;库里&#39;: &#39;333333&#39;&#125;</span><br><span class="line">&#123;&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="dic使用注意事项"><a href="#dic使用注意事项" class="headerlink" title="dic使用注意事项"></a>dic使用注意事项</h3><p> (1) dict （字典）是不允许一个键创建两次的，但是在创建 dict （字典）的时候如果出现了一个键值赋予了两次，会以最后一次赋予的值为准</p>
+<p> (2) dict （字典）键必须不可变，可是键可以用数字，字符串或元组充当，但是就是不能使用列表</p>
+<p> (3) dict 内部存放的顺序和 key 放入的顺序是没有任何关系</p>
+<h3 id="dic常用函数"><a href="#dic常用函数" class="headerlink" title="dic常用函数"></a>dic常用函数</h3><table>
+<thead>
+<tr>
+<th>方法和函数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>len(dict)</td>
+<td>计算字典元素个数</td>
+</tr>
+<tr>
+<td>str(dict)</td>
+<td>输出字典可打印的字符串表示</td>
+</tr>
+<tr>
+<td>type(variable)</td>
+<td>返回输入的变量类型，如果变量是字典就返回字典类型</td>
+</tr>
+<tr>
+<td>dict.clear()</td>
+<td>删除字典内所有元素</td>
+</tr>
+<tr>
+<td>dict.copy()</td>
+<td>返回一个字典的浅复制</td>
+</tr>
+<tr>
+<td>dict.values()</td>
+<td>以列表返回字典中的所有值</td>
+</tr>
+<tr>
+<td>popitem()</td>
+<td>随机返回并删除字典中的一对键和值</td>
+</tr>
+<tr>
+<td>dict.items()</td>
+<td>以列表返回可遍历的(键, 值) 元组数组</td>
+</tr>
+</tbody></table>
+<h2 id="set"><a href="#set" class="headerlink" title="set"></a>set</h2><p>python 的 set 和其他语言类似, 是一个无序不重复元素集, 基本功能包括关系测试和消除重复元素。</p>
+<p>set 和 dict 类似，但是 set 不存储 value 值的。</p>
+<h3 id="创建set"><a href="#创建set" class="headerlink" title="创建set"></a>创建set</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">set1=<span class="built_in">set</span>([<span class="number">1</span>,<span class="number">2</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">5</span>,<span class="number">4</span>])</span><br><span class="line"><span class="built_in">print</span>(set1)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;1,2,3,4,5&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="set添加元素"><a href="#set添加元素" class="headerlink" title="set添加元素"></a>set添加元素</h3><p>通过 add(key) 方法可以添加元素到 set 中，可以重复添加，但不会有效果</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">set1=<span class="built_in">set</span>([<span class="number">1</span>,<span class="number">2</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">5</span>,<span class="number">4</span>])</span><br><span class="line">set1.add(<span class="number">2</span>)</span><br><span class="line">set1.add(<span class="number">6</span>)</span><br><span class="line"><span class="built_in">print</span>(set1)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;1,2,3,4,5,6&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="set删除元素"><a href="#set删除元素" class="headerlink" title="set删除元素"></a>set删除元素</h3><p>通过 remove(key) 方法可以删除 set 中的元素</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">set1=<span class="built_in">set</span>([<span class="number">1</span>,<span class="number">2</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">5</span>,<span class="number">4</span>])</span><br><span class="line">set1.remove(<span class="number">1</span>)</span><br><span class="line">set1.remove(<span class="number">5</span>)</span><br><span class="line"><span class="built_in">print</span>(set1)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;2,3,4&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="set的运用"><a href="#set的运用" class="headerlink" title="set的运用"></a>set的运用</h3><p><img src="https://z3.ax1x.com/2021/06/02/2lSBtg.png" alt="2021 06 02 16 01 49屏幕截图"></p>
+<p>因为 set 是一个无序不重复元素集，因此，两个 set 可以做数学意义上的 union(并集), intersection(交集), difference(差集) 等操作</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">set1=<span class="built_in">set</span>([<span class="number">1</span>,<span class="number">2</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">5</span>,<span class="number">4</span>])</span><br><span class="line">set2=<span class="built_in">set</span>([<span class="number">2</span>,<span class="number">3</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>])</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;set1:&quot;</span>,set1)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;set2:&quot;</span>,set2)</span><br><span class="line"><span class="comment">#交集</span></span><br><span class="line">set3=set1&amp;set2</span><br><span class="line"><span class="built_in">print</span>(set3)</span><br><span class="line"><span class="comment">#并集</span></span><br><span class="line">set4=set1|set2</span><br><span class="line"><span class="built_in">print</span>(set4)</span><br><span class="line"><span class="comment">#差集</span></span><br><span class="line">set5=set1-set2</span><br><span class="line"><span class="built_in">print</span>(set5)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">set1: &#123;1, 2, 3, 4, 5&#125;</span><br><span class="line">set2: &#123;2, 3, 5, 6, 7&#125;</span><br><span class="line">&#123;2, 3, 5&#125;</span><br><span class="line">&#123;1, 2, 3, 4, 5, 6, 7&#125;</span><br><span class="line">&#123;1, 4&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="for循环"><a href="#for循环" class="headerlink" title="for循环"></a>for循环</h2><p>基本语法格式</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> iterating_var <span class="keyword">in</span> sequence:</span><br><span class="line">   statements(s)</span><br></pre></td></tr></table></figure>
+
+<p>举例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> word <span class="keyword">in</span> <span class="string">&#x27;hello world&#x27;</span>:</span><br><span class="line">    <span class="built_in">print</span>(word)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">h</span><br><span class="line">e</span><br><span class="line">l</span><br><span class="line">l</span><br><span class="line">o</span><br><span class="line"> </span><br><span class="line">w</span><br><span class="line">o</span><br><span class="line">r</span><br><span class="line">l</span><br><span class="line">d</span><br></pre></td></tr></table></figure>
+
+<p>从打印结果来看，它就是把字符串 一个一个字符的打印出来。</p>
+<h3 id="range-函数"><a href="#range-函数" class="headerlink" title="range() 函数"></a>range() 函数</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">5</span>):</span><br><span class="line">    <span class="built_in">print</span>(i)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">0</span><br><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td></tr></table></figure>
+
+<p>range(x) 函数，就可以生成一个从 0 到 x-1 的整数序列。</p>
+<p>如果是 <code>range(a,b)</code> 函数，你可以生成了一个左闭右开的整数序列。</p>
+<p>两个参数时，每次递增量为1</p>
+<p>三个参数，比如</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>,<span class="number">8</span>,<span class="number">2</span>):</span><br><span class="line">    <span class="built_in">print</span>(i)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">0</span><br><span class="line">2</span><br><span class="line">4</span><br><span class="line">6</span><br></pre></td></tr></table></figure>
+
+<p>[0,8)递增量为2</p>
+<h2 id="while循环"><a href="#while循环" class="headerlink" title="while循环"></a>while循环</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sum</span>=<span class="number">0</span></span><br><span class="line">temp=<span class="number">1</span></span><br><span class="line"><span class="keyword">while</span> temp&lt;=<span class="number">10</span>:</span><br><span class="line">    <span class="built_in">sum</span>=temp+<span class="built_in">sum</span></span><br><span class="line">    temp=temp+<span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">sum</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">year = <span class="built_in">int</span>(<span class="built_in">input</span>(<span class="string">&quot;请输入一个年份: &quot;</span>))</span><br><span class="line"><span class="keyword">if</span> (year % <span class="number">4</span>) == <span class="number">0</span> <span class="keyword">and</span> (year % <span class="number">100</span>) != <span class="number">0</span> <span class="keyword">or</span> (year % <span class="number">400</span>) == <span class="number">0</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;&#123;0&#125; 是闰年&#x27;</span> .<span class="built_in">format</span>(year))</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">     <span class="built_in">print</span>(<span class="string">&#x27;&#123;0&#125; 不是闰年&#x27;</span> .<span class="built_in">format</span>(year))</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="python函数"><a href="#python函数" class="headerlink" title="python函数"></a>python函数</h2><h3 id="自定义函数"><a href="#自定义函数" class="headerlink" title="自定义函数"></a>自定义函数</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> 函数名(<span class="params">参数<span class="number">1</span>，参数<span class="number">2.</span>...参数n</span>):</span></span><br><span class="line">    函数体</span><br><span class="line">    <span class="keyword">return</span> 语句</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="函数返回值"><a href="#函数返回值" class="headerlink" title="函数返回值"></a>函数返回值</h3><p><strong>不带参数值的 return 语句返回 None</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sum</span>(<span class="params">num1,num2</span>):</span></span><br><span class="line">	<span class="comment"># 两数之和</span></span><br><span class="line">	<span class="keyword">if</span> <span class="keyword">not</span> (<span class="built_in">isinstance</span> (num1,(<span class="built_in">int</span> ,<span class="built_in">float</span>)) <span class="keyword">and</span> <span class="built_in">isinstance</span> (num2,(<span class="built_in">int</span> ,<span class="built_in">float</span>))):</span><br><span class="line">		<span class="keyword">raise</span> TypeError(<span class="string">&#x27;参数类型错误&#x27;</span>)</span><br><span class="line">	<span class="keyword">return</span> num1+num2</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">sum</span>(<span class="number">1</span>,<span class="number">2</span>))</span><br></pre></td></tr></table></figure>
+
+
+
+<p>函数也可以返回多个值，具体实例如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span>  <span class="title">division</span> (<span class="params"> num1, num2 </span>):</span></span><br><span class="line">	<span class="comment"># 求商与余数</span></span><br><span class="line">         a = num1 % num2</span><br><span class="line">         b = (num1-a) / num2</span><br><span class="line">         <span class="keyword">return</span> b , a</span><br><span class="line"></span><br><span class="line">num1 , num2 = division(<span class="number">9</span>,<span class="number">4</span>)</span><br><span class="line">tuple1 = division(<span class="number">9</span>,<span class="number">4</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span> (num1,num2)</span><br><span class="line"><span class="built_in">print</span> (tuple1)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">2.0 1</span><br><span class="line">(2.0, 1)</span><br></pre></td></tr></table></figure>
+
+<p>Python 语言中的函数返回值可以是多个，而其他语言都不行，这是Python 相比其他语言的简便和灵活之处。</p>
+<p><strong>Python 一次接受多个返回值的数据类型就是元组。</strong></p>
+<h3 id="匿名函数"><a href="#匿名函数" class="headerlink" title="匿名函数"></a>匿名函数</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sum</span> = <span class="keyword">lambda</span> num1 , num2 : num1 + num2;</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>( <span class="built_in">sum</span>( <span class="number">1</span> , <span class="number">2</span> ) )</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">3</span><br></pre></td></tr></table></figure>
+
+<p>注意：<strong>尽管 lambda 表达式允许你定义简单函数，但是它的使用是有限制的。 你只能指定单个表达式，它的值就是最后的返回值。也就是说不能包含其他的语言特性了， 包括多个语句、条件表达式、迭代以及异常处理等等。</strong></p>
+
+      
+    </div>
+
+    
+    
+    
+
+
+     
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://bibofu24.com/2021/05/24/ml_q1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -427,7 +860,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-05-26 17:06:42" itemprop="dateModified" datetime="2021-05-26T17:06:42+08:00">2021-05-26</time>
+                <time title="修改时间：2021-05-28 21:39:36" itemprop="dateModified" datetime="2021-05-28T21:39:36+08:00">2021-05-28</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -445,7 +878,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>4.7k</span>
+              <span>4.8k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -464,7 +897,8 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="软件测试定义及基本概念"><a href="#软件测试定义及基本概念" class="headerlink" title="软件测试定义及基本概念"></a>软件测试定义及基本概念</h2><p>测试是为了证明程序有错，通过运行程序发现其中存在的问题。<br>• 软件测试可以证明软件有错；<br>• 软件测试不可以证明软件没有错</p>
+          <p>链接: <a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1BWtrXszBZuQsIQbsdVfLDw">https://pan.baidu.com/s/1BWtrXszBZuQsIQbsdVfLDw</a>  密码: f5bo</p>
+<h2 id="软件测试定义及基本概念"><a href="#软件测试定义及基本概念" class="headerlink" title="软件测试定义及基本概念"></a>软件测试定义及基本概念</h2><p>测试是为了证明程序有错，通过运行程序发现其中存在的问题。<br>• 软件测试可以证明软件有错；<br>• 软件测试不可以证明软件没有错</p>
 <p>使用人工或者自动手段来运行或测试某个系统的过程,其目的在于检验它是否满足规定的需求或弄清预期结果与实际结果之间的差别</p>
 <p>缺陷在软件开发每个阶段都会产生，所以软件测试应该贯穿软件开发始终</p>
 <p><strong>Debug不属于测试</strong>，属于开发调试</p>
@@ -1444,178 +1878,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://bibofu24.com/2021/05/16/onlineEdu_3/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="bibofu">
-      <meta itemprop="description" content="记录学习，分享生活">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="二十六画生">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/05/16/onlineEdu_3/" class="post-title-link" itemprop="url">在线教育项目 3</a>
-        </h2>
-
-        <div class="post-meta">
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-05-16 20:51:17 / 修改时间：21:27:27" itemprop="dateCreated datePublished" datetime="2021-05-16T20:51:17+08:00">2021-05-16</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%9C%A8%E7%BA%BF%E6%95%99%E8%82%B2%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">在线教育项目</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>5.8k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>5 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>SpringCloud ，Redis在项目中的使用</p>
-<h2 id="SpringCloud"><a href="#SpringCloud" class="headerlink" title="SpringCloud"></a>SpringCloud</h2><p>Spring Cloud是一系列框架的集合。它利用Spring Boot的开发便利性简化了分布式系统基础设施的开<br>发，如服务发现、服务注册、配置中心、消息总线、负载均衡、 熔断器、数据监控等，都可以用Spring<br>Boot的开发风格做到一键启动和部署。Spring并没有重复制造轮子，它只是将目前各家公司开发的比较<br>成熟、经得起实际考验的服务框架组合起来，通过SpringBoot风格进行再封装屏蔽掉了复杂的配置和实<br>现原理，最终给开发者留出了一套简单易懂、易部署和易维护的分布式系统开发工具包</p>
-<p>Spring Cloud相关基础服务组件<br>服务发现——Netflix Eureka （Nacos）<br>服务调用——Netflix Feign<br>熔断器——Netflix Hystrix<br>服务网关——Spring Cloud GateWay<br>分布式配置——Spring Cloud Config （Nacos）<br>消息总线 —— Spring Cloud Bus （Nacos）</p>
-<p>nacos</p>
-<p><img src="https://z3.ax1x.com/2021/05/16/ggYUcd.png" alt="2021 05 16 20 53 57屏幕截图"></p>
-<h3 id="服务注册（nacos）"><a href="#服务注册（nacos）" class="headerlink" title="服务注册（nacos）"></a>服务注册（nacos）</h3><ol>
-<li>添加依赖</li>
-</ol>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;!--服务注册--&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">&lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</span><br><span class="line">&lt;artifactId&gt;spring-cloud-starter-alibaba-nacos-discovery&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
-
-
-
-<ol start="2">
-<li>修改配置</li>
-</ol>
-<p>application.properties添加</p>
-<p>nacos服务地址<br>spring.cloud.nacos.discovery.server-addr=127.0.0.1:8848</p>
-<p>启动类上添加</p>
-<p>@EnableDiscoveryClient</p>
-<h3 id="服务调用（Feign）"><a href="#服务调用（Feign）" class="headerlink" title="服务调用（Feign）"></a>服务调用（Feign）</h3><p>Feign是Netflix开发的声明式、模板化的HTTP客户端， Feign可以帮助我们更快捷、优雅地调用HTTP API</p>
-<p>添加依赖</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;!--服务调用--&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">&lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</span><br><span class="line">&lt;artifactId&gt;spring-cloud-starter-openfeign&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
-
-<p>调用段启动类加上注解</p>
-<p>@EnableFeignClients</p>
-<p>项目需求</p>
-<p>删除课时的同时删除云端视频</p>
-<p>写client接口</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@FeignClient(&quot;service-vod&quot;)</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">VodClient</span> </span>&#123;</span><br><span class="line"> <span class="meta">@DeleteMapping(value = &quot;/eduvod/vod/video/&#123;videoId&#125;&quot;)</span></span><br><span class="line"> <span class="function"><span class="keyword">public</span> R <span class="title">removeVideo</span><span class="params">(<span class="meta">@PathVariable(&quot;videoId&quot;)</span> String videoId)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>远程调用</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">removeVideoById</span><span class="params">(String id)</span> </span>&#123;</span><br><span class="line"><span class="comment">//查询云端视频id</span></span><br><span class="line">Video video = baseMapper.selectById(id);</span><br><span class="line">String videoSourceId = video.getVideoSourceId();</span><br><span class="line"><span class="comment">//删除视频资源</span></span><br><span class="line"><span class="keyword">if</span>(!StringUtils.isEmpty(videoSourceId))&#123;</span><br><span class="line">vodClient.removeVideo(videoSourceId);</span><br><span class="line"> &#125;</span><br><span class="line">Integer result = baseMapper.deleteById(id);</span><br><span class="line"><span class="keyword">return</span> <span class="keyword">null</span> != result &amp;&amp; result &gt; <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="熔断器（Hystrix）"><a href="#熔断器（Hystrix）" class="headerlink" title="熔断器（Hystrix）"></a>熔断器（Hystrix）</h3><p>Spring Cloud 在接口调用上，大致会经过如下几个组件配合：<br>Feign —–&gt;Hystrix —&gt;Ribbon —&gt;Http Client（apache http components 或者 Okhttp）</p>
-<p><img src="https://z3.ax1x.com/2021/05/16/ggDN36.png" alt="2021 05 16 21 07 28屏幕截图"></p>
-<p>Hystrix：熔断处理机制 Feign的调用关系，会被Hystrix代理拦截，对每一个Feign调用请求，Hystrix都会将其包装成HystrixCommand,参与Hystrix的流控和熔断规则。如果请求判断需要熔断，则Hystrix直接熔断，抛出异常或者使用FallbackFactory返回熔断Fallback结果；如果通过，则将调用请求传递给Ribbon组件</p>
-<p>Hystrix 是一个供分布式系统使用，提供延迟和容错功能，保证复杂的分布系统在面临不可避免的失败时，仍能有其弹性。<br>比如系统中有很多服务，当某些服务不稳定的时候，使用这些服务的用户线程将会阻塞，如果没有隔离机制，系统随时就有可能会挂掉，从而带来很大的风险。SpringCloud使用Hystrix组件提供断路器、资源隔离与自我修复功能。下图表示服务B触发了断路器，阻止了级联失败</p>
-<p><img src="https://z3.ax1x.com/2021/05/16/ggsW7Q.png" alt="2021 05 16 21 09 39屏幕截图"></p>
-<p>配置文件中添加</p>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#开启熔断机制</span></span><br><span class="line"><span class="meta">feign.hystrix.enabled</span>=<span class="string">true</span></span><br><span class="line"><span class="comment"># 设置hystrix超时时间，默认1000m</span></span><br><span class="line"><span class="meta">hstrix.command.default.execution.isolation.thread.timeoutInMillisecond</span>=<span class="string">6000</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p>创建熔断器的实现类</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">VodFileDegradeFeignClient</span> <span class="keyword">implements</span> <span class="title">VodClient</span> </span>&#123;</span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> R <span class="title">removeVideo</span><span class="params">(String videoId)</span> </span>&#123;</span><br><span class="line"><span class="keyword">return</span> R.error().message(<span class="string">&quot;time out&quot;</span>);</span><br><span class="line"> &#125;</span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> R <span class="title">removeVideoList</span><span class="params">(List videoIdList)</span> </span>&#123;</span><br><span class="line"><span class="keyword">return</span> R.error().message(<span class="string">&quot;time out&quot;</span>);</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>修改调用接口</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@FeignClient(name = &quot;service-vod&quot;, fallback = VodFileDegradeFeignClient.class)</span></span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-<h2 id="Redis"><a href="#Redis" class="headerlink" title="Redis"></a>Redis</h2><p>使用场景：讲前台首页数据，轮播图，热门讲师，热门课程缓存到redis中</p>
-<p>SpringBoot相关注解</p>
-<p>（1）缓存@Cacheable<br>根据方法对其返回结果进行缓存，下次请求时，如果缓存存在，则直接读取存在，则执行方法，并把返回的结果存入缓存中。一般用在查询方法上。</p>
-<p>（2）缓存@CachePut<br>使用该注解标志的方法，每次都会执行，并将结果存入指定的缓存中中读取缓存数据，而不需要再去查询数据库。一般用在新增方法上</p>
-<p>（3）缓存@CacheEvict<br>使用该注解标志的方法，会清空指定的缓存。一般用在更新或者删除方法上</p>
-<p>添加依赖</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-data-redis<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- spring2.X集成redis所需common-pool2--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.commons<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>commons-pool2<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">version</span>&gt;</span>2.6.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<p>写配置类</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@EnableCaching</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RedisConfig</span> <span class="keyword">extends</span> <span class="title">CachingConfigurerSupport</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> RedisTemplate&lt;String, Object&gt; <span class="title">redisTemplate</span><span class="params">(RedisConnectionFactory factory)</span> </span>&#123;</span><br><span class="line">        RedisTemplate&lt;String, Object&gt; template = <span class="keyword">new</span> RedisTemplate&lt;&gt;();</span><br><span class="line">        RedisSerializer&lt;String&gt; redisSerializer = <span class="keyword">new</span> StringRedisSerializer();</span><br><span class="line">        Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = <span class="keyword">new</span> Jackson2JsonRedisSerializer(Object.class);</span><br><span class="line">        ObjectMapper om = <span class="keyword">new</span> ObjectMapper();</span><br><span class="line">        om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);</span><br><span class="line">        om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);</span><br><span class="line">        jackson2JsonRedisSerializer.setObjectMapper(om);</span><br><span class="line">        template.setConnectionFactory(factory);</span><br><span class="line">        <span class="comment">//key序列化方式</span></span><br><span class="line">        template.setKeySerializer(redisSerializer);</span><br><span class="line">        <span class="comment">//value序列化</span></span><br><span class="line">        template.setValueSerializer(jackson2JsonRedisSerializer);</span><br><span class="line">        <span class="comment">//value hashmap序列化</span></span><br><span class="line">        template.setHashValueSerializer(jackson2JsonRedisSerializer);</span><br><span class="line">        <span class="keyword">return</span> template;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> CacheManager <span class="title">cacheManager</span><span class="params">(RedisConnectionFactory factory)</span> </span>&#123;</span><br><span class="line">        RedisSerializer&lt;String&gt; redisSerializer = <span class="keyword">new</span> StringRedisSerializer();</span><br><span class="line">        Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = <span class="keyword">new</span> Jackson2JsonRedisSerializer(Object.class);</span><br><span class="line">        <span class="comment">//解决查询缓存转换异常的问题</span></span><br><span class="line">        ObjectMapper om = <span class="keyword">new</span> ObjectMapper();</span><br><span class="line">        om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);</span><br><span class="line">        om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);</span><br><span class="line">        jackson2JsonRedisSerializer.setObjectMapper(om);</span><br><span class="line">        <span class="comment">// 配置序列化（解决乱码的问题）,过期时间600秒</span></span><br><span class="line">        RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig()</span><br><span class="line">                .entryTtl(Duration.ofSeconds(<span class="number">600</span>))</span><br><span class="line">                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(redisSerializer))</span><br><span class="line">                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(jackson2JsonRedisSerializer))</span><br><span class="line">                .disableCachingNullValues();</span><br><span class="line">        RedisCacheManager cacheManager = RedisCacheManager.builder(factory)</span><br><span class="line">                .cacheDefaults(config)</span><br><span class="line">                .build();</span><br><span class="line">        <span class="keyword">return</span> cacheManager;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>修改properties文件</p>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">spring.redis.host</span>=<span class="string">127.0.0.1</span></span><br><span class="line"><span class="meta">spring.redis.port</span>=<span class="string">6379</span></span><br><span class="line"><span class="meta">spring.redis.database</span>= <span class="string">0</span></span><br><span class="line"><span class="meta">spring.redis.timeout</span>=<span class="string">1800000</span></span><br><span class="line"><span class="meta">spring.redis.lettuce.pool.max-active</span>=<span class="string">20</span></span><br><span class="line"><span class="meta">spring.redis.lettuce.pool.max-wait</span>=<span class="string">-1</span></span><br><span class="line"><span class="comment">#最大阻塞等待时间(负数表示没限制)</span></span><br><span class="line"><span class="meta">spring.redis.lettuce.pool.max-idle</span>=<span class="string">5</span></span><br><span class="line"><span class="meta">spring.redis.lettuce.pool.min-idle</span>=<span class="string">0</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p>修改后端接口</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Cacheable(value = &quot;banner&quot;, key = &quot;&#x27;selectIndexList&#x27;&quot;)</span></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> List&lt;CrmBanner&gt; <span class="title">selectIndexList</span><span class="params">()</span> </span>&#123;</span><br><span class="line">List&lt;CrmBanner&gt; list = baseMapper.selectList(<span class="keyword">new</span></span><br><span class="line">QueryWrapper&lt;CrmBanner&gt;().orderByDesc(<span class="string">&quot;sort&quot;</span>));</span><br><span class="line"><span class="keyword">return</span> list;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-
-
-     
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1687,14 +1949,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">41</span>
+          <span class="site-state-item-count">42</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-count">15</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -1763,12 +2025,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">142k</span>
+    <span title="站点总字数">151k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">2:09</span>
+    <span title="站点阅读时长">2:17</span>
 </div>
 
         
