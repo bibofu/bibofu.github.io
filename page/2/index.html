@@ -197,6 +197,272 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bibofu24.com/2021/05/17/Redis_3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="bibofu">
+      <meta itemprop="description" content="记录学习，分享生活">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="二十六画生">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/05/17/Redis_3/" class="post-title-link" itemprop="url">Redis 3</a>
+        </h2>
+
+        <div class="post-meta">
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-05-17 23:13:13 / 修改时间：23:54:41" itemprop="dateCreated datePublished" datetime="2021-05-17T23:13:13+08:00">2021-05-17</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Redis/" itemprop="url" rel="index"><span itemprop="name">Redis</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>4k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>4 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>Redis底层数据结构</p>
+<h2 id="String"><a href="#String" class="headerlink" title="String"></a>String</h2><blockquote>
+<p><strong>Redis</strong> 提供了5种数据类型：String（字符串）、Hash（哈希）、List（列表）、Set（集合）、Zset（有序集合）</p>
+</blockquote>
+<p><img src="https://z3.ax1x.com/2021/05/17/gWtETI.png" alt="1"></p>
+<p><strong>结构图上显示，String类型有三种实现方式</strong>：</p>
+<blockquote>
+<ul>
+<li>使用整数值实现的字符串对象</li>
+<li>使用 embstr 编码的动态字符串实现的字符串对象</li>
+<li>动态字符串实现的字符串对象</li>
+</ul>
+</blockquote>
+<h3 id="1、Redis中定义的对象的结构体"><a href="#1、Redis中定义的对象的结构体" class="headerlink" title="1、Redis中定义的对象的结构体"></a>1、Redis中定义的对象的结构体</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * Redis 对象</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">redisObject</span> &#123;</span></span><br><span class="line">    <span class="comment">// 类型 4bits</span></span><br><span class="line">    <span class="keyword">unsigned</span> type:<span class="number">4</span>;</span><br><span class="line">    <span class="comment">// 编码方式 4bits</span></span><br><span class="line">    <span class="keyword">unsigned</span> encoding:<span class="number">4</span>;</span><br><span class="line">    <span class="comment">// LRU 时间（相对于 server.lruclock） 24bits</span></span><br><span class="line">    <span class="keyword">unsigned</span> lru:<span class="number">22</span>;</span><br><span class="line">    <span class="comment">// 引用计数 Redis里面的数据可以通过引用计数进行共享 32bits</span></span><br><span class="line">    <span class="keyword">int</span> refcount;</span><br><span class="line">    <span class="comment">// 指向对象的值 64-bit</span></span><br><span class="line">    <span class="keyword">void</span> *ptr;</span><br><span class="line">&#125; robj;<span class="comment">// 16bytes</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>注释</strong>：type表示该对象的类型，即上面 [String,List,Hash,Set,Zset] 中的一个，但为了提高存储效率与程序执行效率，每种对象的底层数据结构实现都可能不止一种，encoding 表示对象底层所使用的编码。</p>
+<h3 id="2、Redis对象底层八种数据结构"><a href="#2、Redis对象底层八种数据结构" class="headerlink" title="2、Redis对象底层八种数据结构"></a>2、Redis对象底层八种数据结构</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">REDIS_ENCODING_INT（long 类型的整数）</span><br><span class="line">REDIS_ENCODING_EMBSTR embstr （编码的简单动态字符串）</span><br><span class="line">REDIS_ENCODING_RAW （简单动态字符串）</span><br><span class="line">REDIS_ENCODING_HT （字典）</span><br><span class="line">REDIS_ENCODING_LINKEDLIST （双端链表）</span><br><span class="line">REDIS_ENCODING_ZIPLIST （压缩列表）</span><br><span class="line">REDIS_ENCODING_INTSET （整数集合）</span><br><span class="line">REDIS_ENCODING_SKIPLIST （跳跃表和字典）</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3、embstr与动态字符串"><a href="#3、embstr与动态字符串" class="headerlink" title="3、embstr与动态字符串"></a>3、embstr与动态字符串</h3><p><strong>embstr</strong> ：是专门用于保存短字符串的一种优化编码方式，跟正常的字符编码相比，字符编码会调用两次内存分配函数来分别创建 redisObject 和 sdshdr 结构（动态字符串结构），而 embstr 编码则通过调用一次内存分配函数来分配一块连续的内存空间，空间中包含 redisObject 和 sdshdr（动态字符串）两个结构，两者在同一个内存块中。从 Redis 3.0 版本开始，字符串引入了 embstr 编码方式，长度小于 OBJ_ENCODING_EMBSTR_SIZE_LIMIT(39) 的字符串将以EMBSTR方式存储。</p>
+<p><strong>注意</strong>： 在Redis 3.2 之后，就不是以 39 为分界线，而是以 44 为分界线，主要与 Redis 中内存分配使用的是 jemalloc 有关。（ jemalloc 分配内存的时候是按照 8、16、32、64 作为 chunk 的单位进行分配的。为了保证采用这种编码方式的字符串能被 jemalloc 分配在同一个 chunk 中，该字符串长度不能超过64，故字符串长度限制</p>
+<p><strong>动态字符串</strong> ：Redis 自己构建的一种名为 简单动态字符串（simple dynamic string，SDS）的抽象类型，并将 SDS 作为 Redis 的默认字符串表示</p>
+<h3 id="4、总结"><a href="#4、总结" class="headerlink" title="4、总结"></a>4、总结</h3><p>字符串的编码可以是 int，raw 或者 embstr。如果一个字符串内容可转为 long，那么该字符串会被转化为 long 类型，对象 ptr 指向该 long，并且对象类型也用 int 类型表示。普通的字符串有两种 embstr 和 raw。如果字符串对象的长度小于 39 字节，就用 embstr，否则用 raw。</p>
+<p><strong>也就是说，Redis 会根据当前值的类型和长度决定使用内部编码实现</strong>！！</p>
+<blockquote>
+<p><strong>int：8个字节的长整型</strong> </p>
+<p><strong>embstr：小于等于39个字节的字符串</strong> </p>
+<p><strong>raw：大于39个字节的字符串</strong></p>
+</blockquote>
+<h3 id="5、实践验证"><a href="#5、实践验证" class="headerlink" title="5、实践验证"></a>5、实践验证</h3><blockquote>
+<p>命令：object encoding key ，获取数据底层的数据结构</p>
+</blockquote>
+<p><img src="https://z3.ax1x.com/2021/05/17/gWtXjg.png" alt="redis6"></p>
+<h3 id="动态字符串："><a href="#动态字符串：" class="headerlink" title="动态字符串："></a>动态字符串：</h3><p>众所周知，Redis 是用 C 语言写的，但是对于 Redis 的字符串，却不是 C 语言中的字符串（即以空字符 ’\0’ 结尾的字符数组），它是自己构建了一种名为 简单动态字符串（simple dynamic string，SDS）的抽象类型，并将 SDS 作为 Redis 的默认字符串表示。</p>
+<h4 id="1、动态字符串结构分析"><a href="#1、动态字符串结构分析" class="headerlink" title="1、动态字符串结构分析"></a>1、动态字符串结构分析</h4><p>SDS定义：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sdshdr</span>&#123;</span></span><br><span class="line">     <span class="comment">//记录buf数组中已使用字节的数量</span></span><br><span class="line">     <span class="comment">//等于 SDS 保存字符串的长度 4byte</span></span><br><span class="line">     <span class="keyword">int</span> len;</span><br><span class="line">     <span class="comment">//记录 buf 数组中未使用字节的数量 4byte</span></span><br><span class="line">     <span class="keyword">int</span> <span class="built_in">free</span>;</span><br><span class="line">     <span class="comment">//字节数组，用于保存字符串 字节\0结尾的字符串占用了1byte</span></span><br><span class="line">     <span class="keyword">char</span> buf[];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>用 SDS 保存字符串 “Redis” 具体结构如下图</p>
+<p><img src="https://z3.ax1x.com/2021/05/17/gWNZDJ.png" alt="re3"></p>
+<p>对于 SDS 数据类型的定义：</p>
+<blockquote>
+<ul>
+<li>len 保存了SDS保存字符串的长度</li>
+<li>buf[] 数组用来保存字符串的每个元素</li>
+<li>free 记录了 buf 数组中未使用的字节数量</li>
+</ul>
+</blockquote>
+<p>上面的定义相对于 C 语言对于字符串的定义，多出了 len 属性以及 free 属性。为什么不直接使用 C 语言字符串实现，而是要使用 SDS 呢？有什么特别的优势呢？</p>
+<h4 id="2、SDS结构与C语言字符串结构比较分析"><a href="#2、SDS结构与C语言字符串结构比较分析" class="headerlink" title="2、SDS结构与C语言字符串结构比较分析"></a>2、SDS结构与C语言字符串结构比较分析</h4><p><img src="https://z3.ax1x.com/2021/05/17/gWN1gO.png" alt="re4"></p>
+<h3 id="要点"><a href="#要点" class="headerlink" title="要点"></a>要点</h3><p>String 类型对象三种实现方式，int，embstr，raw<br>字符串内容可转为 long，采用 int 类型，否则长度&lt;39（3.2版本前39,3.2版本后分界线44） 用 embstr，其他用 raw<br>SDS 是Redis自己构建的一种简单动态字符串的抽象类型，并将 SDS 作为 Redis 的默认字符串表示<br>SDS 与 C 语言字符串结构相比，具有五大优势</p>
+<h2 id="跳表"><a href="#跳表" class="headerlink" title="跳表"></a>跳表</h2><p> 对于一个单链表来讲，即便链表中存储的数据是有序的，如果我们要想在其中查找某个数据，也只能从头到尾遍历链表。这样查找效率就会很低，时间复杂度会很高，是 O(n)。</p>
+<p><img src="https://z3.ax1x.com/2021/05/17/gWYnsJ.png" alt="redis1"></p>
+<p>如果我们想要提高其查找效率，可以考虑在链表上建索引的方式。每两个结点提取一个结点到上一级，我们把抽出来的那一级叫作索引。</p>
+<p><img src="https://z3.ax1x.com/2021/05/17/gWYZzF.png" alt="redis2"></p>
+<p>这个时候，我们假设要查找节点8，我们可以先在索引层遍历，当遍历到索引层中值为 7 的结点时，发现下一个节点是9，那么要查找的节点8肯定就在这两个节点之间。我们下降到链表层继续遍历就找到了8这个节点。原先我们在单链表中找到8这个节点要遍历8个节点，而现在有了一级索引后只需要遍历五个节点。</p>
+<p>  从这个例子里，我们看出，加来一层索引之后，查找一个结点需要遍的结点个数减少了，也就是说查找效率提高了，同理再加一级索引。</p>
+<p><img src="https://z3.ax1x.com/2021/05/17/gWYmM4.png" alt="redis3"></p>
+<p>  从图中我们可以看出，查找效率又有提升。在例子中我们的数据很少，当有大量的数据时，我们可以增加多级索引，其查找效率可以得到明显提升。</p>
+<p><img src="https://z3.ax1x.com/2021/05/17/gWYuL9.png" alt="redis4"></p>
+<p><strong>像这种链表加多级索引的结构，就是跳跃表！</strong></p>
+<p> Redis使用跳跃表作为有序集合键（ZSET）的底层实现之一,如果一个有序集合包含的<strong>元素数量比较多</strong>,又或者有序集合中元素的<strong>成员是比较长的字符串</strong>时, Redis就会使用跳跃表来作为有序集合健的底层实现。</p>
+<p>  这里我们需要思考一个问题——为什么元素数量比较多或者成员是比较长的字符串的时候Redis要使用跳跃表来实现？</p>
+<p>  从上面我们可以知道，跳跃表在链表的基础上增加了多级索引以提升查找的效率，但其是一个空间换时间的方案，必然会带来一个问题——索引是占内存的。原始链表中存储的有可能是很大的对象，而索引结点只需要存储关键值值和几个指针，并不需要存储对象，因此当节点本身比较大或者元素数量比较多的时候，其优势必然会被放大，而缺点则可以忽略。</p>
+<p>Redis的跳跃表由<strong>zskiplistNode</strong>和<strong>skiplist</strong>两个结构定义,其中 zskiplistNode结构用于表示跳跃表节点,而 zskiplist结构则用于保存跳跃表节点的相关信息,比如节点的数量,以及指向表头节点和表尾节点的指针等等。</p>
+<p><img src="https://z3.ax1x.com/2021/05/17/gWYMZR.png" alt="redis5"></p>
+<p>上图展示了一个跳跃表示例,其中最左边的是 skiplist结构,该结构包含以下属性。</p>
+<ul>
+<li><p>header:指向跳跃表的表头节点，通过这个指针程序定位表头节点的时间复杂度就为O(1)</p>
+</li>
+<li><p>tail:指向跳跃表的表尾节点,通过这个指针程序定位表尾节点的时间复杂度就为O(1)</p>
+</li>
+<li><p>level:记录目前跳跃表内,层数最大的那个节点的层数(表头节点的层数不计算在内)，通过这个属性可以再O(1)的时间复杂度内获取层高最好的节点的层数。</p>
+</li>
+<li><p>length:记录跳跃表的长度,也即是,跳跃表目前包含节点的数量(表头节点不计算在内)，通过这个属性，程序可以再O(1)的时间复杂度内返回跳跃表的长度。</p>
+<p>结构右方的是四个 zskiplistNode结构,该结构包含以下属性</p>
+</li>
+<li><p>层(level):</p>
+<p>  节点中用1、2、L3等字样标记节点的各个层,L1代表第一层,L代表第二层,以此类推。</p>
+<p>  每个层都带有两个属性:前进指针和跨度。前进指针用于访问位于表尾方向的其他节点,而跨度则记录了前进指针所指向节点和当前节点的距离(跨度越大、距离越远)。在上图中,连线上带有数字的箭头就代表前进指针,而那个数字就是跨度。当程序从表头向表尾进行遍历时,访问会沿着层的前进指针进行。</p>
+<p>  每次创建一个新跳跃表节点的时候,程序都根据幂次定律(powerlaw,越大的数出现的概率越小)随机生成一个介于1和32之间的值作为level数组的大小,这个大小就是层的“高度”。</p>
+</li>
+<li><p>后退(backward)指针：</p>
+<p>  节点中用BW字样标记节点的后退指针,它指向位于当前节点的前一个节点。后退指针在程序从表尾向表头遍历时使用。与前进指针所不同的是每个节点只有一个后退指针，因此每次只能后退一个节点。</p>
+</li>
+<li><p>分值(score):</p>
+<p>  各个节点中的1.0、2.0和3.0是节点所保存的分值。在跳跃表中,节点按各自所保存的分值从小到大排列。</p>
+</li>
+<li><p>成员对象(oj):</p>
+<p>  各个节点中的o1、o2和o3是节点所保存的成员对象。在同一个跳跃表中,各个节点保存的成员对象必须是唯一的,但是多个节点保存的分值却可以是相同的:分值相同的节点将按照成员对象在字典序中的大小来进行排序,成员对象较小的节点会排在前面(靠近表头的方向),而成员对象较大的节点则会排在后面(靠近表尾的方向)。</p>
+</li>
+</ul>
+<p><img src="https://z3.ax1x.com/2021/05/17/gWYQd1.png" alt="redis6"></p>
+
+      
+    </div>
+
+    
+    
+    
+
+
+     
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bibofu24.com/2021/05/16/onlineEdu_4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="bibofu">
+      <meta itemprop="description" content="记录学习，分享生活">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="二十六画生">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/05/16/onlineEdu_4/" class="post-title-link" itemprop="url">在线教育项目 4</a>
+        </h2>
+
+        <div class="post-meta">
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-05-16 21:28:08 / 修改时间：21:31:19" itemprop="dateCreated datePublished" datetime="2021-05-16T21:28:08+08:00">2021-05-16</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%9C%A8%E7%BA%BF%E6%95%99%E8%82%B2%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">在线教育项目</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>13</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>单点登录和权限管理，重点！</p>
+
+      
+    </div>
+
+    
+    
+    
+
+
+     
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://bibofu24.com/2021/05/16/onlineEdu_3/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1252,302 +1518,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://bibofu24.com/2021/04/29/LeetCode_8/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="bibofu">
-      <meta itemprop="description" content="记录学习，分享生活">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="二十六画生">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/04/29/LeetCode_8/" class="post-title-link" itemprop="url">LeetCode 8</a>
-        </h2>
-
-        <div class="post-meta">
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-04-29 23:45:02 / 修改时间：23:45:32" itemprop="dateCreated datePublished" datetime="2021-04-29T23:45:02+08:00">2021-04-29</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Algorithm/" itemprop="url" rel="index"><span itemprop="name">Algorithm</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>9k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>8 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>回溯专场1</p>
-<h2 id="17-电话号码的字母组合"><a href="#17-电话号码的字母组合" class="headerlink" title="17. 电话号码的字母组合"></a>17. 电话号码的字母组合</h2><p><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/letter-combinations-of-a-phone-number/description/">leetcode地址</a></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">   </span><br><span class="line">    <span class="function"><span class="keyword">public</span> List&lt;String&gt; <span class="title">letterCombinations</span><span class="params">(String digits)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        List&lt;String&gt; res=<span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(digits==<span class="keyword">null</span>||digits.length()==<span class="number">0</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> res;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        dfs(digits,<span class="number">0</span>,<span class="string">&quot;&quot;</span>,res);</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">dfs</span><span class="params">(String digits,<span class="keyword">int</span> start,String temp,List&lt;String&gt; res)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(temp.length()==digits.length())&#123;</span><br><span class="line">            res.add(temp);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=start;i&lt;digits.length();i++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(digits.charAt(i)==<span class="string">&#x27;2&#x27;</span>)&#123;</span><br><span class="line">                dfs(digits,i+<span class="number">1</span>,temp+<span class="string">&#x27;a&#x27;</span>,res);</span><br><span class="line">                dfs(digits,i+<span class="number">1</span>,temp+<span class="string">&#x27;b&#x27;</span>,res);</span><br><span class="line">                dfs(digits,i+<span class="number">1</span>,temp+<span class="string">&#x27;c&#x27;</span>,res);</span><br><span class="line">            &#125;<span class="keyword">else</span> <span class="keyword">if</span>(digits.charAt(i)==<span class="string">&#x27;3&#x27;</span>)&#123;</span><br><span class="line">                dfs(digits,i+<span class="number">1</span>,temp+<span class="string">&#x27;d&#x27;</span>,res);</span><br><span class="line">                dfs(digits,i+<span class="number">1</span>,temp+<span class="string">&#x27;e&#x27;</span>,res);</span><br><span class="line">                dfs(digits,i+<span class="number">1</span>,temp+<span class="string">&#x27;f&#x27;</span>,res);</span><br><span class="line">            &#125;<span class="keyword">else</span> <span class="keyword">if</span>(digits.charAt(i)==<span class="string">&#x27;4&#x27;</span>)&#123;</span><br><span class="line">                dfs(digits,i+<span class="number">1</span>,temp+<span class="string">&#x27;g&#x27;</span>,res);</span><br><span class="line">                dfs(digits,i+<span class="number">1</span>,temp+<span class="string">&#x27;h&#x27;</span>,res);</span><br><span class="line">                dfs(digits,i+<span class="number">1</span>,temp+<span class="string">&#x27;i&#x27;</span>,res);</span><br><span class="line">            &#125;<span class="keyword">else</span> <span class="keyword">if</span>(digits.charAt(i)==<span class="string">&#x27;5&#x27;</span>)&#123;</span><br><span class="line">                dfs(digits,i+<span class="number">1</span>,temp+<span class="string">&#x27;j&#x27;</span>,res);</span><br><span class="line">                dfs(digits,i+<span class="number">1</span>,temp+<span class="string">&#x27;k&#x27;</span>,res);</span><br><span class="line">                dfs(digits,i+<span class="number">1</span>,temp+<span class="string">&#x27;l&#x27;</span>,res);</span><br><span class="line">            &#125;<span class="keyword">else</span> <span class="keyword">if</span>(digits.charAt(i)==<span class="string">&#x27;6&#x27;</span>)&#123;</span><br><span class="line">                dfs(digits,i+<span class="number">1</span>,temp+<span class="string">&#x27;m&#x27;</span>,res);</span><br><span class="line">                dfs(digits,i+<span class="number">1</span>,temp+<span class="string">&#x27;n&#x27;</span>,res);</span><br><span class="line">                dfs(digits,i+<span class="number">1</span>,temp+<span class="string">&#x27;o&#x27;</span>,res);</span><br><span class="line">            &#125;<span class="keyword">else</span> <span class="keyword">if</span>(digits.charAt(i)==<span class="string">&#x27;7&#x27;</span>)&#123;</span><br><span class="line">                dfs(digits,i+<span class="number">1</span>,temp+<span class="string">&#x27;p&#x27;</span>,res);</span><br><span class="line">                dfs(digits,i+<span class="number">1</span>,temp+<span class="string">&#x27;q&#x27;</span>,res);</span><br><span class="line">                dfs(digits,i+<span class="number">1</span>,temp+<span class="string">&#x27;r&#x27;</span>,res);</span><br><span class="line">                dfs(digits,i+<span class="number">1</span>,temp+<span class="string">&#x27;s&#x27;</span>,res);</span><br><span class="line">            &#125;<span class="keyword">else</span> <span class="keyword">if</span>(digits.charAt(i)==<span class="string">&#x27;8&#x27;</span>)&#123;</span><br><span class="line">                dfs(digits,i+<span class="number">1</span>,temp+<span class="string">&#x27;t&#x27;</span>,res);</span><br><span class="line">                dfs(digits,i+<span class="number">1</span>,temp+<span class="string">&#x27;u&#x27;</span>,res);</span><br><span class="line">                dfs(digits,i+<span class="number">1</span>,temp+<span class="string">&#x27;v&#x27;</span>,res);</span><br><span class="line">            &#125;<span class="keyword">else</span> <span class="keyword">if</span>(digits.charAt(i)==<span class="string">&#x27;9&#x27;</span>)&#123;</span><br><span class="line">                dfs(digits,i+<span class="number">1</span>,temp+<span class="string">&#x27;w&#x27;</span>,res);</span><br><span class="line">                dfs(digits,i+<span class="number">1</span>,temp+<span class="string">&#x27;x&#x27;</span>,res);</span><br><span class="line">                dfs(digits,i+<span class="number">1</span>,temp+<span class="string">&#x27;y&#x27;</span>,res);</span><br><span class="line">                dfs(digits,i+<span class="number">1</span>,temp+<span class="string">&#x27;z&#x27;</span>,res);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-
-
-<h2 id="22-括号生成"><a href="#22-括号生成" class="headerlink" title="22. 括号生成"></a>22. 括号生成</h2><p><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/generate-parentheses/description/">leetcode地址</a></p>
-<blockquote>
-<p>此题用到递归剪枝</p>
-</blockquote>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> List&lt;String&gt; <span class="title">generateParenthesis</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        List&lt;String&gt; res=<span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        String cur=<span class="keyword">new</span> String();</span><br><span class="line">        helper(n,cur,res,<span class="number">0</span>,<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">helper</span><span class="params">(<span class="keyword">int</span> n,String cur,List&lt;String&gt; res,<span class="keyword">int</span> left,<span class="keyword">int</span> right)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(left==n&amp;&amp;right==n)&#123;</span><br><span class="line">            res.add(cur);</span><br><span class="line">            <span class="keyword">return</span> ;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(left&gt;n||left&lt;right)&#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(left==right)&#123;</span><br><span class="line">             helper(n,cur+<span class="string">&#x27;(&#x27;</span>,res,left+<span class="number">1</span>,right);</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(left&gt;right)&#123;</span><br><span class="line">            helper(n,cur+<span class="string">&#x27;(&#x27;</span>,res,left+<span class="number">1</span>,right);</span><br><span class="line">            helper(n,cur+<span class="string">&#x27;)&#x27;</span>,res,left,right+<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-
-
-<h2 id="39-组合总和"><a href="#39-组合总和" class="headerlink" title="39. 组合总和"></a>39. 组合总和</h2><p><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/combination-sum/description/">leetcode地址</a></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> List&lt;List&lt;Integer&gt;&gt; combinationSum(<span class="keyword">int</span>[] candidates, <span class="keyword">int</span> target) &#123;</span><br><span class="line"></span><br><span class="line">        List&lt;List&lt;Integer&gt;&gt; res=<span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        List&lt;Integer&gt; temp=<span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        Arrays.sort(candidates);</span><br><span class="line">        dfs(candidates,<span class="number">0</span>,target,temp,res);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">dfs</span><span class="params">(<span class="keyword">int</span>[] candidates,<span class="keyword">int</span> start, <span class="keyword">int</span> target, List&lt;Integer&gt; temp,List&lt;List&lt;Integer&gt;&gt; res)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(target==<span class="number">0</span>)&#123;</span><br><span class="line">            res.add(<span class="keyword">new</span> ArrayList&lt;Integer&gt;(temp));</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=start;i&lt;candidates.length;i++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(candidates[i]&gt;target)&#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            temp.add(candidates[i]);</span><br><span class="line">           </span><br><span class="line">            dfs(candidates,i,target-candidates[i],temp,res);</span><br><span class="line">            temp.remove(temp.size()-<span class="number">1</span>);</span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="40-组合总和2"><a href="#40-组合总和2" class="headerlink" title="40. 组合总和2"></a>40. 组合总和2</h2><p><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/combination-sum-ii/description/">leetcode地址</a></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">   <span class="keyword">public</span> List&lt;List&lt;Integer&gt;&gt; combinationSum2(<span class="keyword">int</span>[] candidates, <span class="keyword">int</span> target) &#123;</span><br><span class="line"></span><br><span class="line">        List&lt;List&lt;Integer&gt;&gt; res=<span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        List&lt;Integer&gt; temp=<span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        Arrays.sort(candidates);</span><br><span class="line"></span><br><span class="line">        dfs(candidates,<span class="number">0</span>,target,<span class="number">0</span>,temp,res);</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">dfs</span><span class="params">(<span class="keyword">int</span>[] nums,<span class="keyword">int</span> start,<span class="keyword">int</span> target,<span class="keyword">int</span> sum,List&lt;Integer&gt; temp,List&lt;List&lt;Integer&gt;&gt; res)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(sum==target)&#123;</span><br><span class="line">            Collections.sort(temp);</span><br><span class="line">            <span class="keyword">if</span>(!res.contains(temp))&#123;</span><br><span class="line">                res.add(<span class="keyword">new</span> ArrayList&lt;&gt;(temp));</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span>(sum&gt;target)&#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=start;i&lt;nums.length;i++)&#123;</span><br><span class="line">            temp.add(nums[i]);</span><br><span class="line">            sum+=nums[i];</span><br><span class="line">            dfs(nums,i+<span class="number">1</span>,target,sum,temp,res);</span><br><span class="line">            temp.remove(temp.size()-<span class="number">1</span>);</span><br><span class="line">            sum-=nums[i];</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-<h2 id="46-全排列"><a href="#46-全排列" class="headerlink" title="46. 全排列"></a>46. 全排列</h2><p><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/permutations/description/">leetcode地址</a></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> List&lt;List&lt;Integer&gt;&gt; permute(<span class="keyword">int</span>[] nums) &#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(nums==<span class="keyword">null</span>||nums.length==<span class="number">0</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        List&lt;List&lt;Integer&gt;&gt; res=<span class="keyword">new</span> ArrayList();</span><br><span class="line">        List&lt;Integer&gt; cur=<span class="keyword">new</span> ArrayList();</span><br><span class="line"></span><br><span class="line">        dfs(nums,cur,res);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">dfs</span><span class="params">(<span class="keyword">int</span>[] nums,List&lt;Integer&gt; cur,List&lt;List&lt;Integer&gt;&gt; res)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(nums.length==cur.size())&#123;</span><br><span class="line">            res.add(<span class="keyword">new</span> ArrayList&lt;&gt;(cur));</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;nums.length;i++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(cur.contains(nums[i]))&#123;</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            cur.add(nums[i]);</span><br><span class="line">            dfs(nums,cur,res);</span><br><span class="line">            cur.remove(cur.size()-<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-
-
-<h2 id="47-全排列2"><a href="#47-全排列2" class="headerlink" title="47. 全排列2"></a>47. 全排列2</h2><p><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/permutations-ii/">leetcode地址</a></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">   </span><br><span class="line"></span><br><span class="line">   <span class="keyword">public</span> List&lt;List&lt;Integer&gt;&gt; permuteUnique(<span class="keyword">int</span>[] nums) &#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(nums==<span class="keyword">null</span>||nums.length==<span class="number">0</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        List&lt;List&lt;Integer&gt;&gt; res=<span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        List&lt;Integer&gt; cur=<span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        <span class="keyword">boolean</span>[] flag=<span class="keyword">new</span> <span class="keyword">boolean</span>[nums.length];</span><br><span class="line">        Arrays.fill(flag,<span class="keyword">false</span>);</span><br><span class="line"></span><br><span class="line">        dfs(nums,cur,res,flag);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">dfs</span><span class="params">(<span class="keyword">int</span>[] nums,List&lt;Integer&gt; cur,List&lt;List&lt;Integer&gt;&gt; res,<span class="keyword">boolean</span>[] flag)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(nums.length==cur.size())&#123;</span><br><span class="line">            <span class="keyword">if</span>(!res.contains(cur))&#123;</span><br><span class="line">                res.add(<span class="keyword">new</span> ArrayList&lt;&gt;(cur));</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;nums.length;i++)&#123;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (flag[i])&#123;</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">            cur.add(nums[i]);</span><br><span class="line">            flag[i]=<span class="keyword">true</span>;</span><br><span class="line">            dfs(nums,cur,res,flag);</span><br><span class="line">            cur.remove(cur.size()-<span class="number">1</span>);</span><br><span class="line">            flag[i]=<span class="keyword">false</span>;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<h2 id="51-N皇后"><a href="#51-N皇后" class="headerlink" title="51. N皇后"></a>51. N皇后</h2><p><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/n-queens/">leetcode地址</a></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    List&lt;List&lt;String&gt;&gt; res=<span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    <span class="keyword">int</span> n;</span><br><span class="line">    <span class="keyword">boolean</span>[][] board;</span><br><span class="line">    HashSet&lt;Integer&gt; lie,pie,na;</span><br><span class="line">    <span class="keyword">public</span> List&lt;List&lt;String&gt;&gt; solveNQueens(<span class="keyword">int</span> n) &#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">this</span>.n=n;</span><br><span class="line">        <span class="keyword">this</span>.board=<span class="keyword">new</span> <span class="keyword">boolean</span>[n][n];</span><br><span class="line">        <span class="keyword">this</span>.lie=<span class="keyword">new</span> HashSet&lt;&gt;();</span><br><span class="line">        <span class="keyword">this</span>.pie=<span class="keyword">new</span> HashSet&lt;&gt;();</span><br><span class="line">        <span class="keyword">this</span>.na=<span class="keyword">new</span> HashSet&lt;&gt;();</span><br><span class="line"></span><br><span class="line">        dfs(<span class="number">0</span>);</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line"></span><br><span class="line">        </span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">dfs</span><span class="params">(<span class="keyword">int</span> row)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(row==n)&#123;</span><br><span class="line">            generate_res(board);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> col=<span class="number">0</span>;col&lt;n;col++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(lie.contains(col)||pie.contains(row+col)||na.contains(row-col))&#123;</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            board[row][col]=<span class="keyword">true</span>;</span><br><span class="line">            lie.add(col);</span><br><span class="line">            pie.add(row+col);</span><br><span class="line">            na.add(row-col);</span><br><span class="line"></span><br><span class="line">            dfs(row+<span class="number">1</span>);</span><br><span class="line">            lie.remove(col);</span><br><span class="line">            pie.remove(row+col);</span><br><span class="line">            na.remove(row-col);</span><br><span class="line">            board[row][col]=<span class="keyword">false</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">generate_res</span><span class="params">(<span class="keyword">boolean</span>[][] board)</span></span>&#123;</span><br><span class="line"></span><br><span class="line">        List&lt;String&gt; temp=<span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;i++)&#123;</span><br><span class="line">            StringBuilder sb=<span class="keyword">new</span> StringBuilder();</span><br><span class="line">                </span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;n;j++)&#123;</span><br><span class="line">                <span class="keyword">if</span>(board[i][j]==<span class="keyword">true</span>)&#123;</span><br><span class="line">                    sb.append(<span class="string">&#x27;Q&#x27;</span>);</span><br><span class="line">                &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                    sb.append(<span class="string">&#x27;.&#x27;</span>);</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">            temp.add(sb.toString());</span><br><span class="line">                </span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">        res.add(temp);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-
-
-
-
-<h2 id="77-组合"><a href="#77-组合" class="headerlink" title="77. 组合"></a>77. 组合</h2><p><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/combinations/description/">leetcode地址</a></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">   <span class="keyword">public</span> List&lt;List&lt;Integer&gt;&gt; combine(<span class="keyword">int</span> n, <span class="keyword">int</span> k) &#123;</span><br><span class="line"></span><br><span class="line">        List&lt;List&lt;Integer&gt;&gt; res=<span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">        List&lt;Integer&gt; temp=<span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">        dfs(n,<span class="number">1</span>,k,temp,res);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">dfs</span><span class="params">(<span class="keyword">int</span> n,<span class="keyword">int</span> start,<span class="keyword">int</span> k,List&lt;Integer&gt; temp,List&lt;List&lt;Integer&gt;&gt; res)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(temp.size()==k)&#123;</span><br><span class="line">            res.add(<span class="keyword">new</span> ArrayList&lt;&gt;(temp));</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=start;i&lt;=n;i++)&#123;</span><br><span class="line"></span><br><span class="line">            temp.add(i);</span><br><span class="line">            dfs(n,i+<span class="number">1</span>,k,temp,res);</span><br><span class="line">            temp.remove(temp.size()-<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="78-子集"><a href="#78-子集" class="headerlink" title="78. 子集"></a>78. 子集</h2><p><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/subsets/description/">leetcode地址</a></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> List&lt;List&lt;Integer&gt;&gt; subsets(<span class="keyword">int</span>[] nums) &#123;</span><br><span class="line">        <span class="keyword">if</span>(nums==<span class="keyword">null</span>||nums.length==<span class="number">0</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        </span><br><span class="line">        &#125;</span><br><span class="line">        List&lt;List&lt;Integer&gt;&gt; res=<span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        List&lt;Integer&gt; temp=<span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        res.add(<span class="keyword">new</span> ArrayList&lt;&gt;());</span><br><span class="line">        dfs(nums,<span class="number">0</span>,temp,res);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">dfs</span><span class="params">(<span class="keyword">int</span>[] nums,<span class="keyword">int</span> start,List&lt;Integer&gt; temp,List&lt;List&lt;Integer&gt;&gt; res)</span></span>&#123;</span><br><span class="line"></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span>(start&gt;=nums.length)&#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=start;i&lt;nums.length;i++)&#123;</span><br><span class="line">            temp.add(nums[i]);</span><br><span class="line">            res.add(<span class="keyword">new</span> ArrayList&lt;&gt;(temp));</span><br><span class="line">            dfs(nums,i+<span class="number">1</span>,temp,res);</span><br><span class="line">            temp.remove(temp.size()-<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-<h2 id="93-复原IP地址"><a href="#93-复原IP地址" class="headerlink" title="93. 复原IP地址"></a>93. 复原IP地址</h2><p><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/restore-ip-addresses/description/">leetcode地址</a></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    List&lt;String&gt; res=<span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    <span class="function"><span class="keyword">public</span> List&lt;String&gt; <span class="title">restoreIpAddresses</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        searsh(s,<span class="number">0</span>,<span class="string">&quot;&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">searsh</span><span class="params">(String s,<span class="keyword">int</span> n,String ipAddr)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(n==<span class="number">4</span>&amp;&amp;s.length()==<span class="number">0</span>)&#123;</span><br><span class="line">            res.add(ipAddr.substring(<span class="number">0</span>,ipAddr.length()-<span class="number">1</span>));</span><br><span class="line">            <span class="keyword">return</span> ;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(n&gt;=<span class="number">4</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> remain=<span class="number">4</span>-n;</span><br><span class="line">        <span class="keyword">if</span>(s.length()&lt;remain||s.length()&gt;(<span class="number">3</span>*remain))&#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=<span class="number">3</span>;i++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(s.length()&lt;i)&#123;</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            String part=s.substring(<span class="number">0</span>,i);</span><br><span class="line">            <span class="keyword">int</span> num=Integer.valueOf(part);</span><br><span class="line">            <span class="keyword">if</span>(part.length()!=String.valueOf(num).length())&#123;</span><br><span class="line">                <span class="keyword">return</span> ;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(num&gt;<span class="number">255</span>)&#123;</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            searsh(s.substring(i),n+<span class="number">1</span>,ipAddr+part+<span class="string">&quot;.&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-    
-    
-
-
-     
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://bibofu24.com/2021/04/29/LeetCode_7/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="bibofu">
-      <meta itemprop="description" content="记录学习，分享生活">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="二十六画生">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/04/29/LeetCode_7/" class="post-title-link" itemprop="url">LeetCode 7</a>
-        </h2>
-
-        <div class="post-meta">
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-04-29 23:44:05" itemprop="dateCreated datePublished" datetime="2021-04-29T23:44:05+08:00">2021-04-29</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-05-03 17:43:07" itemprop="dateModified" datetime="2021-05-03T17:43:07+08:00">2021-05-03</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Algorithm/" itemprop="url" rel="index"><span itemprop="name">Algorithm</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>2.7k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>2 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>动态规划专场 5</p>
-<p>leetcode动态规划最后一场</p>
-<h2 id="91-解码方法"><a href="#91-解码方法" class="headerlink" title="91. 解码方法"></a>91. 解码方法</h2><p><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/decode-ways/description/">leetcode地址</a></p>
-<p><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/decode-ways/solution/gong-shui-san-xie-gen-ju-shu-ju-fan-wei-ug3dd/">题解地址</a></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">  </span><br><span class="line"></span><br><span class="line">     <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">numDecodings</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> n = s.length();</span><br><span class="line">        s = <span class="string">&quot; &quot;</span> + s;</span><br><span class="line">        <span class="keyword">char</span>[] chars = s.toCharArray();</span><br><span class="line">        <span class="keyword">int</span>[] dp = <span class="keyword">new</span> <span class="keyword">int</span>[n + <span class="number">1</span>];</span><br><span class="line">        dp[<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++) &#123; </span><br><span class="line">            <span class="comment">// a : 代表「当前位置」单独形成 item</span></span><br><span class="line">            <span class="comment">// b : 代表「当前位置」与「前一位置」共同形成 item</span></span><br><span class="line">            <span class="keyword">int</span> a = chars[i] - <span class="string">&#x27;0&#x27;</span>;</span><br><span class="line">            <span class="keyword">int</span> b = (chars[i - <span class="number">1</span>] - <span class="string">&#x27;0&#x27;</span>) * <span class="number">10</span> + (chars[i] - <span class="string">&#x27;0&#x27;</span>);</span><br><span class="line">            <span class="comment">// 如果 a 属于有效值，那么 dp[i] 可以由 dp[i - 1] 转移过来</span></span><br><span class="line">            <span class="keyword">if</span> (<span class="number">1</span> &lt;= a &amp;&amp; a &lt;= <span class="number">9</span>) dp[i] = dp[i - <span class="number">1</span>];</span><br><span class="line">            <span class="comment">// 如果 b 属于有效值，那么 dp[i] 可以由 dp[i - 2] 或者 dp[i - 1] &amp; dp[i - 2] 转移过来</span></span><br><span class="line">            <span class="keyword">if</span> (<span class="number">10</span> &lt;= b &amp;&amp; b &lt;= <span class="number">26</span>) dp[i] += dp[i - <span class="number">2</span>];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> dp[n];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-
-
-<h2 id="638-大礼包"><a href="#638-大礼包" class="headerlink" title="638. 大礼包"></a>638. 大礼包</h2><p><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/shopping-offers/description/">leetcode地址</a></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">     <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> price   每个物品的价格</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> special 大礼包数据</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> needs   待购物品清单</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">shoppingOffers</span><span class="params">(List&lt;Integer&gt; price, List&lt;List&lt;Integer&gt;&gt; special, List&lt;Integer&gt; needs)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> dfs(price, special, needs);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> price</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> special</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> needs</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 最少价格</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">dfs</span><span class="params">(List&lt;Integer&gt; price, List&lt;List&lt;Integer&gt;&gt; special, List&lt;Integer&gt; needs)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> res = <span class="number">0</span>;</span><br><span class="line">        <span class="comment">// 没有使用大礼包的时候，我们须要花多少钱</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; needs.size(); i++) &#123;</span><br><span class="line">            res += needs.get(i) * price.get(i);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (List&lt;Integer&gt; item : special) &#123;</span><br><span class="line">            List&lt;Integer&gt; clone = <span class="keyword">new</span> ArrayList&lt;&gt;(needs);</span><br><span class="line">            <span class="keyword">int</span> j;</span><br><span class="line">            <span class="keyword">for</span> (j = <span class="number">0</span>; j &lt; needs.size(); j++) &#123;</span><br><span class="line">                <span class="comment">// 用我们须要的个数 - 大礼包里面的个数</span></span><br><span class="line">                <span class="keyword">int</span> diff = clone.get(j) - item.get(j);</span><br><span class="line">                <span class="keyword">if</span> (diff &lt; <span class="number">0</span>) &#123;</span><br><span class="line">                    <span class="comment">// 须要的 &lt; 大礼包</span></span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">// 须要的部分越来越少，set 的意思是在做减法</span></span><br><span class="line">                clone.set(j, diff);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 所有都考虑完了以后</span></span><br><span class="line">            <span class="keyword">if</span> (j == needs.size()) &#123;</span><br><span class="line">                res = Math.min(res, item.get(j) + dfs(price, special, clone));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-
-
-<h2 id="836-矩阵重叠"><a href="#836-矩阵重叠" class="headerlink" title="836. 矩阵重叠"></a>836. 矩阵重叠</h2><p><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/rectangle-overlap/description/">leetcode地址</a></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isRectangleOverlap</span><span class="params">(<span class="keyword">int</span>[] rec1, <span class="keyword">int</span>[] rec2)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (rec1[<span class="number">0</span>] == rec1[<span class="number">2</span>] || rec1[<span class="number">1</span>] == rec1[<span class="number">3</span>] || rec2[<span class="number">0</span>] == rec2[<span class="number">2</span>] || rec2[<span class="number">1</span>] == rec2[<span class="number">3</span>]) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> !(rec1[<span class="number">2</span>] &lt;= rec2[<span class="number">0</span>] ||   <span class="comment">// left</span></span><br><span class="line">                 rec1[<span class="number">3</span>] &lt;= rec2[<span class="number">1</span>] ||   <span class="comment">// bottom</span></span><br><span class="line">                 rec1[<span class="number">0</span>] &gt;= rec2[<span class="number">2</span>] ||   <span class="comment">// right</span></span><br><span class="line">                 rec1[<span class="number">1</span>] &gt;= rec2[<span class="number">3</span>]);    <span class="comment">// top</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="939-最小面积矩形"><a href="#939-最小面积矩形" class="headerlink" title="939. 最小面积矩形"></a>939. 最小面积矩形</h2><p><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/minimum-area-rectangle/description/">leetcode地址</a></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">minAreaRect</span><span class="params">(<span class="keyword">int</span>[][] points)</span> </span>&#123;</span><br><span class="line">        Map&lt;Integer, List&lt;Integer&gt;&gt; rows = <span class="keyword">new</span> TreeMap();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span>[] point: points) &#123;</span><br><span class="line">            <span class="keyword">int</span> x = point[<span class="number">0</span>], y = point[<span class="number">1</span>];</span><br><span class="line">            rows.computeIfAbsent(x, z-&gt; <span class="keyword">new</span> ArrayList()).add(y);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> ans = Integer.MAX_VALUE;</span><br><span class="line">        Map&lt;Integer, Integer&gt; lastx = <span class="keyword">new</span> HashMap();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> x: rows.keySet()) &#123;</span><br><span class="line">            List&lt;Integer&gt; row = rows.get(x);</span><br><span class="line">            Collections.sort(row);</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; row.size(); ++i)</span><br><span class="line">                <span class="keyword">for</span> (<span class="keyword">int</span> j = i+<span class="number">1</span>; j &lt; row.size(); ++j) &#123;</span><br><span class="line">                    <span class="keyword">int</span> y1 = row.get(i), y2 = row.get(j);</span><br><span class="line">                    <span class="keyword">int</span> code = <span class="number">40001</span> * y1 + y2;</span><br><span class="line">                    <span class="keyword">if</span> (lastx.containsKey(code))</span><br><span class="line">                        ans = Math.min(ans, (x - lastx.get(code)) * (y2-y1));</span><br><span class="line">                    lastx.put(code, x);</span><br><span class="line">                &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> ans &lt; Integer.MAX_VALUE ? ans : <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-      
-    </div>
-
-    
-    
-    
-
-
-     
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1619,20 +1589,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">42</span>
+          <span class="site-state-item-count">44</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-count">17</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-count">11</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -1695,12 +1665,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">151k</span>
+    <span title="站点总字数">159k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">2:17</span>
+    <span title="站点阅读时长">2:24</span>
 </div>
 
         
