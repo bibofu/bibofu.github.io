@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/fru-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/fru-16x16.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"bibofu24.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"manual","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="基于电影海报图像的影片标签生成任务​">
+<meta property="og:type" content="article">
+<meta property="og:title" content="电影海报标签生成">
+<meta property="og:url" content="https://bibofu24.com/2021/06/20/ML_Lab/index.html">
+<meta property="og:site_name" content="二十六画生">
+<meta property="og:description" content="基于电影海报图像的影片标签生成任务​">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://z3.ax1x.com/2021/06/19/RPGqYR.jpg">
+<meta property="og:image" content="https://z3.ax1x.com/2021/06/20/RFJqED.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/06/19/RPtRfA.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/06/19/RPt0Qx.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/06/19/RPNMAe.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/06/19/RPNQtH.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/06/19/RPUib8.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/06/19/RPUKK0.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/06/19/RPUTiQ.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/06/19/RPRo26.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/06/19/RPcxP0.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/06/19/RPgAaR.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/06/19/RPgTF1.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/06/19/RP2uYq.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/06/19/RP2afx.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/06/20/RiRVQf.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/06/20/RiWY9I.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/06/20/RFC9ij.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/06/20/RFC1Qx.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/06/20/RFPgu6.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/06/20/RFiAVU.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/06/20/RFidMt.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/06/20/RFFOhQ.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/06/20/RFkfET.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/06/20/RFETn1.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/06/20/RFVFN8.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/06/20/RFQFpV.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/06/20/RFQZm4.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/06/20/RFQ09P.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/06/20/RFQdht.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/06/20/RFlNKU.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/06/20/RFliEd.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/06/20/RFlKbQ.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/06/20/RFl7xf.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/06/20/RFloGt.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/06/20/RFlTRP.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/06/20/RF1SGq.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/06/20/RF1isU.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/06/20/RF3k1P.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/06/20/RF3ukj.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/06/20/RF3HHg.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/06/20/RF82rT.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/06/20/RF37DS.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/06/20/RF3qEQ.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/06/20/RFGxmT.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/06/20/RFJFpR.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/06/20/RFJPh9.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/06/20/RFJCtJ.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/06/20/RFJ8jP.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/06/20/RFJDcq.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/06/20/RFJB3n.png">
+<meta property="article:published_time" content="2021-06-20T09:15:19.170Z">
+<meta property="article:modified_time" content="2021-06-20T09:16:35.363Z">
+<meta property="article:author" content="bibofu">
+<meta property="article:tag" content="进阶">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://z3.ax1x.com/2021/06/19/RPGqYR.jpg">
+
+<link rel="canonical" href="https://bibofu24.com/2021/06/20/ML_Lab/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>电影海报标签生成 | 二十六画生</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">二十六画生</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-resources">
+
+    <a href="/resources/" rel="section"><i class="fa fa-download fa-fw"></i>资源</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bibofu24.com/2021/06/20/ML_Lab/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="bibofu">
+      <meta itemprop="description" content="记录学习，分享生活">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="二十六画生">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          电影海报标签生成
+        </h1>
+
+        <div class="post-meta">
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-06-20 17:15:19 / 修改时间：17:16:35" itemprop="dateCreated datePublished" datetime="2021-06-20T17:15:19+08:00">2021-06-20</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>4.4k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>4 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="基于电影海报图像的影片标签生成任务"><a href="#基于电影海报图像的影片标签生成任务" class="headerlink" title="基于电影海报图像的影片标签生成任务"></a>基于电影海报图像的影片标签生成任务</h1><p>​                                                                                                                                                                                                       <em><strong>付碧波 王仲煜</strong></em></p>
+<p>源代码：<a target="_blank" rel="noopener" href="https://paste.ubuntu.com/p/RPdTG3yZJk/">https://paste.ubuntu.com/p/RPdTG3yZJk/</a></p>
+<p>运行视频：<a href="http://bibofu24.com/ML_Lab2/">http://bibofu24.com/ML_Lab2/</a></p>
+<h2 id="任务分析"><a href="#任务分析" class="headerlink" title="任务分析"></a>任务分析</h2><p><img src="https://z3.ax1x.com/2021/06/19/RPGqYR.jpg" alt="zidan"></p>
+<p>电影类型可分为动作、喜剧、恐怖、冒险、爱情、警匪、科幻、战争、灾难、悬疑、西部等等</p>
+<p>所以，根据电影海报生成标签，是一个<strong>多标签图像分类问题</strong>。</p>
+<h2 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h2><p><img src="https://z3.ax1x.com/2021/06/20/RFJqED.png" alt="2021 06 20 16 54 51"></p>
+<p>tensorflow_gpu 2.0</p>
+<p>Keras 2.3.1</p>
+<p>tensorflow-hub   0.6.0</p>
+<h2 id="加载和处理数据集"><a href="#加载和处理数据集" class="headerlink" title="加载和处理数据集"></a>加载和处理数据集</h2><h3 id="读取csv文件-MovieGenre-csv"><a href="#读取csv文件-MovieGenre-csv" class="headerlink" title="读取csv文件(MovieGenre.csv)"></a>读取csv文件(MovieGenre.csv)</h3><p><img src="https://z3.ax1x.com/2021/06/19/RPtRfA.png" alt="2021 06 19 18 39 30"></p>
+<p><img src="https://z3.ax1x.com/2021/06/19/RPt0Qx.png" alt="2021 06 19 18 38 09"></p>
+<h3 id="下载图片-数据集"><a href="#下载图片-数据集" class="headerlink" title="下载图片(数据集)"></a>下载图片(数据集)</h3><p><img src="https://z3.ax1x.com/2021/06/19/RPNMAe.png" alt="2021 06 19 18 42 46"></p>
+<p>download_parallel函数定义在utils.py中</p>
+<h3 id="持久化"><a href="#持久化" class="headerlink" title="持久化"></a>持久化</h3><p><img src="https://z3.ax1x.com/2021/06/19/RPNQtH.png" alt="2021 06 19 18 43 03"></p>
+<h3 id="标签频率可视化"><a href="#标签频率可视化" class="headerlink" title="标签频率可视化"></a>标签频率可视化</h3><p><img src="https://z3.ax1x.com/2021/06/19/RPUib8.png" alt="2021 06 19 18 49 41"></p>
+<p><img src="https://z3.ax1x.com/2021/06/19/RPUKK0.png" alt="222"></p>
+<h3 id="清除低频标签"><a href="#清除低频标签" class="headerlink" title="清除低频标签"></a>清除低频标签</h3><p>并非所有电影流派都以相同数量表示。其中一些可能很少出现。忽略少于1000个观察值的所有标签（简短，西方，音乐，体育）。这意味着由于缺少对这些标签的观察，因此不会训练该模型预测这些标签。</p>
+<p><img src="https://z3.ax1x.com/2021/06/19/RPUTiQ.png" alt="2021 06 19 18 52 58"></p>
+<h2 id="搭建模型"><a href="#搭建模型" class="headerlink" title="搭建模型"></a>搭建模型</h2><p><img src="https://z3.ax1x.com/2021/06/19/RPRo26.png" alt="2021 06 19 20 14 06"></p>
+<h3 id="划分数据集"><a href="#划分数据集" class="headerlink" title="划分数据集"></a>划分数据集</h3><p>将建模数据拆分为训练和验证在机器学习实践中很常见。 将分配 80% 的图像用于训练，20% 用于验证。</p>
+<p><img src="https://z3.ax1x.com/2021/06/19/RPcxP0.png" alt="2021 06 19 20 27 35"></p>
+<h3 id="y二值化"><a href="#y二值化" class="headerlink" title="y二值化"></a>y二值化</h3><p>我们需要目标是一个字符串列表，以适合二值化器（多热编码）。</p>
+<p><img src="https://z3.ax1x.com/2021/06/19/RPgAaR.png" alt="2021 06 19 20 30 49"></p>
+<p>一些案例</p>
+<p><img src="https://z3.ax1x.com/2021/06/19/RPgTF1.png" alt="2"></p>
+<h3 id="label-encoding"><a href="#label-encoding" class="headerlink" title="label encoding"></a>label encoding</h3><p>最初的目标是人类可以轻松理解的字符串列表。但是，如果我们要构建和训练神经网络，我们需要创建二进制标签（多热编码）。<br>这对于多标签分类至关重要。为了二值化我们的标签，我们将使用 scikit-learn 的 MultiLabelBinarizer。</p>
+<p><img src="https://z3.ax1x.com/2021/06/19/RP2uYq.png" alt="2021 06 19 20 38 58"></p>
+<p><img src="https://z3.ax1x.com/2021/06/19/RP2afx.png" alt="2021 06 19 20 40 35"></p>
+<h3 id="建立快速输入管道"><a href="#建立快速输入管道" class="headerlink" title="建立快速输入管道"></a><strong>建立快速输入管道</strong></h3><p>首先需要编写一些函数来解析图像文件并生成一个表示特征的张量和一个表示标签的张量。在这个函数中，可以调整图像的大小以适应模型期望的输入。还可以对像素值进行归一化 介于 0 和 1 之间。这是有助于加速训练收敛的常见做法。如果我们将每个像素视为一个特征，我们希望这些特征具有相似的范围，以便梯度不会超出 并且我们只需要一个全局学习率乘数。</p>
+<p><img src="https://z3.ax1x.com/2021/06/20/RiRVQf.png" alt="2021 06 20 11 56 36"></p>
+<p>要在数据集上训练模型，希望数据为：</p>
+<ul>
+<li>Well shuffled，使数据满足<strong>独立同分布</strong></li>
+<li>Batched 分批</li>
+<li>Batches to be available as soon as possible.，批量尽快供货。</li>
+</ul>
+<p><img src="https://z3.ax1x.com/2021/06/20/RiWY9I.png" alt="2021 06 20 12 05 02"></p>
+<p>AUTOTUNE 动态适配预处理和预取</p>
+<p>创建一个为 TensorFlow 生成训练和验证数据集的函数。</p>
+<p><img src="https://z3.ax1x.com/2021/06/20/RFC9ij.png" alt="2021 06 20 14 34 38"></p>
+<p>每个批次将是一对数组（一个保存特征，另一个保存标签）。<br>特征数组的形状为 (BATCH_SIZE, IMG_SIZE, IMG_SIZE, CHANNELS)。<br>标签数组的形状为 (BATCH_SIZE, N_LABELS)，其中 N_LABELS 是标签的最大数量。<br>让我们通过分析第一批来验证这些数组的形状：</p>
+<p><img src="https://z3.ax1x.com/2021/06/20/RFC1Qx.png" alt="2021 06 20 14 38 07"></p>
+<h3 id="Model-Building"><a href="#Model-Building" class="headerlink" title="Model Building"></a>Model Building</h3><h4 id="TF-hub"><a href="#TF-hub" class="headerlink" title="TF.hub"></a>TF.hub</h4><p>一个模型仓库，在这里你可以获取到任何你想要的模型，并且用它来做transfer learning；准确来说，tensorflow hub是一个包，包含了一些下载的操作，直接帮你把模型搞下来。</p>
+<h4 id="使用TF-Hub迁移学习"><a href="#使用TF-Hub迁移学习" class="headerlink" title="使用TF.Hub迁移学习"></a><strong>使用TF.Hub迁移学习</strong></h4><p>我们将在称为迁移学习的过程中使用预训练模型，而不是从头开始构建和训练新模型。大多数用于视觉应用的预训练模型都是在ImageNet 上训练的，ImageNet 是一个拥有超过 1400 万个图像的大型图像数据库 图像分为 2 万多个类别。 迁移学习背后的想法是，由于这些模型是在大型和一般分类任务的背景下训练的，因此可以通过提取和迁移先前学习的有意义的特征来处理更具体的任务。 我们需要做的就是获取一个预先训练好的模型，并在其上简单地添加一个新的分类器。 新的分类头将从头开始训练，以便我们将目标重新用于我们的多标签分类任务。</p>
+<p>来自tfhub.dev的任何与Tensorflow 2兼容的图像特征矢量URL都可能对数据集很有趣。唯一的条件是确保准备的数据集中图像特征的形状与要重用的模型的预期输入形状相匹配。</p>
+<p>首先，准备特征提取器。将使用MobileNet V2的预训练实例，其深度乘数为1.0，输入大小为224x224。实际上，MobileNet V2是一大类神经网络体系结构，其主要目的是加快设备上的推理速度。它们的大小不同，具体取决于深度乘数（隐藏的卷积层中的要素数量）和输入图像的大小。</p>
+<p><img src="https://z3.ax1x.com/2021/06/20/RFPgu6.png" alt="2021 06 20 14 45 34"></p>
+<p>特征提取器接受形状为 (224, 224, 3) 的图像并为每个图像返回一个 1280 长度的向量。</p>
+<p>我们应该冻结特征提取层中的变量，以便训练只修改新的分类层。<br>通常，在处理与特征提取器训练的原始数据集相比非常小的数据集时，这是一个很好的做法。</p>
+<p><img src="https://z3.ax1x.com/2021/06/20/RFiAVU.png" alt="2021 06 20 14 48 00"></p>
+<h4 id="Sequential"><a href="#Sequential" class="headerlink" title="Sequential"></a>Sequential</h4><p>现在，可以将特征提取器层包装在tf.keras.Sequential模型中，并在顶部添加新层。</p>
+<p><img src="https://z3.ax1x.com/2021/06/20/RFidMt.png" alt="2021 06 20 14 52 00"></p>
+<p>需要在最终的神经元中应用S型激活函数，以计算出每种流派的概率得分。这样就可以依靠多个逻辑回归在同一模型中同时进行训练。每个最终神经元将充当一个单一类别的单独的二进制分类器，即使提取的特征对于所有最终神经元而言都是相同的。</p>
+<p><em>使用此模型生成预测时，应该期望每个流派都有一个独立的概率得分，并且所有概率得分不一定总和为1。这与在多类分类中使用softmax层（其中概率得分的总和）不同。输出等于1。</em></p>
+<p><img src="https://z3.ax1x.com/2021/06/20/RFFOhQ.png" alt="2021 06 20 14 58 31"></p>
+<h2 id="训练模型"><a href="#训练模型" class="headerlink" title="训练模型"></a>训练模型</h2><h3 id="损失函数"><a href="#损失函数" class="headerlink" title="损失函数"></a>损失函数</h3><p>在前面的步骤中，我们准备了数据集并通过在预训练网络（无输出）之上附加多标签神经网络分类器来构建模型。我们现在可以继续训练我们的模型，但我们需要定义两个主要功能：</p>
+<p><strong>损失函数</strong>：我们需要它来测量训练批次的模型误差（成本）。它必须是可微的，以便反向传播神经网络中的误差并更新权重。</p>
+<p><strong>评估函数</strong>：它应该代表我们真正关心的最终评估指标。与损失函数不同，它必须更直观地了解模型在现实世界中的表现。<br>这个笔记本的目的不仅是分享多标签分类的一般设计，而且是研究定制损失函数的选择以直接优化我们关心的评估指标的优势。</p>
+<p>F1-score</p>
+<p> <a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_14997473/article/details/82684300">https://blog.csdn.net/qq_14997473/article/details/82684300</a></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/64315175">https://zhuanlan.zhihu.com/p/64315175</a></p>
+<p>假设我们需要 <strong>F1-score</strong>来评估模型在每个标签上的性能。 F1-score是 Precision 和 Recall 的调和平均值。并且，在考虑任何特定标签时，Precision 和 Recall 的计算会考虑TP的数量、FP的数量和 FN 的数量。</p>
+<p><img src="https://z3.ax1x.com/2021/06/20/RFkfET.png" alt="confusion matrix"></p>
+<p>我们计算与标签总数一样多的F1-score ，然后将它们平均以获得我们所说的宏观 F1-score 。如果它们在多标签分类任务中具有相同的重要性，则取所有标签的平均值是合理的。</p>
+<p>F1-score 的问题在于它不可微，因此我们不能将其用作损失函数来计算梯度并在训练模型时更新权重。这是因为F1-score 需要测量二元预测 (0/1)。这些二元预测是通过对模型生成的概率分数应用决策阈值来获得的。例如，如果动作的概率高于阈值 0.5，我们可以预测 1（一部电影是关于动作的），否则我们预测 0（没有动作）。</p>
+<p>通常我们使用二元交叉熵损失表示特定类别的观测值的负对数似然 -log(p)，模型预测该类别的概率 p。一般来说，这种损失效果很好，并被广泛用于训练分类器，但它并不直接与我们想要最大化的 F1-score 相关联和对齐。</p>
+<p>我们可以做的是修改 F1-score 以使其可微。我们可以通过使用概率而不应用任何阈值，将真阳性、假阳性、假阴性的数量计算为离散整数值，而不是将它们计算为似然值的连续总和。</p>
+<p>我们将这个版本的 F1-score 称为 soft-F1-score。 下面，您可以看到在 TensorFlow 中的一批预测中实现它的代码。</p>
+<p>这里有一些事情需要考虑：</p>
+<p>每个标签的成本实际上是 1 - 该标签的 soft-F1。 如果我们想最大化 soft-F1，我们应该最小化 1 - soft-F1。<br>可以替换soft-F1定义中的Precision和Recall，得到更直接的基于TP、FP和FN的公式。 您要这样做的原因是因为当 TP = 0 时 F1 的调和平均表达式未定义，但已定义翻译表达式。 F1 = 2.TP / (2.TP + FN + FP)<br>一批观察的总成本将是所有标签的平均成本。 我们将其称为macro soft-F1 loss。<br>我们必须确保批量大小足够大，以便在训练时看到具有代表性的macro soft-F1 loss。</p>
+<p><img src="https://z3.ax1x.com/2021/06/20/RFETn1.png" alt="2021 06 20 15 22 17"></p>
+<p>接下来，我们将训练两个具有相同架构但有两个不同损失函数的模型：</p>
+<p>第一个将使用macro soft-F1 loss进行训练。<br>第二个将使用二元交叉熵损失进行训练。<br>另一方面，我们可能会默认为两个模型考虑一个单一的评估指标：macro F1-score @ threshold 0.5。</p>
+<p><img src="https://z3.ax1x.com/2021/06/20/RFVFN8.png" alt="2021 06 20 15 24 56"></p>
+<h3 id="Train-with-macro-soft-F1-loss"><a href="#Train-with-macro-soft-F1-loss" class="headerlink" title="Train with macro soft-F1 loss"></a>Train with macro soft-F1 loss</h3><p><img src="https://z3.ax1x.com/2021/06/20/RFQFpV.png" alt="2021 06 20 16 10 15"></p>
+<p><img src="https://z3.ax1x.com/2021/06/20/RFQZm4.png" alt="2021 06 20 16 11 16"></p>
+<p><img src="https://z3.ax1x.com/2021/06/20/RFQ09P.png" alt="2021 06 20 16 12 20"></p>
+<p><img src="https://z3.ax1x.com/2021/06/20/RFQdht.png" alt="2021 06 20 16 12 45"></p>
+<p><img src="https://z3.ax1x.com/2021/06/20/RFlNKU.png" alt="2021 06 20 16 18 10"></p>
+<p><img src="https://z3.ax1x.com/2021/06/20/RFliEd.png" alt="2021 06 20 16 05 54"></p>
+<p><img src="https://z3.ax1x.com/2021/06/20/RFlKbQ.png" alt="下载"></p>
+<h3 id="Train-with-binary-cross-entropy-loss"><a href="#Train-with-binary-cross-entropy-loss" class="headerlink" title="Train with binary cross-entropy loss"></a>Train with binary cross-entropy loss</h3><p><img src="https://z3.ax1x.com/2021/06/20/RFl7xf.png" alt="2021 06 20 16 21 13"></p>
+<p><img src="https://z3.ax1x.com/2021/06/20/RFloGt.png" alt="2021 06 20 16 21 35"></p>
+<p><img src="https://z3.ax1x.com/2021/06/20/RFlTRP.png" alt="2021 06 20 16 21 53"></p>
+<p><img src="https://z3.ax1x.com/2021/06/20/RF1SGq.png" alt="2021 06 20 16 06 27"></p>
+<p><img src="https://z3.ax1x.com/2021/06/20/RF1isU.png" alt="3"></p>
+<p>到目前为止，我们已经训练了两个具有相同架构的神经网络模型。<br>第一个是直接针对macro F1 分数进行优化，而第二个则更经典，针对二元交叉熵进行了优化。<br>在这两种情况下，训练的模型在预测电影海报的类型时都会为每个标签生成一个独立的概率分数。<br>要创建最终决策系统，我们需要为每个标签选择一个介于 0 和 1 之间的决策阈值，以便将每个概率转换为二元信息。 通常系统的性能取决于这些决策阈值的选择。<br>因此，让我们根据我们为每个标签设置阈值的级别来检查系统在验证集上的行为。</p>
+<p>utils 模块中有一个名为 perf_grid 的函数，可以帮助创建性能网格。<br>在性能网格中，每个标签的阈值以 0.01 的步长从 0 增加到 1。<br>对于每个阈值和每个标签，我们计算不同的度量（tp、fn、fp、精度、召回率、f1-score）。</p>
+<p><img src="https://z3.ax1x.com/2021/06/20/RF3k1P.png" alt="2021 06 20 16 27 56"></p>
+<p>对于每个标签，都有一个阈值可以最大化使用二元交叉熵损失训练的第二个模型的性能。<br>使用具有 bce 损失的第二个模型时，哪些标签具有最高的最大性能？</p>
+<p><img src="https://z3.ax1x.com/2021/06/20/RF3ukj.png" alt="2021 06 20 16 29 39"></p>
+<p>数据集中标签的频率与其实现的性能之间是否存在相关性？</p>
+<p>相关性0.99</p>
+<p>现在，比较两个不同模型的性能曲线。</p>
+<p><img src="https://z3.ax1x.com/2021/06/20/RF3HHg.png" alt="10"></p>
+<p><img src="https://z3.ax1x.com/2021/06/20/RF82rT.png" alt="2021 06 20 16 39 52"></p>
+<p>使用每个模型可视化标签概率值的直方图。</p>
+<p><img src="https://z3.ax1x.com/2021/06/20/RF37DS.png" alt="30"></p>
+<p><img src="https://z3.ax1x.com/2021/06/20/RF3qEQ.png" alt="40"></p>
+<p>当使用二元交叉熵损失训练时，输出的概率分布具有一些高斯特性（注意蓝色直方图的钟形）。实际上，这种优化是从数据的原始分布中学习的。我们可以看到，对于覆盖数据集 50% 的标签“Drama”，概率分布以 0.5 为中心。顺便说一句，为“戏剧”构建的分类器似乎非常弱，因为这两个类似乎没有在概率值上分开。我们还可以注意到，标签越不频繁，分布就越向左移动。例如，“犯罪”的概率分数似乎非常低，而该标签仅覆盖了数据集的 14%。该模型从这种稀有性中学习以预测较低的概率值。另一方面，当使用Macro soft-F1 损失时，我们正在创建一个系统，它不会反映条件概率值的相同幅度。相反，它学会了减少犹豫并生成非常接近 1 或非常接近 0 的预测。我们在中间范围内的概率值较少。因此，在该范围内改变阈值时，性能不会发生太大变化。<br>使用Macro soft-F1 损失进行优化可以取代一些详尽的技术，例如：</p>
+<p>搜索使验证集性能最大化的最佳决策阈值<br>通过在训练前对少数类进行过采样或对多数类进行欠采样来校准概率值（在多标签分类的情况下非常复杂）</p>
+<h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><p><img src="https://z3.ax1x.com/2021/06/20/RFGxmT.png" alt="2021 06 20 16 48 10"></p>
+<p><img src="https://z3.ax1x.com/2021/06/20/RFJFpR.png" alt="55"></p>
+<p><img src="https://z3.ax1x.com/2021/06/20/RFJPh9.png" alt="72"></p>
+<p><img src="https://z3.ax1x.com/2021/06/20/RFJCtJ.png" alt="74"></p>
+<h2 id="导出模型"><a href="#导出模型" class="headerlink" title="导出模型"></a>导出模型</h2><p><img src="https://z3.ax1x.com/2021/06/20/RFJ8jP.png" alt="2021 06 20 16 51 37"></p>
+<p><img src="https://z3.ax1x.com/2021/06/20/RFJDcq.png" alt="2021 06 20 16 53 09"></p>
+<p><img src="https://z3.ax1x.com/2021/06/20/RFJB3n.png" alt="2021 06 20 16 53 26"></p>
+
+    </div>
+
+    
+    
+    
+
+
+     
+       <div>
+         <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:24px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+
+       </div>
+     
+        <div class="reward-container">
+  <div>Your support will be the driving force of my creation</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="bibofu 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.png" alt="bibofu 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>bibofu
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://bibofu24.com/2021/06/20/ML_Lab/" title="电影海报标签生成">https://bibofu24.com/2021/06/20/ML_Lab/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E8%BF%9B%E9%98%B6/" rel="tag"># 进阶</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/06/18/SA_Design/" rel="prev" title="软件架构与设计模式">
+      <i class="fa fa-chevron-left"></i> 软件架构与设计模式
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="lv-container" data-id="city" data-uid="MTAyMC81MzMyNy8yOTgwMQ=="></div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E7%94%B5%E5%BD%B1%E6%B5%B7%E6%8A%A5%E5%9B%BE%E5%83%8F%E7%9A%84%E5%BD%B1%E7%89%87%E6%A0%87%E7%AD%BE%E7%94%9F%E6%88%90%E4%BB%BB%E5%8A%A1"><span class="nav-number">1.</span> <span class="nav-text">基于电影海报图像的影片标签生成任务</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%BB%E5%8A%A1%E5%88%86%E6%9E%90"><span class="nav-number">1.1.</span> <span class="nav-text">任务分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE"><span class="nav-number">1.2.</span> <span class="nav-text">环境配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%A0%E8%BD%BD%E5%92%8C%E5%A4%84%E7%90%86%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="nav-number">1.3.</span> <span class="nav-text">加载和处理数据集</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%BB%E5%8F%96csv%E6%96%87%E4%BB%B6-MovieGenre-csv"><span class="nav-number">1.3.1.</span> <span class="nav-text">读取csv文件(MovieGenre.csv)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BD%E5%9B%BE%E7%89%87-%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="nav-number">1.3.2.</span> <span class="nav-text">下载图片(数据集)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%81%E4%B9%85%E5%8C%96"><span class="nav-number">1.3.3.</span> <span class="nav-text">持久化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%87%E7%AD%BE%E9%A2%91%E7%8E%87%E5%8F%AF%E8%A7%86%E5%8C%96"><span class="nav-number">1.3.4.</span> <span class="nav-text">标签频率可视化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B8%85%E9%99%A4%E4%BD%8E%E9%A2%91%E6%A0%87%E7%AD%BE"><span class="nav-number">1.3.5.</span> <span class="nav-text">清除低频标签</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%90%AD%E5%BB%BA%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.4.</span> <span class="nav-text">搭建模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%92%E5%88%86%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="nav-number">1.4.1.</span> <span class="nav-text">划分数据集</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#y%E4%BA%8C%E5%80%BC%E5%8C%96"><span class="nav-number">1.4.2.</span> <span class="nav-text">y二值化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#label-encoding"><span class="nav-number">1.4.3.</span> <span class="nav-text">label encoding</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BB%BA%E7%AB%8B%E5%BF%AB%E9%80%9F%E8%BE%93%E5%85%A5%E7%AE%A1%E9%81%93"><span class="nav-number">1.4.4.</span> <span class="nav-text">建立快速输入管道</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Model-Building"><span class="nav-number">1.4.5.</span> <span class="nav-text">Model Building</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#TF-hub"><span class="nav-number">1.4.5.1.</span> <span class="nav-text">TF.hub</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8TF-Hub%E8%BF%81%E7%A7%BB%E5%AD%A6%E4%B9%A0"><span class="nav-number">1.4.5.2.</span> <span class="nav-text">使用TF.Hub迁移学习</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Sequential"><span class="nav-number">1.4.5.3.</span> <span class="nav-text">Sequential</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.5.</span> <span class="nav-text">训练模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0"><span class="nav-number">1.5.1.</span> <span class="nav-text">损失函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Train-with-macro-soft-F1-loss"><span class="nav-number">1.5.2.</span> <span class="nav-text">Train with macro soft-F1 loss</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Train-with-binary-cross-entropy-loss"><span class="nav-number">1.5.3.</span> <span class="nav-text">Train with binary cross-entropy loss</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95"><span class="nav-number">1.6.</span> <span class="nav-text">测试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%BC%E5%87%BA%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.7.</span> <span class="nav-text">导出模型</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="bibofu"
+      src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name">bibofu</p>
+  <div class="site-description" itemprop="description">记录学习，分享生活</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">46</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/bibofu" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;bibofu" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/bibofu24@gmail.com" title="E-Mail → bibofu24@gmail.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/7401945924" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;7401945924" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/kobeball6" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;kobeball6" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://google.com/" title="https:&#x2F;&#x2F;google.com" rel="noopener" target="_blank">google</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://baidu.com/" title="https:&#x2F;&#x2F;baidu.com" rel="noopener" target="_blank">baidu</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">bibofu</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">191k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">2:54</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/canvas_lines.min.js"></script>
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+<script>
+NexT.utils.loadComments(document.querySelector('#lv-container'), () => {
+  window.livereOptions = {
+    refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+});
+</script>
+
+</body>
+</html>
