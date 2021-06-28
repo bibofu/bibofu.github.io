@@ -323,7 +323,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2021-06-27 21:40:51 / 修改时间：21:42:03" itemprop="dateCreated datePublished" datetime="2021-06-27T21:40:51+08:00">2021-06-27</time>
+              <time title="创建时间：2021-06-27 21:40:51 / 修改时间：23:26:17" itemprop="dateCreated datePublished" datetime="2021-06-27T21:40:51+08:00">2021-06-27</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -341,14 +341,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>2.6k</span>
+              <span>2.8k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>2 分钟</span>
+              <span>3 分钟</span>
             </span>
 
         </div>
@@ -360,8 +360,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>考试要求</p>
-<p>要求1：基本概念<br>要求2：数据集划分<br>要求3：性能度量<br>要求4：可以描述各个任务之间的关系</p>
+          <h2 id="考试要求"><a href="#考试要求" class="headerlink" title="考试要求"></a>考试要求</h2><p>要求1：基本概念<br>要求2：数据集划分<br>要求3：性能度量<br>要求4：可以描述各个任务之间的关系</p>
 <p><strong>线性回归：</strong></p>
 <p>要求1：可以按照自己的理解简述线性回归问题。<br>要求2：可以对简单数据进行计算（PPT中例题）。<br>要求3： 可以编程实现线性回归算法。</p>
 <p><strong>逻辑回归：</strong><br>要求1：可以按照自己的理解简述逻辑回归问题以及与线性回归问题的区别与联系。<br>要求2：掌握梯度下降法、牛顿法的基本原理和迭代公式。<br>要求3：可以编程实现逻辑回归算法。</p>
@@ -378,8 +377,10 @@
 <p>要求1：可以按照自己的理解简述线性判别分析算法，并分析其与PCA之间的联系与区别。<br>要求2：可以简述LDA算法的流程。</p>
 <p><strong>K-均值聚类：</strong></p>
 <p>要求1：可以按照自己的理解简述K-means算法。<br>要求2：可以简述Lloyd算法的流程。</p>
+<p><img src="https://z3.ax1x.com/2021/06/27/RYjL7T.png" alt="2021 06 27 23 08 14"></p>
 <h2 id="线性回归"><a href="#线性回归" class="headerlink" title="线性回归"></a>线性回归</h2><p>泛化(generalization)：在训练集上训练好的模型在未见样本上的效果</p>
 <p>NFL定理（No Free Lunch）：一个算法 A 若在某些问题上比另一个算法 B 好，必存在另一些问题 B 比 A 好。</p>
+<p>过拟合是指模型在训练集上表现很好，到了验证和测试阶段就大不如意了，即模型的泛化能力很差。</p>
 <p>错误率：有多少比例的西瓜被判断错误；</p>
 <p>查准率（precision）：算法挑出来的西瓜中有多少比例是好西瓜；</p>
 <p>查全率（recall）：所有的好西瓜中有多少比例被算法跳了出来。</p>
@@ -398,7 +399,11 @@
 <p><img src="https://z3.ax1x.com/2021/06/27/RJtgv4.png" alt="2021 06 27 10 41 31"></p>
 <p><img src="https://z3.ax1x.com/2021/06/27/RJNKRU.png" alt="2021 06 27 10 53 59"></p>
 <p><img src="https://z3.ax1x.com/2021/06/27/RJWqbt.png" alt="2021 06 27 13 01 35"></p>
-<h2 id="逻辑回归"><a href="#逻辑回归" class="headerlink" title="逻辑回归"></a>逻辑回归</h2><p><img src="https://z3.ax1x.com/2021/06/27/RJfxdx.png" alt="2021 06 27 13 15 50"></p>
+<h2 id="逻辑回归"><a href="#逻辑回归" class="headerlink" title="逻辑回归"></a>逻辑回归</h2><p>线性回归解决的是<strong>回归</strong>问题，逻辑回归相当于是线性回归的基础上，来解决<strong>分类</strong>问题。</p>
+<p>将线性回归变成一个0~1输出的分类问题</p>
+<p><strong>区别：</strong></p>
+<p>1.线性回归用来预测连续的变量（房价预测），逻辑回归用来预测离散的变量（分类，癌症预测）<br>2. 线性回归是拟合函数，逻辑回归是预测函数<br>3. 线性回归的参数计算方法是最小二乘法，逻辑回归的参数计算方法是似然估计的方法</p>
+<p><img src="https://z3.ax1x.com/2021/06/27/RJfxdx.png" alt="2021 06 27 13 15 50"></p>
 <p><img src="https://z3.ax1x.com/2021/06/27/RJfZPU.png" alt="2021 06 27 13 06 14"></p>
 <h2 id="决策树"><a href="#决策树" class="headerlink" title="决策树"></a>决策树</h2><p><img src="https://z3.ax1x.com/2021/06/27/RJI67n.png" alt="2021 06 27 13 52 04"></p>
 <p><img src="https://z3.ax1x.com/2021/06/27/RJIh1U.png" alt="2021 06 27 13 53 05"></p>
@@ -409,6 +414,7 @@
 <p><img src="https://z3.ax1x.com/2021/06/27/RJ7sne.png" alt="2021 06 27 14 02 28"></p>
 <p><img src="https://z3.ax1x.com/2021/06/27/RJLcKf.png" alt="2021 06 27 14 28 28"></p>
 <p><img src="https://z3.ax1x.com/2021/06/27/RJO5wD.png" alt="2021 06 27 14 38 07"></p>
+<p><img src="https://z3.ax1x.com/2021/06/27/RYzQk8.png" alt="2021 06 27 23 25 15"></p>
 <h2 id="感知机"><a href="#感知机" class="headerlink" title="感知机"></a>感知机</h2><p>感知机由两层神经元组成。输入层接受外界输入信号后传递给输出层，输出层是MP神经元。感知机能容易的实现与或非运算。</p>
 <p>需要注意的是，感知机无法处理非线性可分问题</p>
 <p><img src="https://z3.ax1x.com/2021/06/27/RYeZk9.md.png" alt="2021 06 27 16 16 39"></p>
@@ -2526,7 +2532,7 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">3:05</span>
+    <span title="站点阅读时长">3:06</span>
 </div>
 
         
