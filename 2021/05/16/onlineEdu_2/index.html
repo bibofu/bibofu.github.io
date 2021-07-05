@@ -31,7 +31,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://z3.ax1x.com/2021/05/16/gglN11.png">
 <meta property="article:published_time" content="2021-05-16T11:52:00.583Z">
-<meta property="article:modified_time" content="2021-05-19T14:51:44.695Z">
+<meta property="article:modified_time" content="2021-07-05T11:20:02.285Z">
 <meta property="article:author" content="bibofu">
 <meta property="article:tag" content="项目">
 <meta name="twitter:card" content="summary">
@@ -235,7 +235,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-05-19 22:51:44" itemprop="dateModified" datetime="2021-05-19T22:51:44+08:00">2021-05-19</time>
+                <time title="修改时间：2021-07-05 19:20:02" itemprop="dateModified" datetime="2021-07-05T19:20:02+08:00">2021-07-05</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -260,7 +260,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>20k</span>
+              <span>19k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -324,7 +324,7 @@
 <p>阿里云对象存储OSS的使用</p>
 <p>创建模块service_oss</p>
 <p>配置文件</p>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#服务端口</span></span><br><span class="line"><span class="meta">server.port</span>=<span class="string">8002</span></span><br><span class="line"><span class="comment">#服务名</span></span><br><span class="line"><span class="meta">spring.application.name</span>=<span class="string">service-oss</span></span><br><span class="line"><span class="comment">#环境设置：dev、test、prod</span></span><br><span class="line"><span class="meta">spring.profiles.active</span>=<span class="string">dev</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#阿里云 OSS</span></span><br><span class="line"><span class="comment">#不同的服务器，地址不同</span></span><br><span class="line"><span class="meta">aliyun.oss.file.endpoint</span>=<span class="string">oss-cn-beijing.aliyuncs.com</span></span><br><span class="line"><span class="meta">aliyun.oss.file.keyid</span>=<span class="string"></span></span><br><span class="line"><span class="meta">aliyun.oss.file.keysecret</span>=<span class="string"></span></span><br><span class="line"><span class="comment">#bucket可以在控制台创建，也可以使用java代码创建</span></span><br><span class="line"><span class="meta">aliyun.oss.file.bucketname</span>=<span class="string">edu-bibofu</span></span><br><span class="line"></span><br><span class="line"><span class="meta">spring.servlet.multipart.max-file-size</span>=<span class="string">100MB</span></span><br><span class="line"><span class="meta">spring.servlet.multipart.max-request-size</span>=<span class="string">100MB</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># nacos服务地址</span></span><br><span class="line"><span class="meta">spring.cloud.nacos.discovery.server-addr</span>=<span class="string">127.0.0.1:8848</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
 
 
 
@@ -370,7 +370,7 @@
 <p>类似于阿里云OSS，视频点播服务也要先进行开通</p>
 <p>创建模块service_vod</p>
 <p>配置文件</p>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 服务端口</span></span><br><span class="line"><span class="meta">server.port</span>=<span class="string">8003</span></span><br><span class="line"><span class="comment"># 服务名</span></span><br><span class="line"><span class="meta">spring.application.name</span>=<span class="string">service-vod</span></span><br><span class="line"><span class="comment"># 环境设置：dev、test、prod</span></span><br><span class="line"><span class="meta">spring.profiles.active</span>=<span class="string">dev</span></span><br><span class="line"><span class="comment">#阿里云 vod</span></span><br><span class="line"><span class="comment">#不同的服务器，地址不同</span></span><br><span class="line"><span class="meta">aliyun.vod.file.keyid</span>=<span class="string"></span></span><br><span class="line"><span class="meta">aliyun.vod.file.keysecret</span>=<span class="string"></span></span><br><span class="line"><span class="comment"># 最大上传单个文件大小：默认1M</span></span><br><span class="line"><span class="meta">spring.servlet.multipart.max-file-size</span>=<span class="string">1024MB</span></span><br><span class="line"><span class="comment"># 最大置总上传的数据大小 ：默认10M</span></span><br><span class="line"><span class="meta">spring.servlet.multipart.max-request-size</span>=<span class="string">1024MB</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># nacos服务地址</span></span><br><span class="line"><span class="meta">spring.cloud.nacos.discovery.server-addr</span>=<span class="string">127.0.0.1:8848</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
 
 <p>注意配置文件上传大小，nginx中也要配置，否则可能报错</p>
 <p>核心代码</p>
@@ -647,12 +647,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">204k</span>
+    <span title="站点总字数">203k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">3:06</span>
+    <span title="站点阅读时长">3:05</span>
 </div>
 
         
