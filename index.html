@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>thatgirl</title>
+    <link rel="shortcut icon" href="NWQ.ico" type="image/x-icon">
+    
+    
+    <style>
+        .n77{
+            width: 48%;
+            height: auto;
+        }
+    </style>
+</head>
+<body id="app">
+
+    <audio id="audio" src="pics/lastpage.mp3"></audio>  
+	
+    <script>
+		var myAuto = document.getElementById('audio');  
+
+        var app = document.getElementById("app");
+        // 监听事件
+        app.addEventListener("mousemove", function(){
+        	console.log("played");
+        	myAuto.play();
+        }, true);
+
+        // 用定时器触发事件
+		setInterval(function(){
+			if ("createEvent" in document) {
+			 var evt = document.createEvent("HTMLEvents");
+			 evt.initEvent("mousemove", false, true);
+			 app.dispatchEvent(evt);
+			}
+			else
+			 app.fireEvent("onmousemove");
+		}, 1000);
+
+	</script>
+
+
+    <div class="slideshow">
+        <img class="n77" src="pics/000.jpg" alt="图片1">
+        <img class="n77" src="pics/0000.jpg" alt="图片1">
+        <img class="n77" src="pics/1.jpg" alt="图片1">
+        <img class="n77" src="pics/01.jpg" alt="图片1">
+        
+        <img class="n77" src="pics/02.jpg" alt="图片2">
+        
+        <img class="n77" src="pics/03.jpg" alt="图片3">
+        
+        <img class="n77" src="pics/04.jpg" alt="图片1">
+        
+        <img class="n77" src="pics/05.jpg" alt="图片1">
+        
+        <img class="n77" src="pics/06.jpg" alt="图片1">
+        
+        <img class="n77" src="pics/07.jpg" alt="图片1">
+        
+        <img class="n77" src="pics/08.jpg" alt="图片1">
+        
+        <img class="n77" src="pics/09.jpg" alt="图片1">
+        
+        <img class="n77" src="pics/010.jpg" alt="图片1">
+        
+        <img class="n77" src="pics/011.jpg" alt="图片1">
+        
+        <img class="n77" src="pics/012.jpg" alt="图片1">
+        
+        <img class="n77" src="pics/013.jpg" alt="图片1">
+        
+        <img class="n77" src="pics/014.jpg" alt="图片1">
+        
+        <img class="n77" src="pics/015.jpg" alt="图片1">
+        
+        <img class="n77" src="pics/016.jpg" alt="图片1">
+        
+        <img class="n77" src="pics/017.jpg" alt="图片1">
+        
+        <img class="n77" src="pics/018.jpg" alt="图片1">
+        
+        <img class="n77" src="pics/019.jpg" alt="图片1">
+       
+        <img class="n77" src="pics/020.jpg" alt="图片1">
+        
+        <img class="n77" src="pics/021.jpg" alt="图片1">
+        
+        <img class="n77" src="pics/022.jpg" alt="图片1">
+        
+        <img class="n77" src="pics/023.jpg" alt="图片1">
+       
+        <img class="n77" src="pics/024.jpg" alt="图片1">
+        
+        <img class="n77" src="pics/025.jpg" alt="图片1">
+        
+        <img class="n77" src="pics/026.jpg" alt="图片1">
+       
+        <img class="n77" src="pics/027.jpg" alt="图片1">
+        
+        <img class="n77" src="pics/028.jpg" alt="图片1">
+        
+        <img class="n77" src="pics/029.jpg" alt="图片1">
+       
+        <img class="n77" src="pics/030.jpg" alt="图片1">
+       
+        <img class="n77" src="pics/031.jpg" alt="图片1">
+        
+        <img class="n77" src="pics/032.jpg" alt="图片1">
+        <img class="n77" src="pics/33.jpg" alt="图片1">
+        <img class="n77" src="pics/033.jpg" alt="图片1">
+        <img class="n77" src="pics/34.jpg" alt="图片1">
+    </div>
+</body>
+</html>
