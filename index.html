@@ -1,20 +1,111 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>thatgirl</title>
     <link rel="shortcut icon" href="NWQ.ico" type="image/x-icon">
-    
-    
     <style>
-        .n77{
-            width: 48%;
-            height: auto;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #1a1a1a;
+            color: #fff;
+            font-family: 'Segoe UI', sans-serif;
+            min-height: 100vh;
+        }
+
+        .header {
+            text-align: center;
+            padding: 3rem 0;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .gallery {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .photo-card {
+            position: relative;
+            overflow: hidden;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            aspect-ratio: 1;
+        }
+
+        .photo-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+        }
+
+        .photo-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 15px;
+            transition: transform 0.3s ease;
+        }
+
+        .photo-card:hover img {
+            transform: scale(1.05);
+        }
+
+        /* 模态框样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 10px;
+            box-shadow: 0 0 50px rgba(255,255,255,0.2);
+        }
+
+        .close {
+            position: absolute;
+            top: 20px;
+            right: 35px;
+            color: #fff;
+            font-size: 40px;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close:hover {
+            color: #ff6b6b;
+        }
+
+        @media (max-width: 768px) {
+            .gallery {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body id="app">
+    <h1 class="header">The Beauty</h1>
 
     <audio id="audio" src="pics/lastpage.mp3"></audio>  
 	
@@ -40,78 +131,160 @@
 		}, 1000);
 
 	</script>
-
-
-    <div class="slideshow">
-        <img class="n77" src="pics/000.jpg" alt="图片1">
-        <img class="n77" src="pics/0000.jpg" alt="图片1">
-        <img class="n77" src="pics/1.jpg" alt="图片1">
-        <img class="n77" src="pics/01.jpg" alt="图片1">
-        
-        <img class="n77" src="pics/02.jpg" alt="图片2">
-        
-        <img class="n77" src="pics/03.jpg" alt="图片3">
-        
-        <img class="n77" src="pics/04.jpg" alt="图片1">
-        
-        <img class="n77" src="pics/05.jpg" alt="图片1">
-        
-        <img class="n77" src="pics/06.jpg" alt="图片1">
-        
-        <img class="n77" src="pics/07.jpg" alt="图片1">
-        
-        <img class="n77" src="pics/08.jpg" alt="图片1">
-        
-        <img class="n77" src="pics/09.jpg" alt="图片1">
-        
-        <img class="n77" src="pics/010.jpg" alt="图片1">
-        
-        <img class="n77" src="pics/011.jpg" alt="图片1">
-        
-        <img class="n77" src="pics/012.jpg" alt="图片1">
-        
-        <img class="n77" src="pics/013.jpg" alt="图片1">
-        
-        <img class="n77" src="pics/014.jpg" alt="图片1">
-        
-        <img class="n77" src="pics/015.jpg" alt="图片1">
-        
-        <img class="n77" src="pics/016.jpg" alt="图片1">
-        
-        <img class="n77" src="pics/017.jpg" alt="图片1">
-        
-        <img class="n77" src="pics/018.jpg" alt="图片1">
-        
-        <img class="n77" src="pics/019.jpg" alt="图片1">
-       
-        <img class="n77" src="pics/020.jpg" alt="图片1">
-        
-        <img class="n77" src="pics/021.jpg" alt="图片1">
-        
-        <img class="n77" src="pics/022.jpg" alt="图片1">
-        
-        <img class="n77" src="pics/023.jpg" alt="图片1">
-       
-        <img class="n77" src="pics/024.jpg" alt="图片1">
-        
-        <img class="n77" src="pics/025.jpg" alt="图片1">
-        
-        <img class="n77" src="pics/026.jpg" alt="图片1">
-       
-        <img class="n77" src="pics/027.jpg" alt="图片1">
-        
-        <img class="n77" src="pics/028.jpg" alt="图片1">
-        
-        <img class="n77" src="pics/029.jpg" alt="图片1">
-       
-        <img class="n77" src="pics/030.jpg" alt="图片1">
-       
-        <img class="n77" src="pics/031.jpg" alt="图片1">
-        
-        <img class="n77" src="pics/032.jpg" alt="图片1">
-        <img class="n77" src="pics/33.jpg" alt="图片1">
-        <img class="n77" src="pics/033.jpg" alt="图片1">
-        <img class="n77" src="pics/34.jpg" alt="图片1">
+    
+    <div class="gallery">
+        <!-- 在这里替换成你的照片路径 -->
+        <div class="photo-card">
+            <img src="pics/000.jpg" alt="回忆1">
+        </div>
+        <div class="photo-card">
+            <img src="pics/0000.jpg" alt="回忆2">
+        </div>
+        <div class="photo-card">
+            <img src="pics/1.jpg" alt="回忆1">
+        </div>
+        <div class="photo-card">
+            <img src="pics/01.jpg" alt="回忆2">
+        </div>
+        <div class="photo-card">
+            <img src="pics/02.jpg" alt="回忆1">
+        </div>
+        <div class="photo-card">
+            <img src="pics/03.jpg" alt="回忆2">
+        </div>
+        <div class="photo-card">
+            <img src="pics/04.jpg" alt="回忆1">
+        </div>
+        <div class="photo-card">
+            <img src="pics/05.jpg" alt="回忆2">
+        </div>
+        <div class="photo-card">
+            <img src="pics/06.jpg" alt="回忆1">
+        </div>
+        <div class="photo-card">
+            <img src="pics/07.jpg" alt="回忆2">
+        </div>
+        <div class="photo-card">
+            <img src="pics/08.jpg" alt="回忆1">
+        </div>
+        <div class="photo-card">
+            <img src="pics/09.jpg" alt="回忆2">
+        </div>
+        <div class="photo-card">
+            <img src="pics/010.jpg" alt="回忆1">
+        </div>
+        <div class="photo-card">
+            <img src="pics/011.jpg" alt="回忆2">
+        </div>
+        <div class="photo-card">
+            <img src="pics/012.jpg" alt="回忆1">
+        </div>
+        <div class="photo-card">
+            <img src="pics/013.jpg" alt="回忆2">
+        </div>
+        <div class="photo-card">
+            <img src="pics/014.jpg" alt="回忆1">
+        </div>
+        <div class="photo-card">
+            <img src="pics/015.jpg" alt="回忆2">
+        </div>
+        <div class="photo-card">
+            <img src="pics/016.jpg" alt="回忆1">
+        </div>
+        <div class="photo-card">
+            <img src="pics/017.jpg" alt="回忆2">
+        </div>
+        <div class="photo-card">
+            <img src="pics/018.jpg" alt="回忆1">
+        </div>
+        <div class="photo-card">
+            <img src="pics/019.jpg" alt="回忆2">
+        </div>
+        <div class="photo-card">
+            <img src="pics/020.jpg" alt="回忆1">
+        </div>
+        <div class="photo-card">
+            <img src="pics/021.jpg" alt="回忆2">
+        </div>
+        <div class="photo-card">
+            <img src="pics/022.jpg" alt="回忆1">
+        </div>
+        <div class="photo-card">
+            <img src="pics/023.jpg" alt="回忆2">
+        </div>
+        <div class="photo-card">
+            <img src="pics/024.jpg" alt="回忆1">
+        </div>
+        <div class="photo-card">
+            <img src="pics/025.jpg" alt="回忆2">
+        </div>
+        <div class="photo-card">
+            <img src="pics/026.jpg" alt="回忆1">
+        </div>
+        <div class="photo-card">
+            <img src="pics/027.jpg" alt="回忆2">
+        </div>
+        <div class="photo-card">
+            <img src="pics/028.jpg" alt="回忆1">
+        </div>
+        <div class="photo-card">
+            <img src="pics/029.jpg" alt="回忆2">
+        </div>
+        <div class="photo-card">
+            <img src="pics/030.jpg" alt="回忆1">
+        </div>
+        <div class="photo-card">
+            <img src="pics/031.jpg" alt="回忆2">
+        </div>
+        <div class="photo-card">
+            <img src="pics/032.jpg" alt="回忆1">
+        </div>
+        <div class="photo-card">
+            <img src="pics/33.jpg" alt="回忆2">
+        </div>
+        <div class="photo-card">
+            <img src="pics/033.jpg" alt="回忆1">
+        </div>
+        <div class="photo-card">
+            <img src="pics/34.jpg" alt="回忆2">
+        </div>
+        <div class="photo-card">
+            <img src="pics/35.jpg" alt="回忆2">
+        </div>
+        <!-- 添加更多照片... -->
     </div>
+
+    <!-- 模态框 -->
+    <div class="modal" id="modal">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <img class="modal-content" id="modal-img">
+    </div>
+
+    <script>
+        // 点击图片放大
+        document.querySelectorAll('.photo-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const imgSrc = card.querySelector('img').src;
+                const modal = document.getElementById('modal');
+                const modalImg = document.getElementById('modal-img');
+                
+                modal.style.display = 'flex';
+                modalImg.src = imgSrc;
+            });
+        });
+
+        // 关闭模态框
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        // 点击背景关闭
+        window.onclick = function(event) {
+            const modal = document.getElementById('modal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
 </body>
 </html>
